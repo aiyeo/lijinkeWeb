@@ -1,5 +1,7 @@
 # lijinkeWeb
+
 ### 个人网站建设中 ... :)
+http://lijinke.xicp.io/
 #### 使用技术栈
 - `React`
 - `webpack2`
