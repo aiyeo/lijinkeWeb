@@ -7,6 +7,7 @@ import thunk from "redux-thunk"
 import { Provider } from "react-redux"
 
 import App from "app"
+import "./style.less"
 
 import reducer from "./reducers"
 const store = createStore(

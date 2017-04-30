@@ -2,7 +2,7 @@ import obj2Query from "libs/params"
 
 const helper = {
   host: "http://localhost",
-  port: "3000",
+  port: "1996",
 
   jsonToString(params) {
     return obj2Query.toQueryString(params)

@@ -1,4 +1,3 @@
-//webpack2.2 配置练习
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require("html-webpack-plugin")            //自动生成一个html 引入打包之后的js
@@ -9,7 +8,7 @@ const autoprefixer = require('autoprefixer')                       //自动加�
 const CptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin') //压缩css
 const ImageminPlugin = require('imagemin-webpack-plugin').default         //压缩图片
 const HOST = "localhost"             //IP
-const PORT = 1996                    //端口
+const PORT = 666                    //端口
 
 module.exports = (env) => {
     //env 是npm script 运行webpack时传进来的  判断是否是开发环境
@@ -121,7 +120,7 @@ module.exports = (env) => {
                     use: [{
                         loader: 'file-loader',
                         options: {
-                            name: "images/[name].[ext]"          //遇到图片  生成一个images文件夹  名字.后缀的图片
+                            name: "images/[name][hash:8].[ext]"          //遇到图片  生成一个images文件夹  名字.后缀的图片
                         }
                     }]
                 },

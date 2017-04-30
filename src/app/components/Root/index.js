@@ -17,7 +17,7 @@ export default class Root extends React.Component {
       <div>
          <Loading
             isLoading={isLoading}
-          />,
+          />
           {this.props.children}
       </div>
     )

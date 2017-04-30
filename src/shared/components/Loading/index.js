@@ -1,5 +1,5 @@
 import React,{PropTypes} from 'react'
-import "./index.less"
+import "./styles.less"
 
 export default class Loading extends React.Component {
     static defaultProps = {

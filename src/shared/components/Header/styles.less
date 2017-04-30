@@ -1,0 +1,26 @@
+@import "~styles/vars.less";
+header{
+    height:@header-height;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid rgba(30,35,42,.06);
+    box-shadow: 0 1px 3px 0 rgba(0,34,77,.05);
+    animation: header .6s cubic-bezier(0.075, 0.82, 0.165, 1);
+    background-clip: content-box;
+    .title{
+        font-size:18px;
+        color:@primary-color;
+        text-shadow: 0 0 1px rgba(0,0,0,.2);
+    }
+}
+
+@keyframes header{
+    from{
+        transform: translate3d(0,-@header-height,0)
+    }
+    to{
+        transform: translate3d(0,0,0)
+    }
+}

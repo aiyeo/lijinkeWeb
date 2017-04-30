@@ -18,13 +18,15 @@ app.all("*",(req,res,next)=>{
 
 //路由
 app.get("/",(req,res,next)=>{
-    console.log('app')
+    console.log("app start");
 })
+
+
 app.get('/test',(req,res)=>{
     res.send('2222')
 })
 //端口启动部分
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 1996);
 const port = app.get('port')
 
 const serverRuningInfo = `

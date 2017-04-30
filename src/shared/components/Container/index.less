@@ -1,0 +1,12 @@
+@import "~styles/vars.less";
+.container{
+    &::before,&::after{
+        content:"";
+        clear: both;
+        zoom: 1;
+    }
+    .wrap{
+        width:@main-width;
+        margin:0 auto;
+    }
+}
