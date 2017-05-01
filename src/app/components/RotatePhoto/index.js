@@ -87,6 +87,7 @@ export default class RotatePhoto extends React.Component {
                             return (
                                 <li 
                                     className="item"
+                                    data-id={i}
                                     alt="category"
                                     key={`category${i}`}
                                     style={styles}

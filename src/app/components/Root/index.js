@@ -39,7 +39,7 @@ export default class Root extends React.Component {
   }
   componentWillMount(){
     const isFirst= sessionStorage.getItem('welcome') || "yes"
-    if(isFirst === "yes"){
+    if(isFirst){
       setTimeout(this.loading,this.weclomeTime)
       sessionStorage.setItem('welcome',"no")
     }else{

@@ -4,6 +4,7 @@ import {bindActionCreators} from "redux"
 import Header from "shared/components/Header"
 import RotatePhoto from "app/components/RotatePhoto"
 import Container from "shared/components/Container"
+import MusicPlayer from "app/components/MusicPlayer"
 import { Link } from "react-router"
 import getHomeInfo from "./action"
 
@@ -97,6 +98,7 @@ export default class Home extends React.Component {
               />
             </Container>
          </main>
+         <MusicPlayer/>
       </div>
     )
   }

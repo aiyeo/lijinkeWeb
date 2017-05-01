@@ -3,9 +3,10 @@ const express = require('express')
 const path = require("path")
 const http = require('http')
 const app = express()
+const fs = require('fs')
 
 //中间键部分
-app.use(express.static(`${__dirname}/dist`))
+app.use(express.static(`${__dirname}/public`))
 //跨域请求
 app.all("*",(req,res,next)=>{
   res.header("Access-Control-Allow-Origin", "*");  
@@ -20,8 +21,10 @@ app.all("*",(req,res,next)=>{
 app.get("/",(req,res,next)=>{
     console.log("app start");
 })
-
-
+app.get('/getMusicSrc',(req,res,next)=>{
+   const musicFile =  fs.readdirSync(`${__dirname}/public/music`)
+   res.send(`${__dirname}/public/${musicFile[0]}`)
+})
 app.get('/test',(req,res)=>{
     res.send('2222')
 })

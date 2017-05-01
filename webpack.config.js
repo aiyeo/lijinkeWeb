@@ -47,7 +47,7 @@ module.exports = (env) => {
 
         //打包输出
         output: {
-            path: path.resolve(__dirname, "dist"),
+            path: path.resolve(__dirname, "public"),
             filename: mode === "DEV"
                 ? "js/app.js"
                 : "js/app.[chunkhash:8].js",
