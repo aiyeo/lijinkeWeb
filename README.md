@@ -7,6 +7,8 @@ http://16xq885342.iask.in/
 - `React`
 - `webpack2`
 - `Redux`
+- `React-Redux`
+- `React-Router`
 - `node.js`
 - `yarn`
 - `mongodb`
