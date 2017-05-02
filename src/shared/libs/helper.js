@@ -1,21 +1,19 @@
 import obj2Query from "libs/params"
+import config from "config"
 
 const helper = {
-  host: "http://localhost",
-  port: "1996",
-
   jsonToString(params) {
     return obj2Query.toQueryString(params)
   },
   async getJson(url, params) {
     return (await
-      fetch(`${this.host}:${this.port}${url}${params ? '?' + (this.jsonToString(params)) : ''}`,{
+      fetch(`${config.host}:${config.port}${url}${params ? '?' + (this.jsonToString(params)) : ''}`,{
         method:"GET",
         mode:"cors",
       })).json()
   },
   async postJson(url, params) {
-    return (await fetch(`${this.host}:${this.port}${url}`, {
+    return (await fetch(`${config.host}:${config.port}${url}`, {
         method: "POST",
         mode:"cors",
         headers: {

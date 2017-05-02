@@ -130,7 +130,7 @@ module.exports = (env) => {
                         {
                             loader: "file-loader",
                             options: {
-                                name: "fonts/[name].[ext]",
+                                name: "fonts/[name][hash:8].[ext]",
                             },
                         },
                     ],
@@ -140,7 +140,7 @@ module.exports = (env) => {
 
         //自动补全后缀
         resolve: {
-            extensions: ['.js', '.jsx'],      //比如 test.js   可以写成 require('test')
+            extensions: ['.js', '.jsx','.json'],      //比如 test.js   可以写成 require('test')
             modules: [
                 path.resolve("src"),         //比如 src/app/components/xx  可以写成 app/components/xx
                 path.resolve("."),

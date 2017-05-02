@@ -1,0 +1,51 @@
+@import "~styles/mixin.less";
+@import "~styles/vars.less";
+.music-player{
+    position: fixed;
+    right:20px;
+    bottom:50px;
+    &-audio{
+        .hidden();
+    }
+    &-controller{
+        @player-width:100px;
+        @player-height:@player-width;
+        padding: 10px;
+        width:@player-width;
+        height:@player-height;
+        border-radius: 50%;
+        border:2px solid #fff;
+        background-color: #fff;
+        color:@primary-color;
+        box-shadow: 0 1px 2px rgba(0,0,0,.3);
+        position: relative;
+        font-size:20px;
+        .text-center();
+        .transition(.3s);
+        cursor:pointer;
+        overflow: hidden;
+        .center();
+        i{
+            font-size:28px;
+        }
+        &:hover{
+            font-size:22px;
+            .music-player-controller-setting{
+                transform: scale(1)
+            }
+        }
+        .music-player-controller-setting{
+            width:100%;
+            height:100%;
+            background: @primary-color;
+            transform:scale(0);
+            border-radius: 50%;
+            .transition(.4s);
+            color:#fff;
+            position: absolute;
+            left:0;
+            top:0;
+            .center();
+        }
+    }
+}

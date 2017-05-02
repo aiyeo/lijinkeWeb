@@ -2,11 +2,10 @@ import React from 'react'
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
 import Header from "shared/components/Header"
-import RotatePhoto from "app/components/RotatePhoto"
+import RotatePhoto from "shared/components/RotatePhoto"
 import Container from "shared/components/Container"
-import MusicPlayer from "app/components/MusicPlayer"
+import MusicPlayer from "shared/components/MusicPlayer"
 import { Link } from "react-router"
-import getHomeInfo from "./action"
 
 const photos = [];
 const photoCovers = [{
@@ -66,17 +65,6 @@ photoCovers.map((v,i)=>{
   }
 })
 
-@connect(
-  ({HomeAction})=>({
-    info:HomeAction.data
-  }),
-  (dispatch)=>(
-    bindActionCreators({
-      getHomeInfo
-    },dispatch)
-  )
-)
-
 export default class Home extends React.Component {
   render() {
     return (
@@ -89,20 +77,17 @@ export default class Home extends React.Component {
               <h2 className="text-center">全家福</h2>
             </Container>
             <Container>
-              <RotatePhoto
+              {/*<RotatePhoto
                   categories={photoCovers}
                   space={20}
                   width={300}
                   height={300}
                   animateTime={10}
-              />
+              />*/}
             </Container>
          </main>
          <MusicPlayer/>
       </div>
     )
-  }
-  componentWillMount(){
-    this.props.getHomeInfo()
   }
 }
