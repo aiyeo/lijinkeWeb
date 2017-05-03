@@ -41,7 +41,7 @@
             font-size:28px;
         }
         &:hover{
-            font-size:22px;
+            font-size:16px;
             .music-player-controller-setting{
                 transform: scale(1)
             }
@@ -66,11 +66,13 @@
         width:100%;
         bottom:0;
         left:0;
+        color:#fff;
         height:@panel-height;
-        background-color:#fff;
+        background-color:rgba(0,0,0,.7);
         padding: 6px 20px;
         box-shadow:0 1px 20px rgba(0,0,0,.3);
         .panel-content{
+            padding: 4px 20px 0 20px;
             display: flex;
             justify-content: center;
             align-content: center;
@@ -79,15 +81,26 @@
                 height:50px;
                 border-radius: 50%;
                 overflow: hidden;
+                box-shadow: 0 0 10px rgba(0,0,0,.2);
+                animation: rotate 15s linear infinite;
                 img{
                     width: 100%;
                 }
+            }
+            .play-btn{
+                i{
+                    font-size:25px;
+                }
+                cursor: pointer;
+            }
+            .hide-panel{
+                margin-left:15px;
             }
             .progressbar-content{
                 flex:1;
                 padding: 0 20px;
                 .progressbar{
-                    @progress-height:10px;
+                    @progress-height:5px;
                     position: relative;
                     width:100%;
                     height:@progress-height;
@@ -110,13 +123,22 @@
                 align-items: center;
                 align-content: center;
                 flex-basis: 15%;
+                padding-top: 7px;
                 i{
+                    cursor:pointer;
                     color:@primary-color;
                 }
             }
         }
     }
+    .translate{
+        animation: translate .2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards
+    }
+        .scale{
+        animation: scaleTo .2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards
+    }
 }
+
 @keyframes scale{
     from{
         transform: scale(0)
@@ -130,4 +152,29 @@
         transform: scale(2)
     }
 
+}
+@keyframes scaleTo{
+    from{
+        transform: scale(0)
+    }
+    to{
+        transform: scale(1)
+    }
+
+}
+@keyframes rotate{
+    from{
+        transform: rotate(0deg)
+    }
+    to{
+        transform: rotate(360deg)
+    }
+}
+@keyframes translate{
+    from{
+        transform: translate3d(100%,0,0)
+    }
+    to{
+        transform: translate3d(0,0,0)
+    }
 }

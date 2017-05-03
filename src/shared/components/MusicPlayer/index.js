@@ -19,7 +19,9 @@ import "./styles.less"
 export default class MusicPlayer extends React.Component {
     state = {
         toggle: false,
-        playing: false
+        playing: false,
+        duration:0,          //音乐总时长
+        currentTime:0        //当前音乐进度
     }
     constructor(props) {
         super(props)
@@ -27,7 +29,9 @@ export default class MusicPlayer extends React.Component {
     }
     render() {
         const { musicData } = this.props;
-        const { toggle, playing } = this.state
+        const { toggle, playing,duration,currentTime } = this.state
+        const progress = ((currentTime/duration) * 100 ).toFixed(4)
+        console.log(progress);
         return (
             <figure className="music-player" key="music-player">
                 {/*控制按钮*/}
@@ -35,7 +39,7 @@ export default class MusicPlayer extends React.Component {
                     toggle
                         ? undefined
                         : (
-                            <div key="controller" className="music-player-controller" onClick={this.openPanel}>
+                            <div key="controller" className="scale music-player-controller" onClick={this.openPanel}>
                                 <i className="icon icon-yinle"></i>
                                 <div key="setting" className="music-player-controller-setting">{toggle ? "关闭" : "展开"}</div>
                             </div>
@@ -45,15 +49,15 @@ export default class MusicPlayer extends React.Component {
                 {
                     toggle
                         ? (
-                            <div key="panel" className="music-player-panel">
+                            <div key="panel" className="music-player-panel translate">
                                 <section className="panel-content" key="panel-content">
                                     <div className="img-content" key="img-content">
                                         <img key="img" src={musicData && musicData.image} alt="" />
                                     </div>
                                     <div className="progressbar-content" key="progressbar-content">
                                         <span>{musicData && musicData.name}</span>
-                                        <div className="progressbar">
-                                            <span style={{ width: "20%" }} className="progress"></span>
+                                        <div className="progressbar" key="progressbar">
+                                            <span key="progress" style={{ width: `${progress}%` }} className="progress"></span>
                                         </div>
                                     </div>
                                     <div className="player-content" key="player-content">
@@ -91,6 +95,7 @@ export default class MusicPlayer extends React.Component {
         if (playing === true) {
             this.pauseAudio()
         } else {
+            this.getAudioLength();
             this.loadAudio();
         }
     }
@@ -104,12 +109,23 @@ export default class MusicPlayer extends React.Component {
             this.audio.play()
         }
     }
+    getAudioLength = ()=>{ 
+        this.setState({
+            duration:this.audio.duration
+        })
+    }
     loadAudioError = () => {
         this.setState({ playing: false })
         alert('加载音频失败')
     }
     audioEnd = () => {
         this.loadAudio()
+    }
+    audioTimeUpdate = ()=>{
+        const currentTime = this.audio.currentTime 
+        this.setState({
+            currentTime
+        })
     }
     componentWillMount() {
         //获取音频src
@@ -122,5 +138,6 @@ export default class MusicPlayer extends React.Component {
         this.audio.addEventListener('canplay', this.onPlay)
         this.audio.addEventListener('error', this.loadAudioError)
         this.audio.addEventListener('ended', this.audioEnd)
+        this.audio.addEventListener('timeupdate',this.audioTimeUpdate)
     }
 }

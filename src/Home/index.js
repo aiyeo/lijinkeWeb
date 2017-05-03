@@ -77,13 +77,13 @@ export default class Home extends React.Component {
               <h2 className="text-center">全家福</h2>
             </Container>
             <Container>
-              {/*<RotatePhoto
+              <RotatePhoto
                   categories={photoCovers}
                   space={20}
                   width={300}
                   height={300}
                   animateTime={10}
-              />*/}
+              />
             </Container>
          </main>
          <MusicPlayer/>
