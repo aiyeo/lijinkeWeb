@@ -4,6 +4,7 @@ const path = require("path")
 const http = require('http')
 const app = express()
 const fs = require('fs')
+const writeIndex = require('./server/utils/writeIndex')
 
 //中间键部分
 app.use(express.static(`${__dirname}/public`));
@@ -15,12 +16,14 @@ app.all("*",(req,res,next)=>{
   res.header("Content-Type", "application/json;charset=utf-8");  
   next();
 })
+//将打包的dist/index.html  写入到  public/index.html
+writeIndex();
 //端口启动部分
 app.set('port', process.env.PORT || 1996);
 const port = app.get('port')
 //路由
 app.get("/",(req,res,next)=>{
-    console.log("app start");
+    console.log("PortalApp start");
     next();
 })
 app.use('/music',require("./server/api/music"))

@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "npm run dev",
-    "clean": "rimraf public/css && rimraf public/js && rimraf public/images && rimraf public/fonts",
+    "clean": "rimraf public/dist",
     "server": "nodemon server.js",
     "build": "npm run clean && webpack --env.mode=PROD --progress --config webpack.config.js",
     "dev": "npm run clean &&  webpack-dev-server --config webpack.config.js",

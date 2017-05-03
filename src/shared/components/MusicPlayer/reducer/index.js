@@ -1,11 +1,11 @@
 import {GET_MUSIC} from "../action"
 const nameInitialState = {}
 export default function (state = nameInitialState, action) {
-    const {type,src} = action;
+    const {type,musicData} = action;
     switch (type) {
         case GET_MUSIC:
             return {
-                src
+                musicData
             }
         default:
             return state

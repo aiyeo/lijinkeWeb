@@ -6,7 +6,7 @@ export default function(){
         const file = await helper.getJson('/music/')
         dispatch({
             type:GET_MUSIC,
-            src:file
+            musicData:file
         })
     }
 }

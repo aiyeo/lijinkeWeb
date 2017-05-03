@@ -1,3 +1,9 @@
+/*
+ * @Author: jinke.li 
+ * @Date: 2017-05-03 16:32:21 
+ * @Last Modified by:   jinke.li 
+ * @Last Modified time: 2017-05-03 16:32:21 
+ */
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require("html-webpack-plugin")            //自动生成一个html 引入打包之后的js
@@ -47,7 +53,7 @@ module.exports = (env) => {
 
         //打包输出
         output: {
-            path: path.resolve(__dirname, "public"),
+            path: path.resolve(__dirname, "public/static"),
             filename: mode === "DEV"
                 ? "js/app.js"
                 : "js/app.[chunkhash:8].js",
@@ -56,7 +62,7 @@ module.exports = (env) => {
                 : "js/app.[chunkhash:8]js",
             publicPath: mode === "DEV"
                 ? `http://${HOST}:${PORT}/`
-                : "/"
+                : "/static/"
         },
 
         //模块加载器
@@ -208,8 +214,11 @@ module.exports = (env) => {
             // chunks: ["app"],     //允许只添加某些块
         })
         // new CopyWebpackPlugin([                            //复制文件或者文件夹   复制依赖时比较好用
-        //     { from: './src/index.html', to: 'index.html' },
-        // ]),
+        //     { 
+        //         from: path.resolve(__dirname,'public/dist/index.html'),
+        //         to: path.resolve(__dirname,'plublic/index.html') 
+        //     }
+        // ])
     )
     return options
 }

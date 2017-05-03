@@ -8,7 +8,7 @@
         .hidden();
     }
     &-controller{
-        @player-width:100px;
+        @player-width:80px;
         @player-height:@player-width;
         padding: 10px;
         width:@player-width;
@@ -17,13 +17,25 @@
         border:2px solid #fff;
         background-color: #fff;
         color:@primary-color;
-        box-shadow: 0 1px 2px rgba(0,0,0,.3);
+        box-shadow: 0 0 10px rgba(0,0,0,.15);
         position: relative;
         font-size:20px;
         .text-center();
         .transition(.3s);
         cursor:pointer;
-        overflow: hidden;
+        z-index: 99;
+        &::before{
+            content:"";
+            position: absolute;
+            left:0;
+            top:0;
+            width:@player-width;
+            height:@player-height;
+            border:2px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            z-index:88;
+            animation: scale 5s linear infinite;
+        }
         .center();
         i{
             font-size:28px;
@@ -48,4 +60,74 @@
             .center();
         }
     }
+    &-panel{
+        @panel-height:65px;
+        position: fixed;
+        width:100%;
+        bottom:0;
+        left:0;
+        height:@panel-height;
+        background-color:#fff;
+        padding: 6px 20px;
+        box-shadow:0 1px 20px rgba(0,0,0,.3);
+        .panel-content{
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            .img-content{
+                width:50px;
+                height:50px;
+                border-radius: 50%;
+                overflow: hidden;
+                img{
+                    width: 100%;
+                }
+            }
+            .progressbar-content{
+                flex:1;
+                padding: 0 20px;
+                .progressbar{
+                    @progress-height:10px;
+                    position: relative;
+                    width:100%;
+                    height:@progress-height;
+                    background-color: #ccc;
+                    margin-top: 10px;
+                    .progress{
+                        position: absolute;
+                        display: inline-block;
+                        height:@progress-height;
+                        left:0;
+                        top:0;
+                        transition: width .3s cubic-bezier(0.165, 0.84, 0.44, 1);
+                        background-color: @primary-color;
+                    }
+                }
+            }
+            .player-content{
+                padding-left: 5%;
+                display: flex;
+                align-items: center;
+                align-content: center;
+                flex-basis: 15%;
+                i{
+                    color:@primary-color;
+                }
+            }
+        }
+    }
+}
+@keyframes scale{
+    from{
+        transform: scale(0)
+    }
+    50%{
+        opacity: .6;
+        transform: scale(1.5)
+    }
+    to{
+     opacity: 0;
+        transform: scale(2)
+    }
+
 }
