@@ -87,19 +87,32 @@
                     width: 100%;
                 }
             }
-            .play-btn{
-                i{
-                    font-size:25px;
-                }
-                cursor: pointer;
-            }
             .hide-panel{
+                flex-basis:10%;
+                cursor: pointer;
                 margin-left:15px;
             }
             .progressbar-content{
                 flex:1;
                 padding: 0 20px;
+                section{
+                    width: 100%;
+                    display: inline-flex;
+                    justify-content: center;
+                    .current-time,
+                    .duration{
+                        font-size:12px;
+                        flex-basis: 5%;
+                    }
+                    .current-time{
+                        margin-right: 5px;
+                    }
+                    .duration{
+                        margin-left: 22px;
+                    }
+                }
                 .progressbar{
+                    flex:1;
                     @progress-height:5px;
                     position: relative;
                     width:100%;
@@ -119,14 +132,62 @@
             }
             .player-content{
                 padding-left: 5%;
-                display: flex;
+                display: inline-flex;
                 align-items: center;
                 align-content: center;
                 flex-basis: 15%;
-                padding-top: 7px;
-                i{
-                    cursor:pointer;
-                    color:@primary-color;
+                span{
+                    text-align: center;
+                    flex:1;
+                    padding: 0 10px;
+                    display: inline-flex;
+                    justify-content: center;
+                    >i{
+                        cursor:pointer;
+                        color:@primary-color;
+                        font-size:25px;
+                        vertical-align: middle
+                    }
+                }
+                .play-sounds{
+                    padding-top: 5px;
+                    i{
+                        margin-right: 10px;
+                    }
+                    .sound-operation{
+                        width:100px;
+                        .transition()
+                    }
+                }
+                .play-setting{
+                    position: relative;
+                    overflow: hidden;
+                    &:hover{
+                        &-items{
+                            transform: translate3d(0,0,0)
+                        }
+                    }
+                    &-items{
+                        position: absolute;
+                        left:0;
+                        bottom:0;
+                        transform: translate3d(0,-100%,0);
+                        background-color: rgba(0,0,0,.5);
+                        .transition();
+                       li{
+                           cursor: pointer;
+                           .center();
+                           padding: 5px 10px;
+                           text-align: center;
+                           .transition();
+                           &:hover{
+                                background-color: rgba(0,0,0,.7);
+                                i{
+                                    color:@primary-color;
+                                }
+                           }
+                       } 
+                    }
                 }
             }
         }
