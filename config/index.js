@@ -1,5 +1,5 @@
 module.exports =  {
   "host": "http://localhost",
   "port": "1996",
-  "staticPath":`${__dirname}/../public`
+  "staticPath":__dirname + '/../public'
 }

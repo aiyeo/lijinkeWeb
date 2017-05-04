@@ -49,17 +49,20 @@ module.exports = (env) => {
                 "webpack/hot/only-dev-server",
                 path.resolve(__dirname, "src/index.js")
             ]
-            : path.resolve(__dirname, "src/index.js"),
+            : {
+                app:path.resolve(__dirname, "src/index.js"),
+                vendor:['react']
+            },
 
         //打包输出
         output: {
             path: path.resolve(__dirname, "public/static"),
             filename: mode === "DEV"
                 ? "js/app.js"
-                : "js/app.[chunkhash:8].js",
+                : "js/[name].[chunkhash:8].js",
             chunkFilename: mode === "DEV"
                 ? "js/app.js"
-                : "js/app.[chunkhash:8]js",
+                : "js/[name].[chunkhash:8]js",
             publicPath: mode === "DEV"
                 ? `http://${HOST}:${PORT}/`
                 : "/static/"
@@ -174,10 +177,13 @@ module.exports = (env) => {
     } else {
         options.plugins = options.plugins.concat([
             new webpack.DefinePlugin({
-                "process.env.NODE_ENV": JSON.stringify("PROD"),
+                "process.env.NODE_ENV": JSON.stringify("production"),
                 __DEBUG__: false,
             }),
             new webpack.optimize.UglifyJsPlugin({                                //压缩
+                output:{
+                    comments:false //移除所有注释
+                },
                 compress: {
                     warnings: false
                 }
@@ -187,13 +193,14 @@ module.exports = (env) => {
                 allChunks: true
             }),
             new webpack.optimize.CommonsChunkPlugin({
-                names:['pulic'],
-                filename:"js/pulic.[chunkhash:8].js"
+                name:['vender'],
+                filename:"js/common.[chunkhash:8].js"
             }),
             new ImageminPlugin({
-                disable:false,
+                // disable:false,
+                test: /\.(jpe?g|png|gif|svg)$/i,
                 optipng:{
-                    optimizationLevel:3
+                    optimizationLevel:7
                 }
             }),
             new CptimizeCssAssetsPlugin({          //压缩css  与 ExtractTextPlugin 配合使用
