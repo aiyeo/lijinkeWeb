@@ -61,6 +61,7 @@
         }
     }
     &-panel{
+        box-shadow: 0 0 10px rgba(255,255,255,.1);
         @panel-height:65px;
         position: fixed;
         width:100%;
@@ -87,10 +88,11 @@
                     width: 100%;
                 }
             }
-            .hide-panel{
+            .hide-panel,.upload-music{
                 flex-basis:10%;
                 cursor: pointer;
                 margin-left:15px;
+                margin-top: 5px;
             }
             .progressbar-content{
                 flex:1;
@@ -105,7 +107,7 @@
                         flex-basis: 5%;
                     }
                     .current-time{
-                        margin-right: 5px;
+                        margin-right: 22px;
                     }
                     .duration{
                         margin-left: 22px;
@@ -128,6 +130,18 @@
                         transition: width .3s cubic-bezier(0.165, 0.84, 0.44, 1);
                         background:linear-gradient(135deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 31%, rgba(0,0,0,0.05) 33%, rgba(0,0,0,0.05) 67%, rgba(0,0,0,0) 69%);
                         background-color: @primary-color;
+                        .progress-change{
+                            position: absolute;
+                            width:10px;
+                            height:10px;
+                            right:0;
+                            bottom:-2px;
+                            border-radius: 50%;
+                            box-shadow: 0 0 2px rgba(0,0,0,.4);
+                            background-color: #fff;
+                            cursor: pointer;
+                            
+                        }
                     }
                 }
             }
@@ -152,29 +166,52 @@
                 }
                 .play-sounds{
                     padding-top: 5px;
+                    align-items: center;
                     i{
                         margin-right: 10px;
+                        flex:1
                     }
                     .sound-operation{
                         width:100px;
+                        height: 5px;
+                        flex:1;
+                        outline: none;
+                        -webkit-appearance: none;
+                        border-radius: 10px;
                         .transition()
                     }
                 }
                 .play-setting{
                     position: relative;
-                    overflow: hidden;
+                    >i{
+                        font-size:28px;
+                    }
                     &:hover{
-                        &-items{
-                            transform: translate3d(0,0,0)
+                        .play-setting-items{
+                            transform: scale(1)
                         }
                     }
                     &-items{
+                        box-shadow: 0 0 10px rgba(255,255,255,.1);
                         position: absolute;
-                        left:0;
-                        bottom:0;
-                        transform: translate3d(0,-100%,0);
+                        bottom:60px;
+                        left:6px;
+                        transform: scale(0);
                         background-color: rgba(0,0,0,.5);
+                        transform-origin: bottom center;
                         .transition();
+                        .active{
+                            color:@primary-color;
+                        }
+                        &::before{
+                            width:20px;
+                            height:20px;
+                            border:20px solid transparent;
+                            border-bottom-color:red;
+                            position: absolute;
+                            bottom:0;
+                            left:0;
+                        }
                        li{
                            cursor: pointer;
                            .center();
@@ -182,7 +219,7 @@
                            text-align: center;
                            .transition();
                            &:hover{
-                                background-color: rgba(0,0,0,.7);
+                                background-color: rgba(0,0,0,.5);
                                 i{
                                     color:@primary-color;
                                 }
@@ -239,4 +276,15 @@
     to{
         transform: translate3d(0,0,0)
     }
+}
+input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    height: 15px;
+    width: 15px;
+    margin-top: -2px; /*使滑块超出轨道部分的偏移量相等*/
+    background: @primary-color; 
+    border-radius: 50%; /*外观设置为圆形*/
+    box-shadow: 0 .125em .125em #3b4547; /*添加底部阴影*/
+    cursor: pointer;
+                        
 }

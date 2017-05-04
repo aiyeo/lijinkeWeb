@@ -13,6 +13,7 @@ export default class MusicPlayer extends React.Component {
         isLoop:false,         //是否循环
         isMute:false,          //是否静音
         soundValue:100,
+        isDown:false,      //鼠标是否按下  判断是否在拖动进度条
     }
     static defaultProps = {
         mode: "mini"     //默认迷你模式
@@ -28,6 +29,7 @@ export default class MusicPlayer extends React.Component {
         this.audio = null       //当前播放器
         this.defaultMusciName = "今日音乐"
         this.defaultMusciImgSrc = require('images/photo8.jpg')
+        this.mouseX = 0
     }
     render() {
         const {
@@ -77,7 +79,17 @@ export default class MusicPlayer extends React.Component {
                                                 }
                                             </span>
                                             <div className="progressbar" key="progressbar">
-                                                <span key="progress" style={{ width: `${progress}%` }} className="progress"></span>
+                                                <span key="progress" style={{ width: `${progress}%` }} className="progress">
+                                                    <span
+                                                        className="progress-change"
+                                                        key="progress-change"
+                                                        onMouseDown={this.onProgressDown}
+                                                        onMouseUp={this.onProgressUp}
+                                                        onMouseMove={this.onProgressMove}
+                                                        onMouseOut={this.onProgressOut}
+                                                    >
+                                                    </span>
+                                                </span>
                                             </div>
                                             <span key="duration" className="duration">
                                                 {
@@ -101,17 +113,20 @@ export default class MusicPlayer extends React.Component {
                                         <span className="play-setting" key="play-setting">
                                             <i key="icon-setting" className="icon icon-set"></i>
                                             <ul className="play-setting-items">
-                                                <li className="item" key="setting1"><i className="icon icon-set"></i></li>
-                                                <li className="item" key="setting2"><i className="icon icon-set"></i></li>
-                                                <li className="item" key="setting3"><i className="icon icon-set"></i></li>
+                                                <li className={classNames("item",{"active":isLoop})} key="setting1" onClick={this.audioLoop}>
+                                                    <i className="icon icon-iconfontdanquxunhuan2eps" title="单曲循环"></i>
+                                                </li>
+                                                <li className="item" key="setting2" onClick={this.audioReload}>
+                                                    <i className="icon icon-shuaxin" title="重放"></i>
+                                                </li>
                                             </ul>
                                         </span>
                                         {/*音量*/}
                                         <span className="play-sounds" key="play-sound">
                                             {
                                                 isMute
-                                                ? <i key="icon-jingyin" className="icon icon-jingyin" style={{"fontSize":"27px"}}></i>
-                                                : <i key="icon-laba" className="icon icon-laba" onClick={this.onMute}></i>
+                                                ? <i key="icon-jingyin" className="icon icon-jingyin"></i>
+                                                : <i key="icon-17" className="icon icon-laba" onClick={this.onMute}></i>
                                             }
                                             <input type="range" value={soundValue} className="sound-operation" key="range" onChange={this.audioSoundChange} />
                                         </span>
@@ -119,9 +134,12 @@ export default class MusicPlayer extends React.Component {
                                             mode === 'full'
                                             ? undefined
                                             : <span className="hide-panel" key="hide-panel-btn" onClick={this.onHidePanel}>
-                                                收起
+                                                <i className="icon icon-iconfontbiaozhunmoban01" title="收起"></i>
                                               </span>
                                         }
+                                        <span className="upload-music" key="upload-music">
+                                                <i className="icon icon-iconfontbiaozhunmoban01" title="上传"></i>
+                                        </span>
                                     </div>
                                 </section>
                             </div>
@@ -131,6 +149,55 @@ export default class MusicPlayer extends React.Component {
                 <audio key="audio" className="music-player-audio" src={musicSrc} controls loop={isLoop}></audio>
             </figure>
         )
+    }
+    stopAll = (target)=>{
+        target.stopPropagation()
+        target.preventDefault()
+    }
+    getBoundingClientRect = ()=>{
+        const ele =  ReactDOM.findDOMNode(this).querySelector('.progress')
+        const {left} = ele.getBoundingClientRect()
+        return {
+            left
+        }
+    }
+    progressClick= (e)=>{
+        this.stopAll(e)
+        const {left} = this.getBoundingClientRect()
+        console.log( ~~ (e.pageX - left));
+        this.audio.currentTime = ~~ (e.pageX - left)
+    }
+    onProgressDown =(e)=>{
+        this.stopAll(e)
+        this.setState({isDown:true})
+        const {left} = this.getBoundingClientRect()
+        this.mouseX = (e.pageX -left)>>0
+    }
+    onProgressUp =(e)=>{
+        this.stopAll(e)
+        this.setState({isDown:false})
+    }
+    onProgressMove =(e)=>{
+        this.stopAll(e)
+        const {isDown}= this.state
+        let moveX = 0
+        const {left} = this.getBoundingClientRect()
+        if(isDown === true){
+            moveX = (e.pageX -left- this.mouseX)>>0
+            // console.log(currentTime);
+            this.audio.currentTime+=moveX
+        }
+    }
+    onProgressOut = (e)=>{
+        this.stopAll(e)
+        this.setState({isDown:false})
+    }
+    audioLoop =()=>{
+        this.setState({isLoop:!this.state.isLoop})
+    }
+    audioReload = ()=>{
+        this.audio.load()
+        this.onPlay()
     }
     openPanel = () => {
         this.setState({ toggle: !this.state.toggle })
@@ -165,7 +232,7 @@ export default class MusicPlayer extends React.Component {
     //获取音频长度
     getAudioLength = () => {
         this.setState({
-            duration: this.audio.duration
+            duration: this.audio.duration - 11
         })
     }
     loadAudioError = () => {
@@ -176,6 +243,7 @@ export default class MusicPlayer extends React.Component {
     }
     //音频播放结束
     audioEnd = () => {
+        this.setState({isLoop:!this.state.isLoop})
         this.loadAudio()
     }
     //播放进度更新
@@ -220,6 +288,7 @@ export default class MusicPlayer extends React.Component {
     }
     componentDidMount() {
         const dom = ReactDOM.findDOMNode(this)
+        this.progress = dom.querySelector('.progress')
         this.audio = dom.querySelector('audio')
         this.audio.addEventListener('waiting', this.loadAudio)
         this.audio.addEventListener('canplay', this.onPlay)
