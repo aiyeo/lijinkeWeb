@@ -13,6 +13,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')           //拷贝文�
 const autoprefixer = require('autoprefixer')                       //自动加前缀
 const CptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin') //压缩css
 const ImageminPlugin = require('imagemin-webpack-plugin').default         //压缩图片
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')       //生成打包图
 const HOST = "localhost"             //IP
 const PORT = 666                    //端口
 
@@ -51,17 +52,17 @@ module.exports = (env) => {
             ]
             : {
                 app:path.resolve(__dirname, "src/index.js"),
-                vendor:['react']
+                // vendor:['react']
             },
 
         //打包输出
         output: {
             path: path.resolve(__dirname, "public/static"),
             filename: mode === "DEV"
-                ? "js/app.js"
+                ? "js/[name].js"
                 : "js/[name].[chunkhash:8].js",
             chunkFilename: mode === "DEV"
-                ? "js/app.js"
+                ? "js/[name].js"
                 : "js/[name].[chunkhash:8]js",
             publicPath: mode === "DEV"
                 ? `http://${HOST}:${PORT}/`
@@ -176,6 +177,7 @@ module.exports = (env) => {
         ])
     } else {
         options.plugins = options.plugins.concat([
+            new BundleAnalyzerPlugin(),     //生成打包图
             new webpack.DefinePlugin({
                 "process.env.NODE_ENV": JSON.stringify("production"),
                 __DEBUG__: false,
@@ -192,9 +194,36 @@ module.exports = (env) => {
                 filename: 'css/app.[contenthash:8].css',
                 allChunks: true
             }),
+            //[1]
+            // new webpack.optimize.CommonsChunkPlugin({
+            //     async:"common-in-lazy",
+            //     minChunks:({ resource } = {} )=>(
+            //         resource &&
+            //         resource.includes('node_modules') &&
+            //         /axios/.test(resource)
+            //     )
+            // }),
+            // // [2]
+            // //[1]和[2] 有点不明白
+            // new webpack.optimize.CommonsChunkPlugin({
+            //     async: 'used-twice',
+            //     minChunks: (module, count) => (
+            //         count >= 2
+            //     ),
+            // }),
             new webpack.optimize.CommonsChunkPlugin({
-                name:['vender'],
-                filename:"js/common.[chunkhash:8].js"
+                name:'vender',
+                filename:"js/common.[chunkhash:8].js",
+                //遍历node_modules目录 以.js结尾 一道vender chunk
+                //自动化分离第三方依赖
+                minChunks:({ resource})=>(
+                    resource &&
+                    resource.indexOf('node_modules') >=0 &&
+                    resource.match(/\.js$/)
+                )
+            }),
+            new webpack.LoaderOptionsPlugin({    //laoder最小化
+                minimize: true
             }),
             new ImageminPlugin({
                 // disable:false,

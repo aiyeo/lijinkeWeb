@@ -1,21 +1,33 @@
+//使用webpack2 新增import 方法 来实现按需加载
+//使用 bable-pluginsyntax-dynamic 来解析import 语法
 import Root from "app/components/Root"
-import Home from "home"
+// import Home from "home"
+// const Home = ()=> import('home')
 
-
+//赖加载组件
+/**
+ * importor 加载器
+ * name 懒加载组件的名字   export deafult class Home ...  这里默认就是Home
+ */
+const loadComponent = ( importor, name = 'default' ) => (location,cb)=>{
+    importor.then((module)=>{
+        console.info(`动态路由加载成功!`)
+        cb(null,module[name])
+    })
+    .catch((err)=>{
+        console.debug(`动态路由加载失败:${err}`)
+    })
+}
 export default {
     path: "/",
     component: Root,
     indexRoute: {
-        component: Home
-    },
+        getComponent:loadComponent(System.import('home'))
+    },    
     childRoutes: [
         {
             path:"home",
-            getComponent(location, cb) {
-                System.import('home')
-                    .then((module) => cb(null, module.default))
-                    .catch(err => console.log('aaa',err))
-            }
+            getComponent:loadComponent(System.import('home'))
         }
     ]
 }

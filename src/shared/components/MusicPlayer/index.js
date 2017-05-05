@@ -1,19 +1,33 @@
 import React, { PropTypes } from "react"
 import ReactDOM from "react-dom"
+import { bindActionCreators } from "redux"
+import {connect} from "react-redux"
 import classNames from "classnames"
+import Modal from "shared/components/Modal"
+import Button from "shared/components/Button"
+import uploadAudio from "./action"
 
 import "./styles.less"
 
+// @connect(
+//     null,
+//     (dispatch)=>(
+//         bindActionCreators({
+//             uploadAudio
+//         },dispatch)
+//     )
+// )
 export default class MusicPlayer extends React.Component {
     state = {
         toggle: false,       //显示隐藏
         playing: false,      //是否播放
         duration: 0,          //音乐总时长
         currentTime: 0,        //当前音乐进度
-        isLoop:false,         //是否循环
-        isMute:false,          //是否静音
-        soundValue:100,
-        isDown:false,      //鼠标是否按下  判断是否在拖动进度条
+        isLoop: false,         //是否循环
+        isMute: false,          //是否静音
+        soundValue: 100,
+        isDown: false,      //鼠标是否按下  判断是否在拖动进度条
+        uploadModalVisible: false       //音乐上传框
     }
     static defaultProps = {
         mode: "mini"     //默认迷你模式
@@ -40,7 +54,7 @@ export default class MusicPlayer extends React.Component {
             className
         } = this.props
 
-        const { toggle, playing, duration, currentTime,isLoop,isMute,soundValue } = this.state
+        const { toggle, playing, duration, currentTime, isLoop, isMute, soundValue, uploadModalVisible } = this.state
 
         //当前播放进度
         const progress = ((currentTime / duration) * 100).toFixed(2)
@@ -74,7 +88,7 @@ export default class MusicPlayer extends React.Component {
                                                 {/*暂时只考虑10分钟以下的歌曲*/}
                                                 {
                                                     (~~currentTime) < 60
-                                                        ? `00:${(~~currentTime)<10 ? `0${~~currentTime}` : ~~currentTime}`
+                                                        ? `00:${(~~currentTime) < 10 ? `0${~~currentTime}` : ~~currentTime}`
                                                         : `0${~~(currentTime / 60)}:${(~~(currentTime % 60) < 10) ? `0${~~(currentTime % 60)}` : ~~(currentTime % 60)}`
                                                 }
                                             </span>
@@ -113,7 +127,7 @@ export default class MusicPlayer extends React.Component {
                                         <span className="play-setting" key="play-setting">
                                             <i key="icon-setting" className="icon icon-set"></i>
                                             <ul className="play-setting-items">
-                                                <li className={classNames("item",{"active":isLoop})} key="setting1" onClick={this.audioLoop}>
+                                                <li className={classNames("item", { "active": isLoop })} key="setting1" onClick={this.audioLoop}>
                                                     <i className="icon icon-iconfontdanquxunhuan2eps" title="单曲循环"></i>
                                                 </li>
                                                 <li className="item" key="setting2" onClick={this.audioReload}>
@@ -125,20 +139,20 @@ export default class MusicPlayer extends React.Component {
                                         <span className="play-sounds" key="play-sound">
                                             {
                                                 isMute
-                                                ? <i key="icon-jingyin" className="icon icon-jingyin"></i>
-                                                : <i key="icon-17" className="icon icon-laba" onClick={this.onMute}></i>
+                                                    ? <i key="icon-jingyin" className="icon icon-jingyin"></i>
+                                                    : <i key="icon-17" className="icon icon-laba" onClick={this.onMute}></i>
                                             }
                                             <input type="range" value={soundValue} className="sound-operation" key="range" onChange={this.audioSoundChange} />
                                         </span>
                                         {
                                             mode === 'full'
-                                            ? undefined
-                                            : <span className="hide-panel" key="hide-panel-btn" onClick={this.onHidePanel}>
-                                                <i className="icon icon-iconfontbiaozhunmoban01" title="收起"></i>
-                                              </span>
+                                                ? undefined
+                                                : <span className="hide-panel" key="hide-panel-btn" onClick={this.onHidePanel}>
+                                                    <i className="icon icon-11111" title="收起"></i>
+                                                </span>
                                         }
-                                        <span className="upload-music" key="upload-music">
-                                                <i className="icon icon-iconfontbiaozhunmoban01" title="上传"></i>
+                                        <span className="upload-music" key="upload-music" onClick={this.showUploadModal}>
+                                            <i className="icon icon-iconfontbiaozhunmoban01" title="上传你喜欢的音乐"></i>
                                         </span>
                                     </div>
                                 </section>
@@ -147,55 +161,82 @@ export default class MusicPlayer extends React.Component {
                         : undefined
                 }
                 <audio key="audio" className="music-player-audio" src={musicSrc} controls loop={isLoop}></audio>
+                <Modal
+                    title="上传你喜欢的音乐"
+                    visible={uploadModalVisible}
+                    onCancel={this.closeUploadModal}
+                >
+                    <form action="#" method="post" name="upload-music-form" className="upload-music-form">
+                        <div className="upload-music-content">
+                            <input type="file" accept="*.mp3" className="hidden music-file-original-btn"/>
+                            <Button type="primary" htmlType="button" onClick={this.selectAudio} className="music-file-btn">上传音乐</Button>
+                        </div>
+                    </form>
+                </Modal>
             </figure>
         )
     }
-    stopAll = (target)=>{
+    selectAudio = ()=>{
+        const fileBtn = ReactDOM.findDOMNode(this).querySelector('.music-file-original-btn')
+        fileBtn.click()
+    }
+    uploadAudio = ( ) => {
+        const formEle = this.dom.querySelector('.upload-music-form')
+        const formData = new FormData(formEle)
+        this.props.uploadAudio(formData)
+    }
+    showUploadModal = () => {
+        this.setState({ uploadModalVisible: true })
+    }
+    closeUploadModal = () => {
+        this.setState({ uploadModalVisible: false })
+    }
+    stopAll = (target) => {
         target.stopPropagation()
         target.preventDefault()
     }
-    getBoundingClientRect = ()=>{
-        const ele =  ReactDOM.findDOMNode(this).querySelector('.progress')
-        const {left} = ele.getBoundingClientRect()
+    getBoundingClientRect = () => {
+        const ele = this.don.querySelector('.progress')
+        const { left } = ele.getBoundingClientRect()
         return {
             left
         }
     }
-    progressClick= (e)=>{
+    progressClick = (e) => {
         this.stopAll(e)
-        const {left} = this.getBoundingClientRect()
-        console.log( ~~ (e.pageX - left));
-        this.audio.currentTime = ~~ (e.pageX - left)
+        const { left } = this.getBoundingClientRect()
+        console.log(~~(e.pageX - left));
+        this.audio.currentTime = ~~(e.pageX - left)
     }
-    onProgressDown =(e)=>{
+    onProgressDown = (e) => {
         this.stopAll(e)
-        this.setState({isDown:true})
-        const {left} = this.getBoundingClientRect()
-        this.mouseX = (e.pageX -left)>>0
+        this.setState({ isDown: true })
+        const { left } = this.getBoundingClientRect()
+        this.mouseX = (e.pageX - left) >> 0
     }
-    onProgressUp =(e)=>{
+    onProgressUp = (e) => {
         this.stopAll(e)
-        this.setState({isDown:false})
+        this.setState({ isDown: false })
     }
-    onProgressMove =(e)=>{
+    onProgressMove = (e) => {
         this.stopAll(e)
-        const {isDown}= this.state
+        const { isDown } = this.state
         let moveX = 0
-        const {left} = this.getBoundingClientRect()
-        if(isDown === true){
-            moveX = (e.pageX -left- this.mouseX)>>0
+        const { left } = this.getBoundingClientRect()
+        if (isDown === true) {
+            moveX = (e.pageX - left - this.mouseX) >> 0
             // console.log(currentTime);
-            this.audio.currentTime+=moveX
+            this.audio.currentTime += moveX
         }
     }
-    onProgressOut = (e)=>{
+    onProgressOut = (e) => {
         this.stopAll(e)
-        this.setState({isDown:false})
+        this.setState({ isDown: false })
     }
-    audioLoop =()=>{
-        this.setState({isLoop:!this.state.isLoop})
+    audioLoop = () => {
+        this.setState({ isLoop: !this.state.isLoop })
     }
-    audioReload = ()=>{
+    audioReload = () => {
         this.audio.load()
         this.onPlay()
     }
@@ -243,7 +284,7 @@ export default class MusicPlayer extends React.Component {
     }
     //音频播放结束
     audioEnd = () => {
-        this.setState({isLoop:!this.state.isLoop})
+        this.setState({ isLoop: !this.state.isLoop })
         this.loadAudio()
     }
     //播放进度更新
@@ -254,42 +295,42 @@ export default class MusicPlayer extends React.Component {
         })
     }
     //音量控制
-    audioSoundChange = (e)=>{
+    audioSoundChange = (e) => {
         const value = e.target.value
         this.audio.volume = value / 100
         this.setState({
-            soundValue:value
+            soundValue: value
         })
     }
     //音量改变
-    audioVolumeChange = ()=>{
-        if(this.audio.volume <=0){
+    audioVolumeChange = () => {
+        if (this.audio.volume <= 0) {
             this.setState({
-                isMute:true
+                isMute: true
             })
-        }else{
+        } else {
             this.setState({
-                isMute:false
+                isMute: false
             })
         }
     }
     //静音
-    onMute = ()=>{
+    onMute = () => {
         this.setState({
-            isMute:true,
-            soundValue:0
+            isMute: true,
+            soundValue: 0
         })
         this.audio.volume = 0
     }
-    toggleMode = (mode)=>{
-        if(mode === "full"){
-            this.setState({toggle:true})
+    toggleMode = (mode) => {
+        if (mode === "full") {
+            this.setState({ toggle: true })
         }
     }
     componentDidMount() {
-        const dom = ReactDOM.findDOMNode(this)
-        this.progress = dom.querySelector('.progress')
-        this.audio = dom.querySelector('audio')
+        this.dom = ReactDOM.findDOMNode(this)
+        this.progress = this.dom.querySelector('.progress')
+        this.audio = this.dom.querySelector('audio')
         this.audio.addEventListener('waiting', this.loadAudio)
         this.audio.addEventListener('canplay', this.onPlay)
         this.audio.addEventListener('error', this.loadAudioError)

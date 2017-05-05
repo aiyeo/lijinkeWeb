@@ -10,6 +10,9 @@
 .hidden(){
   display: none;
 }
+.hidden{
+  .hidden();
+}
 .text-center(){
   text-align: center
 }
@@ -20,4 +23,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.btn-hover(@color:@default-color,@lighten:10%){
+    color:#fff;
+    background-color: @primary-color;
+    &:hover{
+        background-color: lighten(@primary-color,@lighten)
+    }
 }

@@ -5,7 +5,6 @@ import Header from "shared/components/Header"
 import RotatePhoto from "shared/components/RotatePhoto"
 import Container from "shared/components/Container"
 import MusicPlayer from "shared/components/MusicPlayer"
-import Modal from "shared/components/Modal"
 import { Link } from "react-router"
 
 import getMusic from "./action"
@@ -80,9 +79,11 @@ photoCovers.map((v, i) => {
 )
 
 export default class Home extends React.Component {
+  constructor(props) {
+    super(props)
+  }
   render() {
     const { musicData } = this.props
-
     return (
       <div key="home">
         <Header
@@ -105,11 +106,6 @@ export default class Home extends React.Component {
           name={musicData && musicData.name}
           mode={"mini"}       //full 完整模式  mini  迷你模式
         />
-        <Modal
-          title="测试"
-        >
-          <p>111</p>
-        </Modal>
       </div>
     )
   }
