@@ -11,15 +11,17 @@
     border: 1px solid transparent;
     white-space: nowrap;
     line-height: 1.5;
-    padding: 5px 30px;
+    padding: 8px 30px;
     font-size: 12px;
     border-radius: 4px;
-    height: 28px;
+    height: 35px;
     user-select: none;
     transition: all .3s cubic-bezier(0.165, 0.84, 0.44, 1);
     position: relative;
     color: rgba(0,0,0,.65);
     border-color: @border-color;
+    outline: none;
+    .btn-hover(@default-color);
     &.btn-primary{
         .btn-hover(@primary-color)
     }
@@ -42,5 +44,9 @@
         border-style:dashed;
         color: rgba(0,0,0,.25);
         border-color: #d9d9d9;
+    }
+    &.btn-block{
+        width:100%;
+        display: block
     }
 }

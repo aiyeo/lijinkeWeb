@@ -24,10 +24,10 @@
   justify-content: center;
   align-items: center;
 }
-.btn-hover(@color:@default-color,@lighten:10%){
+.btn-hover(@color:@default-color,@lighten:3%){
     color:#fff;
-    background-color: @primary-color;
+    background-color: @color;
     &:hover{
-        background-color: lighten(@primary-color,@lighten)
+        background-color: lighten(@color,@lighten)
     }
 }

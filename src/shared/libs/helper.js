@@ -7,21 +7,28 @@ const helper = {
   },
   async getJson(url, params) {
     return (await
-      fetch(`${config.host}:${config.port}${url}${params ? '?' + (this.jsonToString(params)) : ''}`,{
-        method:"GET",
-        mode:"cors",
-      })).json()
+    fetch(`${config.host}:${config.port}${url}${params ? '?' + (this.jsonToString(params)) : ''}`, {
+      method: "GET",
+      mode: "cors",
+    })).json()
   },
-  async postJson(url, params) {
-    return (await fetch(`${config.host}:${config.port}${url}`, {
-        method: "POST",
-        mode:"cors",
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(params)
-      })).json()
+  async postJson(url, params, isForm = false) {
+    const fetchConfig = {
+      method: "POST",
+      mode: "cors",
+    }
+    if (isForm === false) {
+      fetchConfig.headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+      fetchConfig.body = JSON.stringify(params)
+    } else {
+      fetchConfig.body = params
+    }
+    return (await
+      fetch(`${config.host}:${config.port}${url}`, fetchConfig )
+     ).json()
   }
 }
 export default helper

@@ -12,20 +12,25 @@ export default class Button extends React.Component {
         type: PropTypes.oneOf(['primary', 'default', 'warning', 'success', 'error'])
     }
     render() {
-        const { children, type, className, htmlType } = this.props
+        const { children, type, className, htmlType,onClick } = this.props
+        const Type = ( btnType )=>{
+            return type.indexOf(btnType) != -1
+        }
         return (
             <button
                 type={htmlType}
+                onClick={onClick}
                 className={
                     classNames(
                         'jinke-btn',
                         'btn',
-                        { 'btn-primary': type === "primary" },
-                        { 'btn-warning': type === "warning" },
-                        { 'btn-success': type === "success" },
-                        { 'btn-error': type === "error" },
-                        { 'btn-default': type === "default" },
-                        { 'btn-disbled': type === "disbled" },
+                        { 'btn-primary': Type("primary") },
+                        { 'btn-warning': Type("warning") },
+                        { 'btn-success': Type("success") },
+                        { 'btn-error': Type("error") },
+                        { 'btn-default': Type("default") },
+                        { 'btn-disbled': Type("disbled") },
+                        { 'btn-block': Type("block")},
                         className
                     )
                 }

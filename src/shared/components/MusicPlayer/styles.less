@@ -238,6 +238,28 @@
     }
 }
 
+.upload-music-content{
+    @audio-show-width:100px;
+    @audio-show-height:@audio-show-width;
+    .audio-img-show{
+        width:    @audio-show-width;
+        height:    @audio-show-height;
+        background-color: @bg-color;
+        border:1px solid @border-color;
+        overflow: hidden;
+        margin:0 auto 10px auto;
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(255,255,255,.4);
+        .audio-img{
+            width:100%;
+        }
+    }
+    .audio-img-size{
+        position: absolute;
+        left:@audio-show-width +20;
+        bottom:0;
+    }
+}
 @keyframes scale{
     from{
         transform: scale(0)

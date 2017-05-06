@@ -4,18 +4,12 @@ const path = require("path")
 const http = require('http')
 const app = express()
 const fs = require('fs')
+const cors = require('cors')
 const writeIndex = require('./server/utils/writeIndex')
 
 //中间键部分
 app.use(express.static(`${__dirname}/public`));
-app.all("*",(req,res,next)=>{
-  res.header("Access-Control-Allow-Origin", "*");  
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");  
-  res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");  
-  res.header("X-Powered-By",' 3.2.1')  
-  res.header("Content-Type", "application/json;charset=utf-8");  
-  next();
-})
+app.use(cors())
 //将打包的dist/index.html  写入到  public/index.html
 writeIndex();
 //端口启动部分

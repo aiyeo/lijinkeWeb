@@ -2,20 +2,112 @@ const express = require('express')
 const router = express.Router()
 const config = require('../../config')
 const fs = require("fs")
+const debug = require('debug')('music')
+const multiparty = require('multiparty')
 const {host:HOST,port:PORT,staticPath} = config
 
 router.get('/',(req,res,next)=>{
-   const musicFile =  fs.readdirSync(`${staticPath}/music`)
-   const src = musicFile.find( item => /\.mp3/.test(item) )     //音乐文件路径
-   const imageSrc = musicFile.find( item=> /.*\.(jpg|jpeg|gif|png)/.test(item) )  //图片路径
-   const name = src.replace(/(.*)\.mp3/,'$1')       //音乐名字
+
+    const {name,imageSrc,src} = getMusicInfo(fs);
    res.send({
-       name,
-       image:`${HOST}:${PORT}/music/${imageSrc}`,
-       src:`${HOST}:${PORT}/music/${src}`
+       name:name ? name : undefined,
+       image:imageSrc ? `${HOST}:${PORT}/music/${imageSrc}` : undefined,
+       src: src ? `${HOST}:${PORT}/music/${src}` :undefined
    })
    next();
 })
+
+function getMusicInfo(fs){
+    const musicFile =  fs.readdirSync(`${staticPath}/music`)
+    debug('音乐文件读取成功')
+    const src = musicFile.find( item => /\.mp3/.test(item) )     //音乐文件路径
+    const imageSrc = musicFile.find( item=> /.*\.(jpg|jpeg|gif|png)/.test(item) )  //图片路径
+    const name = src && src.replace(/(.*)\.mp3/,'$1') || ""       //音乐名字
+    debug(`[musicSrc]:${src}`)
+   debug(`[musicImgSrc]:${imageSrc}`)
+   debug(`[name]:${name}`)
+    return {
+        src,
+        imageSrc,
+        name
+    }
+}
+//上传音乐
+const fieldsConfig = {
+    name:"audioName",
+    img:"audioImg",
+    file:"audioFile"
+}
+router.post('/uploadMusic',(req,res,next)=>{
+    const form = new multiparty.Form();
+    form.parse(req,( err,fields,files )=>{
+        if(err) throw err
+        //新音频文件
+        const {name,src} = saveUploadAudio(files[fieldsConfig.file],fieldsConfig.file)
+        //新音频图片
+        const {imageSrc} = saveUploadAudio(files[fieldsConfig.img],fieldsConfig.img)
+        res.send({
+            success:1,
+            data:{
+                src:src &&  `${HOST}:${PORT}/music/${src}` || "",
+                name:name && name || "",
+                imageSrc:src && `${HOST}:${PORT}/music/${imageSrc}`|| ""
+            }
+        })
+    })
+})
+
+
+function saveUploadAudio( files,fileType ){
+    let fileData = {};
+    if(files && files.length >=1){
+        files.forEach((data,index)=>{
+            const {originalFilename,path} = data
+            let file = fs.readFileSync(path).toString();
+            switch (fileType) {
+                case fieldsConfig['file']:
+                    const {name,src} = getMusicInfo(fs);
+                    if(src){
+                        fs.unlinkSync(`${staticPath}/music/${src}`)
+                        console.log(`删除${src}成功!`);   
+                    }
+                    let oldMusicPath = `${staticPath}/music/${originalFilename}`
+                    let newMusicPath = `${staticPath}/music/${Date.now()}.mp3`
+                    fs.writeFileSync(oldMusicPath,file,'binary')
+                    console.log(`保存${originalFilename}成功`)
+                    fs.renameSync(oldMusicPath,newMusicPath)
+                    console.log(`重命名${originalFilename}成功,新名字${newMusicPath}`)
+                    const {name:newName,src:newSrc} = getMusicInfo(fs);
+                    fileData.name = originalFilename && originalFilename.replace(/(.*)\.mp3/,'$1') || "",
+                    fileData.src = newSrc
+    
+                    break;
+                case fieldsConfig['img']:
+                    if(originalFilename == ""){
+                        fileData.imageSrc = ""
+                        return
+                    }
+                    const {imageSrc} = getMusicInfo(fs);
+                    if(imageSrc){
+                        fs.unlinkSync(`${staticPath}/music/${imageSrc}`)
+                        console.log(`删除${imageSrc}成功!`);
+                    }
+                    let oldPath = `${staticPath}/music/${originalFilename}`
+                    let newPath = `${staticPath}/music/${Date.now()}.${originalFilename.replace(/.*\.(jpg|jpeg|png)$/,'$1')}`
+                    fs.writeFileSync(oldPath,file,'binary')
+                    console.log(`保存${originalFilename}成功`)
+                    fs.renameSync(oldPath,newPath)
+                    console.log(`重命名${originalFilename}成功,新名字${newPath}`)
+                    const {imageSrc:newImageSrc} = getMusicInfo(fs);
+                    fileData.imageSrc = newImageSrc
+                    break;
+                default:
+                    throw new Error('[error]:上传的音乐类型未知!')
+            }
+        })
+    }
+    return fileData
+}
 
 
 module.exports = router;
