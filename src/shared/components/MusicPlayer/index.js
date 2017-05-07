@@ -218,7 +218,7 @@ export default class MusicPlayer extends React.Component {
                             </p>
                             <p>
                                 {
-                                    audioFileReady
+                                    true
                                     ? <Button key="uploadBtn" type="primary block" htmlType="button" onClick={this.upLoadAudio} className="music-upload-file-btn">立即上传</Button>
                                     : <Button key="uploadBtn" type="error block" htmlType="button" className="music-upload-file-btn">立即上传</Button>
                                 }

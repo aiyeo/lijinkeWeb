@@ -2,6 +2,7 @@
 const express = require('express')
 const path = require("path")
 const http = require('http')
+const bodyParser = require('body-parser')
 const app = express()
 const fs = require('fs')
 const cors = require('cors')
@@ -9,6 +10,8 @@ const writeIndex = require('./server/utils/writeIndex')
 
 //中间键部分
 app.use(express.static(`${__dirname}/public`));
+app.use(bodyParser())
+// app.use(bodyParser.json())
 app.use(cors())
 //将打包的dist/index.html  写入到  public/index.html
 writeIndex();

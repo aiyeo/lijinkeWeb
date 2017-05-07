@@ -10,9 +10,9 @@ router.get('/',(req,res,next)=>{
 
     const {name,imageSrc,src} = getMusicInfo(fs);
    res.send({
-       name:name ? name : undefined,
-       image:imageSrc ? `${HOST}:${PORT}/music/${imageSrc}` : undefined,
-       src: src ? `${HOST}:${PORT}/music/${src}` :undefined
+       name:name ? name : "",
+       image:imageSrc ? `${HOST}:${PORT}/music/${imageSrc}` : "",
+       src: src ? `${HOST}:${PORT}/music/${src}` :""
    })
    next();
 })
@@ -51,7 +51,7 @@ router.post('/uploadMusic',(req,res,next)=>{
             data:{
                 src:src &&  `${HOST}:${PORT}/music/${src}` || "",
                 name:name && name || "",
-                imageSrc:src && `${HOST}:${PORT}/music/${imageSrc}`|| ""
+                imageSrc:imageSrc && `${HOST}:${PORT}/music/${imageSrc}`|| ""
             }
         })
     })
@@ -62,42 +62,45 @@ function saveUploadAudio( files,fileType ){
     let fileData = {};
     if(files && files.length >=1){
         files.forEach((data,index)=>{
-            const {originalFilename,path} = data
-            let file = fs.readFileSync(path).toString();
+            const {originalFilename,path,size} = data
+            let file = fs.readFileSync(path)
+                        .toString()
+                        .replace(/%/g, "%25")
+                        .replace(/\&/g, "%26")
+                        .replace(/\+/g, "%2B");
             switch (fileType) {
                 case fieldsConfig['file']:
+                    if(size == 0){
+                        fileData.name = ""
+                        fileData.src = ""
+                        return        
+                    }
                     const {name,src} = getMusicInfo(fs);
                     if(src){
                         fs.unlinkSync(`${staticPath}/music/${src}`)
                         console.log(`删除${src}成功!`);   
                     }
-                    let oldMusicPath = `${staticPath}/music/${originalFilename}`
                     let newMusicPath = `${staticPath}/music/${Date.now()}.mp3`
-                    fs.writeFileSync(oldMusicPath,file,'binary')
+                    fs.writeFileSync(newMusicPath,file)
                     console.log(`保存${originalFilename}成功`)
-                    fs.renameSync(oldMusicPath,newMusicPath)
-                    console.log(`重命名${originalFilename}成功,新名字${newMusicPath}`)
                     const {name:newName,src:newSrc} = getMusicInfo(fs);
                     fileData.name = originalFilename && originalFilename.replace(/(.*)\.mp3/,'$1') || "",
                     fileData.src = newSrc
     
                     break;
                 case fieldsConfig['img']:
-                    if(originalFilename == ""){
+                    if(size == 0){
                         fileData.imageSrc = ""
-                        return
+                         return
                     }
                     const {imageSrc} = getMusicInfo(fs);
                     if(imageSrc){
                         fs.unlinkSync(`${staticPath}/music/${imageSrc}`)
                         console.log(`删除${imageSrc}成功!`);
                     }
-                    let oldPath = `${staticPath}/music/${originalFilename}`
                     let newPath = `${staticPath}/music/${Date.now()}.${originalFilename.replace(/.*\.(jpg|jpeg|png)$/,'$1')}`
-                    fs.writeFileSync(oldPath,file,'binary')
+                    fs.writeFileSync(newPath,file)
                     console.log(`保存${originalFilename}成功`)
-                    fs.renameSync(oldPath,newPath)
-                    console.log(`重命名${originalFilename}成功,新名字${newPath}`)
                     const {imageSrc:newImageSrc} = getMusicInfo(fs);
                     fileData.imageSrc = newImageSrc
                     break;
