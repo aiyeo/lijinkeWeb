@@ -1,22 +1,23 @@
 import React, { PropTypes } from "react"
 import ReactDOM from "react-dom"
 import { bindActionCreators } from "redux"
-import {connect} from "react-redux"
+import { connect } from "react-redux"
 import classNames from "classnames"
 import Modal from "shared/components/Modal"
 import Button from "shared/components/Button"
+import Message from "shared/components/Message"
 import uploadAudio from "./action"
 
 import "./styles.less"
 
 @connect(
-    ({UploadAudioAction})=>({
-        audioUploadFile:UploadAudioAction.audioUploadFile
+    ({ UploadAudioAction }) => ({
+        audioUploadFile: UploadAudioAction.audioUploadFile
     }),
-    (dispatch)=>(
+    (dispatch) => (
         bindActionCreators({
             uploadAudio
-        },dispatch)
+        }, dispatch)
     )
 )
 export default class MusicPlayer extends React.Component {
@@ -30,12 +31,13 @@ export default class MusicPlayer extends React.Component {
         soundValue: 100,
         isDown: false,      //鼠标是否按下  判断是否在拖动进度条
         uploadModalVisible: false,       //音乐上传框
-        isCanUpload:false,        //是否能上传
-        audioFileReady:false,
-        audioImgReady:false,
-        audioFile:{},
-        audioImg:{}
+        isCanUpload: false,        //是否能上传
+        audioFileReady: false,
+        audioImgReady: false,
+        audioFile: {},
+        audioImg: {}
     }
+    IMG_MAX_SIZE = 1024
     static defaultProps = {
         mode: "mini"     //默认迷你模式
     }
@@ -62,14 +64,14 @@ export default class MusicPlayer extends React.Component {
             audioUploadFile
         } = this.props
 
-        const { 
+        const {
             toggle,
             playing,
             duration,
             audioImg,
             isCanUpload,
-            currentTime, 
-            isLoop, 
+            currentTime,
+            isLoop,
             isMute,
             soundValue,
             uploadModalVisible,
@@ -181,7 +183,7 @@ export default class MusicPlayer extends React.Component {
                         )
                         : undefined
                 }
-                <audio key="audio" className="music-player-audio" src={ audioUploadFile && audioUploadFile.src || musicSrc} controls loop={isLoop}></audio>
+                <audio key="audio" className="music-player-audio" src={audioUploadFile && audioUploadFile.src || musicSrc} controls loop={isLoop}></audio>
                 <Modal
                     title="上传你喜欢的音乐"
                     visible={uploadModalVisible}
@@ -190,39 +192,39 @@ export default class MusicPlayer extends React.Component {
                     <form method="post" name="upload-music-form" encType="multipart/form-data" className="upload-music-form">
                         <div className="upload-music-content">
                             <p>
-                                <input type="file" name="audioImg" accept="image/*" ref="audioImg" className="hidden music-img-file-original-btn" onChange={this.selectAudioImgChange}/>
+                                <input type="file" name="audioImg" accept="image/*" ref="audioImg" className="hidden music-img-file-original-btn" onChange={this.selectAudioImgChange} />
                                 {
                                     audioImgReady && audioImg && audioImg.src && audioImg.size
                                         ? (
-                                                <div className="audio-img-show">
-                                                    {
-                                                        <div style={{"position":"relative"}}>
-                                                        <img src={audioImg.src} className="audio-img" key="audio-img"/>
-                                                        <span key="audio-img-size" className="audio-img-size">{audioImg.size}</span> 
-                                                        </div>
-                                                    }
-                                                </div>  
+                                            <div className="audio-img-show">
+                                                {
+                                                    <div style={{ "position": "relative" }}>
+                                                        <img src={audioImg.src} className="audio-img" key="audio-img" />
+                                                        <span key="audio-img-size" className="audio-img-size">{audioImg.size}</span>
+                                                    </div>
+                                                }
+                                            </div>
                                         )
                                         : undefined
                                 }
                                 <Button type="block" htmlType="button" onClick={this.selectAudioImg}>选择图片</Button>
                             </p>
                             <p>
-                                <input type="file" name="audioFile" accept="*.mp3" ref="audioFile" className="hidden music-file-original-btn" onChange={this.selectAudioChange}/>
+                                <input type="file" name="audioFile" accept="*.mp3" ref="audioFile" className="hidden music-file-original-btn" onChange={this.selectAudioChange} />
                                 {
                                     audioFileReady && audioFile && audioFile.name && audioFile.size
-                                    ? <span>名字:{audioFile.name} || 大小:{audioFile.size}</span>
-                                    : undefined
+                                        ? <span>名字:{audioFile.name} || 大小:{audioFile.size}</span>
+                                        : undefined
                                 }
-                                <Button type="block" htmlType="button" style={{"marginTop":"10px"}} onClick={this.selectAudio} className="music-file-btn">选择音乐</Button>
+                                <Button type="block" htmlType="button" style={{ "marginTop": "10px" }} onClick={this.selectAudio} className="music-file-btn">选择音乐</Button>
                             </p>
                             <p>
                                 {
                                     true
-                                    ? <Button key="uploadBtn" type="primary block" htmlType="button" onClick={this.upLoadAudio} className="music-upload-file-btn">立即上传</Button>
-                                    : <Button key="uploadBtn" type="error block" htmlType="button" className="music-upload-file-btn">立即上传</Button>
+                                        ? <Button key="uploadBtn" type="primary block" htmlType="button" onClick={this.upLoadAudio} className="music-upload-file-btn">立即上传</Button>
+                                        : <Button key="uploadBtn" type="error block" htmlType="button" className="music-upload-file-btn">立即上传</Button>
                                 }
-                                 
+
                             </p>
                         </div>
                     </form>
@@ -230,75 +232,76 @@ export default class MusicPlayer extends React.Component {
             </figure>
         )
     }
-    selectAudio = ()=>{
+    selectAudio = () => {
         const fileBtn = this.dom.querySelector('.music-file-original-btn')
         fileBtn.click()
     }
-    selectAudioChange = ()=>{
+    selectAudioChange = () => {
         const files = Array.from(this.refs.audioFile.files)
-        files.forEach((file)=>{
-            let {type,name,size} = file;
-            if(!/.*\/mp3$/.test(type)){
+        files.forEach((file) => {
+            let { type, name, size } = file;
+            if (!/.*\/mp3$/.test(type)) {
                 return alert('请上传mp3文件')
             }
             this.setState({
-                audioFileReady:true,
-                audioFile:{
+                audioFileReady: true,
+                audioFile: {
                     name,
-                    size:~~(size/1024) >1024 ? `${~~(size/1024/1024)}MB` : `${~~(size/1024)}KB`
+                    size: ~~(size / 1024) > 1024 ? `${~~(size / 1024 / 1024)}MB` : `${~~(size / 1024)}KB`
                 }
             })
         })
-        
+
     }
-    selectAudioImg = ()=>{
+    selectAudioImg = () => {
         const fileBtn = this.dom.querySelector('.music-img-file-original-btn')
         fileBtn.click()
     }
-    selectAudioImgChange = ()=>{
+    selectAudioImgChange = () => {
         var _this = this
-       const files = Array.from(this.refs.audioImg.files);
-        files.forEach((file)=>{
-            let {type,name,size} = file;
-            if(!/.*\/(jpg|jpeg|png)$/.test(type)){
+        const files = Array.from(this.refs.audioImg.files);
+        files.forEach((file) => {
+            let { type, name, size } = file;
+            if (!/.*\/(jpg|jpeg|png)$/.test(type)) {
                 return alert('无效的图片格式')
             }
-            if(size/1024 >= 1024){
-                return alert('图片最大1M')
+            if (size / 1024 >= IMG_MAX_SIZE) {
+                let max = IMG_MAX_SIZE >= 1024 ? `${IMG_MAX_SIZE}MB` : `${IMG_MAX_SIZE}KB`
+                return alert(`图片最大 ${max}`)
             }
             const reader = new FileReader();
-            reader.onprogress =  ()=> {
+            reader.onprogress = () => {
                 console.debug(`${name}读取中,请稍后`);
             };
-            reader.onabort = ()=> {
+            reader.onabort = () => {
                 this.setState({
-                     audioImgReady:false,
-                     audioImg:{}
-                 })
+                    audioImgReady: false,
+                    audioImg: {}
+                })
                 console.debug(`${name}读取中断`)
             };
-            reader.onerror = () =>{
+            reader.onerror = () => {
                 this.setState({
-                     audioImgReady:false,
-                     audioImg:{}
-                 })
-                console.debug(`${name}读取失败!`)  
+                    audioImgReady: false,
+                    audioImg: {}
+                })
+                console.debug(`${name}读取失败!`)
             };
-            reader.onload = function() {
-                console.debug(`${name}读取成功,文件大小：${size/1024}KB`)
-                 const result = this.result;        //读取失败时  null   否则就是读取的结果
-                 _this.setState({
-                     audioImgReady:true,
-                     audioImg:{
-                         src:result,
-                         size:`${(~~size/1024)}KB`
-                     }
-                 })
+            reader.onload = function () {
+                console.debug(`${name}读取成功,文件大小：${size / 1024}KB`)
+                const result = this.result;        //读取失败时  null   否则就是读取的结果
+                _this.setState({
+                    audioImgReady: true,
+                    audioImg: {
+                        src: result,
+                        size: `${(~~size / 1024)}KB`
+                    }
+                })
             }
             reader.readAsDataURL(file);      //base64
         })
     }
-    upLoadAudio = ( ) => {
+    upLoadAudio = () => {
         const formEle = this.dom.querySelector('.upload-music-form')
         const formData = new FormData(formEle)
         this.props.uploadAudio(formData)
@@ -314,7 +317,7 @@ export default class MusicPlayer extends React.Component {
         target.preventDefault()
     }
     getBoundingClientRect = () => {
-        const ele = this.don.querySelector('.progress')
+        const ele = this.dom.querySelector('.progress')
         const { left } = ele.getBoundingClientRect()
         return {
             left
@@ -349,9 +352,12 @@ export default class MusicPlayer extends React.Component {
         this.stopAll(e)
         this.setState({ isDown: false })
     }
+    //循环播放
     audioLoop = () => {
-        this.setState({ isLoop: !this.state.isLoop })
+        this.setState({ isLoop: true })
+        this.audio.loop = true
     }
+    //重新播放
     audioReload = () => {
         this.audio.load()
         this.onPlay()
@@ -400,8 +406,7 @@ export default class MusicPlayer extends React.Component {
     }
     //音频播放结束
     audioEnd = () => {
-        this.setState({ isLoop: !this.state.isLoop })
-        this.loadAudio()
+        this.setState({ playing: false })
     }
     //播放进度更新
     audioTimeUpdate = () => {
