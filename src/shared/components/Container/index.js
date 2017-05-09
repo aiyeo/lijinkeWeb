@@ -1,4 +1,5 @@
 import React from 'react'
+import classNames from "classnames"
 import "./index.less"
 
 export default class Container extends React.Component{
@@ -6,7 +7,7 @@ export default class Container extends React.Component{
         const {className} = this.props
         return(
             <div key="container" className="container">
-                <div className="wrap">
+                <div className={classNames("wrap",className)}>
                     {this.props.children}
                 </div>
             </div>

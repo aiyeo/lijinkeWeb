@@ -8,6 +8,7 @@ import MusicPlayer from "shared/components/MusicPlayer"
 import { Link } from "react-router"
 
 import getMusic from "./action"
+import "./styles.less"
 
 const photos = [];
 const photoCovers = [{
@@ -90,7 +91,37 @@ export default class Home extends React.Component {
           title="李金珂的小屋"
         />
         <main className="content" key="content">
-          <Container>
+          <div className="feature">
+            <ul key="home-feature" className="feature-list">
+              <li key="item1" className="item">
+                <div className="info">
+                  <h2 className="title">聊天室</h2>
+                  <p className="text">聊一聊</p>
+                </div>
+                <Link to="/about"></Link>
+              </li>
+              <li key="item2" className="item">
+                <div className="info">
+                  <h2 className="title">心得/感悟/杂文</h2>
+                  <p className="text">说一说</p>
+                </div>
+                <Link to="/about"></Link>
+              </li>
+              <li key="item3" className="item">
+                <div className="info">
+                  <h2 className="title">照片墙</h2>
+                  <p className="text">瞧一瞧</p>
+                </div>
+                <Link to="/about"></Link>
+              </li>
+              <li key="item4" className="item">
+                <div className="info">
+                  <h2 className="title">关于我</h2>
+                  <p className="text">看一看</p>
+                </div>
+                <Link to="/about"></Link>
+              </li>
+            </ul>
             {/*<RotatePhoto
                   categories={photoCovers}
                   space={20}
@@ -98,7 +129,7 @@ export default class Home extends React.Component {
                   height={300}
                   animateTime={12}
               />*/}
-          </Container>
+          </div>
         </main>
         <MusicPlayer
           musicSrc={musicData && musicData.src}
