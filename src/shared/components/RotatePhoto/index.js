@@ -53,7 +53,7 @@ export default class RotatePhoto extends React.Component {
 
         const photoConfig ={
             "photo1":require("images/photo1.jpg"),
-            "photo2":require("images/photo2.jpg"),
+            "photo2":require("images/photo1.jpg"),
             "photo3":require("images/photo3.jpg"),
             "photo4":require("images/photo4.jpg"),
             "photo5":require("images/photo5.jpg"),

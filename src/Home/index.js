@@ -96,7 +96,7 @@ export default class Home extends React.Component {
                   space={20}
                   width={300}
                   height={300}
-                  animateTime={10}
+                  animateTime={12}
               />*/}
           </Container>
         </main>

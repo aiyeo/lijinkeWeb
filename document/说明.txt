@@ -12,6 +12,10 @@
 11.mixin.less  公用css方法
 12.vars.less   css变量
 13.pulic.less  公用css
+14 public/static  打包之后的静态资源目录
+15 server 后端相关文件
+16 server/api 相关接口
+17 server/utils 后端工具处理函数
 
 
 #start
