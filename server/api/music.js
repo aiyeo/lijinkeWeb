@@ -78,11 +78,11 @@ function saveUploadAudio( files,fileType ){
                     const {name,src} = getMusicInfo(fs);
                     if(src){
                         fs.unlinkSync(`${staticPath}/music/${src}`)
-                        console.log(`删除${src}成功!`);   
+                        debug(`删除${src}成功!`);   
                     }
                     let newMusicPath = `${staticPath}/music/${Date.now()}.mp3`
                     fs.writeFileSync(newMusicPath,file)
-                    console.log(`保存${originalFilename}成功`)
+                    debug(`保存${originalFilename}成功`)
                     const {name:newName,src:newSrc} = getMusicInfo(fs);
                     fileData.name = originalFilename && originalFilename.replace(/(.*)\.mp3/,'$1') || "",
                     fileData.src = newSrc
@@ -96,15 +96,16 @@ function saveUploadAudio( files,fileType ){
                     const {imageSrc} = getMusicInfo(fs);
                     if(imageSrc){
                         fs.unlinkSync(`${staticPath}/music/${imageSrc}`)
-                        console.log(`删除${imageSrc}成功!`);
+                        debug(`删除${imageSrc}成功!`);
                     }
                     let newPath = `${staticPath}/music/${Date.now()}.${originalFilename.replace(/.*\.(jpg|jpeg|png)$/,'$1')}`
                     fs.writeFileSync(newPath,file)
-                    console.log(`保存${originalFilename}成功`)
+                    debug(`保存${originalFilename}成功`)
                     const {imageSrc:newImageSrc} = getMusicInfo(fs);
                     fileData.imageSrc = newImageSrc
                     break;
                 default:
+                    debug('[error]:上传的音乐类型未知!')
                     throw new Error('[error]:上传的音乐类型未知!')
             }
         })

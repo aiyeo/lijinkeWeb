@@ -7,7 +7,7 @@
   "scripts": {
     "start": "npm run dev",
     "clean": "rimraf public/static",
-    "server": "nodemon server.js",
+    "server": "set debug=*,-not_this && nodemon server.js",
     "build": "npm run clean && webpack --env.mode=PROD --progress --config webpack.config.js",
     "dev": "npm run clean &&  webpack-dev-server --config webpack.config.js",
     "upgrade": "yarn upgrade"
@@ -20,6 +20,7 @@
     "body-parser": "^1.17.1",
     "classnames": "^2.2.5",
     "cors": "^2.8.3",
+    "cross-env": "^4.0.0",
     "cssnano": "^3.10.0",
     "debug": "^2.6.6",
     "imagemin-webpack-plugin": "^1.4.4",

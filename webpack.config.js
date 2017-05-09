@@ -195,22 +195,22 @@ module.exports = (env) => {
                 allChunks: true
             }),
             //[1]
-            // new webpack.optimize.CommonsChunkPlugin({
-            //     async:"common-in-lazy",
-            //     minChunks:({ resource } = {} )=>(
-            //         resource &&
-            //         resource.includes('node_modules') &&
-            //         /axios/.test(resource)
-            //     )
-            // }),
-            // // [2]
-            // //[1]和[2] 有点不明白
-            // new webpack.optimize.CommonsChunkPlugin({
-            //     async: 'used-twice',
-            //     minChunks: (module, count) => (
-            //         count >= 2
-            //     ),
-            // }),
+            new webpack.optimize.CommonsChunkPlugin({
+                async:"common-in-lazy",
+                minChunks:({ resource } = {} )=>(
+                    resource &&
+                    resource.includes('node_modules') &&
+                    /axios/.test(resource)
+                )
+            }),
+            // [2]
+            //[1]和[2] 有点不明白
+            new webpack.optimize.CommonsChunkPlugin({
+                async: 'used-twice',
+                minChunks: (module, count) => (
+                    count >= 2
+                ),
+            }),
             new webpack.optimize.CommonsChunkPlugin({
                 name:'vender',
                 filename:"js/common.[chunkhash:8].js",
@@ -225,6 +225,7 @@ module.exports = (env) => {
             new webpack.LoaderOptionsPlugin({    //laoder最小化
                 minimize: true
             }),
+            //图片压缩没用。。。什么鬼
             new ImageminPlugin({
                 // disable:false,
                 test: /\.(jpe?g|png|gif|svg)$/i,
@@ -233,7 +234,6 @@ module.exports = (env) => {
                 }
             }),
             new CptimizeCssAssetsPlugin({          //压缩css  与 ExtractTextPlugin 配合使用
-                // assetNameRegExp:/\.css/g,     //匹配规则,
                 cssProcessor: require('cssnano'),
                 cssProcessorOptions:{discardComments:{removeAll: true }}, //移除所有注释
                 canPrint:true        //是否向控制台打印消息
@@ -249,12 +249,6 @@ module.exports = (env) => {
             inject: true     //注射所有资源到 body元素的底部     "head" "body" true false  "body" == true
             // chunks: ["app"],     //允许只添加某些块
         })
-        // new CopyWebpackPlugin([                            //复制文件或者文件夹   复制依赖时比较好用
-        //     { 
-        //         from: path.resolve(__dirname,'public/dist/index.html'),
-        //         to: path.resolve(__dirname,'plublic/index.html') 
-        //     }
-        // ])
     )
     return options
 }
