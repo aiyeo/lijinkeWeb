@@ -2,6 +2,7 @@
  * Created by lijinke on 17/1/12.
  */
 import React,{PropTypes} from "react"
+import classNames from "classnames"
 
 import './styles.less'
 
@@ -36,7 +37,7 @@ export default class RotatePhoto extends React.Component {
         })
     }
     render() {
-        const {categories,space,width,height,animateTime} = this.props
+        const {categories,space,width,height,animateTime,className} = this.props
         const {delay,rotate} = this.state
 
         const animationDuration = {
@@ -64,7 +65,7 @@ export default class RotatePhoto extends React.Component {
         return(
             <section
                  key="rotateBox"
-                 className="rotateBox"
+                 className={classNames("rotateBox",className)}
             >
                 <ul className="category"
                     onClick={ (e)=> this.onRotateBoxClick(e,categoriesLength)}

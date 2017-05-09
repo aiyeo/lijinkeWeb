@@ -1,5 +1,6 @@
 import React from "react"
 import Loading from "shared/components/Loading"
+import Header from "shared/components/Header"
 //将所有组件包裹起来  react-router 会根据对应路由加载对应组件
 
 export default class Root extends React.Component {
@@ -18,6 +19,9 @@ export default class Root extends React.Component {
          <Loading
             isLoading={isLoading}
           />
+        <Header
+          title="李金珂的小屋"
+        />
           {this.props.children}
       </div>
     )

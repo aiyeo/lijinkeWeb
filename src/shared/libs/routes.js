@@ -28,6 +28,10 @@ export default {
         {
             path:"home",
             getComponent:loadComponent(System.import('home'))
+        },
+        {
+            path:"photo",
+            getComponent:loadComponent(System.import('app/routes/photo'))
         }
     ]
 }

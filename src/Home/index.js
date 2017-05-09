@@ -1,72 +1,13 @@
 import React from 'react'
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
-import Header from "shared/components/Header"
-import RotatePhoto from "shared/components/RotatePhoto"
 import Container from "shared/components/Container"
 import MusicPlayer from "shared/components/MusicPlayer"
 import { Link } from "react-router"
+import classNames from "classnames"
 
 import getMusic from "./action"
 import "./styles.less"
-
-const photos = [];
-const photoCovers = [{
-  id: 7,
-  title: "皮皮怪",
-  content: "蛇皮剪刀手"
-}, {
-  id: 8,
-  title: "绿头怪",
-  content: "一不小心就绿了"
-}, {
-  id: 2,
-  title: "小仙女",
-  content: "无敌剪刀手"
-}, {
-  id: 4,
-  title: "大帅锅",
-  content: "飞jer帅"
-}, {
-  id: 6,
-  title: "余文乐",
-  content: "高新区第一打手"
-}, {
-  id: 1,
-  title: "骚猪葫芦娃",
-  content: "叫你一声哈麻批你敢答应吗?"
-}, {
-  id: 5,
-  title: "刘骚猪",
-  content: "余文乐的男朋友"
-}, {
-  id: 3,
-  title: "王骚猪",
-  content: "随地大小便"
-}, {
-  id: 9,
-  title: "肌肉狗",
-  content: "疯起来自己都咬"
-}, {
-  id: 10,
-  title: "父子台球solo赛",
-  content: "duo死你个哈麻批"
-}];
-// const count = [...new Array(8)]
-
-photoCovers.map((v, i) => {
-  i += 1;
-  let my = photoCovers.find((v) => v.id == i)
-  v.name = `photo${i}`,
-    v.src = `images/photo${i}`
-  if (my) {
-    v.title = my.title
-    v.content = my.content
-  } else {
-    v.title = `title${i}`
-    v.content = `content${i}`
-  }
-})
 
 @connect(
   ({ MusicPlayerAction }) => ({
@@ -85,50 +26,51 @@ export default class Home extends React.Component {
   }
   render() {
     const { musicData } = this.props
+    const featureConfig = [{
+      title:"聊天室",
+      text:"聊一聊",
+      iconName:"icon-liaotian",
+      href:"/about"
+    },{
+      title:"照片墙",
+      text:"看一看",
+      iconName:"icon-zhaopian-copy",
+      href:"/photo"
+    },{
+      title:"关于我",
+      text:"看一看",
+      iconName:"icon-2guanyuwomeneps",
+      href:"/about"
+    },{
+      title:"有话说",
+      text:"说一说",
+      iconName:"icon-luyinshuohuashengyin",
+      href:"/about"
+    }]
     return (
       <div key="home">
-        <Header
-          title="李金珂的小屋"
-        />
         <main className="content" key="content">
           <div className="feature">
             <ul key="home-feature" className="feature-list">
-              <li key="item1" className="item">
-                <div className="info">
-                  <h2 className="title">聊天室</h2>
-                  <p className="text">聊一聊</p>
-                </div>
-                <Link to="/about"></Link>
-              </li>
-              <li key="item2" className="item">
-                <div className="info">
-                  <h2 className="title">心得/感悟/杂文</h2>
-                  <p className="text">说一说</p>
-                </div>
-                <Link to="/about"></Link>
-              </li>
-              <li key="item3" className="item">
-                <div className="info">
-                  <h2 className="title">照片墙</h2>
-                  <p className="text">瞧一瞧</p>
-                </div>
-                <Link to="/about"></Link>
-              </li>
-              <li key="item4" className="item">
-                <div className="info">
-                  <h2 className="title">关于我</h2>
-                  <p className="text">看一看</p>
-                </div>
-                <Link to="/about"></Link>
-              </li>
+              {
+                featureConfig.map((item,i)=>{
+                  const {title,text,iconName,href} = item
+                  return (
+                    <li key={`item${i}`} className="item">
+                      <div className="info">
+                        <h2 className="title">{title}</h2>
+                        <p className="text">{text}</p>
+                      </div>
+                      <span className="line"></span>
+                      <div className="icon-content">
+                        <i className={classNames("icon",iconName)}></i>
+                      </div>
+                      <Link to={href}></Link>
+                    </li>
+                  )
+                })
+              }
             </ul>
-            {/*<RotatePhoto
-                  categories={photoCovers}
-                  space={20}
-                  width={300}
-                  height={300}
-                  animateTime={12}
-              />*/}
           </div>
         </main>
         <MusicPlayer
@@ -136,6 +78,7 @@ export default class Home extends React.Component {
           imgSrc={musicData && musicData.image}
           name={musicData && musicData.name}
           mode={"mini"}       //full 完整模式  mini  迷你模式
+          isUploadAudio={false}
         />
       </div>
     )

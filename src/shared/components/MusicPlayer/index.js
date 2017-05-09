@@ -39,13 +39,15 @@ export default class MusicPlayer extends React.Component {
     }
     IMG_MAX_SIZE = 1024
     static defaultProps = {
-        mode: "mini"     //默认迷你模式
+        mode: "mini",    //默认迷你模式
+        isUploadAudio:false
     }
     static PropTypes = {
-        mode: PropTypes.oneOf(['mini', 'full']),
-        name: PropTypes.string,
-        imgSrc: PropTypes.string,
-        musicSrc: PropTypes.string.isRequired,
+        mode: PropTypes.oneOf(['mini', 'full']),      //模式
+        name: PropTypes.string,                       //音乐名
+        imgSrc: PropTypes.string,                     //图片路径
+        musicSrc: PropTypes.string.isRequired,        //音乐路径
+        isUploadAudio:PropTypes.bool                    //是否上传音乐
     }
     constructor(props) {
         super(props)
@@ -61,7 +63,8 @@ export default class MusicPlayer extends React.Component {
             imgSrc,
             mode,
             className,
-            audioUploadFile
+            audioUploadFile,
+            isUploadAudio
         } = this.props
 
         const {
@@ -174,9 +177,13 @@ export default class MusicPlayer extends React.Component {
                                                     <i className="icon icon-11111" title="收起"></i>
                                                 </span>
                                         }
-                                        <span className="upload-music" key="upload-music" onClick={this.showUploadModal}>
-                                            <i className="icon icon-iconfontbiaozhunmoban01" title="上传你喜欢的音乐"></i>
-                                        </span>
+                                        {
+                                            uploadAudio
+                                            ? <span className="upload-music" key="upload-music" onClick={this.showUploadModal}>
+                                                <i className="icon icon-iconfontbiaozhunmoban01" title="上传你喜欢的音乐"></i>
+                                              </span>
+                                            : undefined
+                                        }
                                     </div>
                                 </section>
                             </div>
@@ -220,7 +227,7 @@ export default class MusicPlayer extends React.Component {
                             </p>
                             <p>
                                 {
-                                    audioFileReady
+                                    isUploadAudio
                                         ? <Button key="uploadBtn" type="primary block" htmlType="button" onClick={this.upLoadAudio} className="music-upload-file-btn">立即上传</Button>
                                         : <Button key="uploadBtn" type="error block" htmlType="button" className="music-upload-file-btn">立即上传</Button>
                                 }
@@ -265,8 +272,8 @@ export default class MusicPlayer extends React.Component {
             if (!/.*\/(jpg|jpeg|png)$/.test(type)) {
                 return alert('无效的图片格式')
             }
-            if (size / 1024 >= IMG_MAX_SIZE) {
-                let max = IMG_MAX_SIZE >= 1024 ? `${IMG_MAX_SIZE}MB` : `${IMG_MAX_SIZE}KB`
+            if (size / 1024 >= this.IMG_MAX_SIZE) {
+                let max = this.IMG_MAX_SIZE >= 1024 ? `${this.IMG_MAX_SIZE}MB` : `${this.IMG_MAX_SIZE}KB`
                 return alert(`图片最大 ${max}`)
             }
             const reader = new FileReader();
