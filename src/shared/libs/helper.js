@@ -1,5 +1,5 @@
 import obj2Query from "libs/params"
-import config from "config"
+import config from "../../../config"
 
 const helper = {
   jsonToString(params) {

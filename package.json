@@ -7,8 +7,8 @@
   "scripts": {
     "start": "npm run dev",
     "clean": "rimraf public/static",
-    "update-server":"npm run build && npm run server",
-    "server": "set debug=*,-not_this && nodemon server.js",
+    "prod-server": "npm run build && cross-env NODE_ENV=PROD node server.js",
+    "dev-server": "npm run build && set debug=*,-not_this && cross-env NODE_ENV=DEV nodemon server.js",
     "build": "npm run clean && webpack --env.mode=PROD --progress --config webpack.config.js",
     "dev": "npm run clean &&  webpack-dev-server --config webpack.config.js",
     "upgrade": "yarn upgrade"
@@ -35,6 +35,8 @@
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
     "rimraf": "^2.6.0",
+    "socket.io": "^2.0.1",
+    "socket.io-client": "^2.0.1",
     "webpack": "^2.2.1",
     "webpack-bundle-analyzer": "^2.4.0",
     "webpack-dev-server": "^2.3.0"

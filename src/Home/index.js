@@ -30,7 +30,7 @@ export default class Home extends React.Component {
       title:"聊天室",
       text:"聊一聊",
       iconName:"icon-liaotian",
-      href:"/about"
+      href:"/talk"
     },{
       title:"照片墙",
       text:"看一看",

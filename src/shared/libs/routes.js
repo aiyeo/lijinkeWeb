@@ -32,6 +32,10 @@ export default {
         {
             path:"photo",
             getComponent:loadComponent(System.import('app/routes/photo'))
+        },
+        {
+            path:"talk",
+            getComponent:loadComponent(System.import('app/routes/talk'))
         }
     ]
 }

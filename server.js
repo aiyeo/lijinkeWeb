@@ -1,14 +1,13 @@
 //依赖
 const express = require('express')
 const path = require("path")
-const http = require('http')
 const debug = require('debug')('server')
 const bodyParser = require('body-parser')
+const http = require("http")
 const app = express()
 const fs = require('fs')
 const cors = require('cors')
 const writeIndex = require('./server/utils/writeIndex')
-
 
 //中间键部分
 app.use(express.static(`${__dirname}/public`));
@@ -25,6 +24,7 @@ app.get("/",(req,res,next)=>{
     debug("PortalApp start");
     next();
 })
+require("./server/api/talk")
 app.use('/music',require("./server/api/music"))
 
 const serverRuningInfo = `
