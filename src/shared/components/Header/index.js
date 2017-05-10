@@ -18,11 +18,11 @@ export default class Header extends React.Component{
             <header key="header" className="header" style={animationDuration}>
                 {
                     showBack
-                    ?  <div key="left" className="block left" onClick={()=>this.goBack()}> 返回 </div>
+                    ?  <div key="left" className="block left" onClick={()=>this.goBack()}></div>
                     : undefined
                 }
                 <div key="center" className="center">
-                    <h2 key="title" className="title">{this.props.title}</h2>
+                    <h2 key="title" className="title" onClick={this.goBack}>{this.props.title}</h2>
                 </div>
                 {
                     showBack
@@ -42,6 +42,7 @@ export default class Header extends React.Component{
             this.setState({
                 showBack:true
             })
+            history.back()
         }else{
             if(typeof url =="undefined" || !url){
                 url = "/"
