@@ -4,11 +4,19 @@
     position: fixed;
     right:20px;
     bottom:50px;
+    @media screen and (max-width:768px){
+        right:10px;
+        bottom:10px;
+    }
     &-audio{
         .hidden();
     }
     &-controller{
         @player-width:80px;
+        @media screen and (max-width:768px){
+            transform: scale(0.5);
+            @player-width:50px !important;
+        }
         @player-height:@player-width;
         padding: 10px;
         width:@player-width;
@@ -46,6 +54,17 @@
                 transform: scale(1)
             }
         }
+        @media screen and (max-width:768px){
+            i{
+                font-size:20px;
+            }
+            &:hover{
+                font-size:12px;
+                .music-player-controller-setting{
+                    transform: scale(1)
+                }
+            }
+        }
         .music-player-controller-setting{
             width:100%;
             height:100%;
@@ -77,25 +96,23 @@
             display: flex;
             justify-content: center;
             align-content: center;
-            @media screen and (max-width:768px){
-                 .hide-panel{
-                     .hidden()
-                 }
-                 .img-content{
-                     width: 40px;
-                     height:40px;
-                 }
-            }
             .img-content{
                 width:50px;
                 height:50px;
                 border-radius: 50%;
                 overflow: hidden;
                 box-shadow: 0 0 10px rgba(0,0,0,.2);
-                animation: rotate 15s linear infinite;
+                animation: imgRotate 15s linear infinite;
+                @media screen and (max-width:768px){
+                    width: 40px;
+                    height:40px;
+                }
                 img{
                     width: 100%;
                 }
+            }
+            .img-rotate{
+                    animation: imgRotate 15s linear infinite;
             }
             .hide-panel,.upload-music{
                 flex-basis:10%;
@@ -302,12 +319,12 @@
     }
 
 }
-@keyframes rotate{
+@keyframes imgRotate{
     from{
-        transform: rotateX(0deg)
+        transform: rotate(0deg)
     }
     to{
-        transform: rotateX(360deg)
+        transform: rotate(360deg)
     }
 }
 @keyframes translate{

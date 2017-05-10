@@ -104,7 +104,7 @@ export default class MusicPlayer extends React.Component {
                         ? (
                             <div key="panel" className="music-player-panel translate">
                                 <section className="panel-content" key="panel-content">
-                                    <div className="img-content" key="img-content">
+                                    <div className={classNames("img-content",{"img-rotate":playing})} key="img-content">
                                         <img key="img" src={audioUploadFile && audioUploadFile.imageSrc || imgSrc || this.defaultMusciImgSrc} alt="" />
                                     </div>
                                     <div className="progressbar-content" key="progressbar-content">
@@ -199,7 +199,7 @@ export default class MusicPlayer extends React.Component {
                     <form method="post" name="upload-music-form" encType="multipart/form-data" className="upload-music-form">
                         <div className="upload-music-content">
                             <p>
-                                <input type="file" name="audioImg" accept="image/*" ref="audioImg" className="hidden music-img-file-original-btn" onChange={this.selectAudioImgChange} />
+                                <input type="file" name="audioImg" ref="audioImg" className="hidden music-img-file-original-btn" onChange={this.selectAudioImgChange} />
                                 {
                                     audioImgReady && audioImg && audioImg.src && audioImg.size
                                         ? (

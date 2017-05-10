@@ -20,7 +20,7 @@ export default class Root extends React.Component {
             isLoading={isLoading}
           />
         <Header
-          title="李金珂的小屋"
+          title="山前没相见-山后别相逢"
         />
           {this.props.children}
       </div>

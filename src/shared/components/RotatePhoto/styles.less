@@ -8,11 +8,14 @@
     margin: auto;
     transform-origin: 50% 50%;
     cursor: pointer;
+    @media screen and (max-width:768px){
+        transform: scale(0.5)
+    }
     .category{
         position: relative;
         transform-style: preserve-3d;
         transition: transform .35s ease-in-out;
-        animation: rotate 20s cubic-bezier(.55,-0.09,.87,.27) ;
+        animation: photoRotate 20s cubic-bezier(.55,-0.09,.87,.27) ;
         .item{
             width: @rotate-box-width;
             height: @rotate-box-width;
@@ -47,7 +50,7 @@
 }
 
 
-@keyframes rotate {
+@keyframes photoRotate {
     0%{
         opacity: 0;
     }
