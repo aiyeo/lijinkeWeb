@@ -1,10 +1,10 @@
 # lijinkeWeb
 
 ### 个人网站建设中 ... :)
-![lijinkeWeb](https://github.com/lijinke666/lijinkeWeb/blob/master/images/app.png)
---
 ##### 手机访问
--- 
+
+![lijinkeWeb](https://github.com/lijinke666/lijinkeWeb/blob/master/images/app.png)
+ 
 ##### PC访问
 http://lijinke.xicp.io/
 ##### 访问不了就是没启动 node:(
