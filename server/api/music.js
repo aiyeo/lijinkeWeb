@@ -11,8 +11,8 @@ router.get('/',(req,res,next)=>{
     const {name,imageSrc,src} = getMusicInfo(fs);
    res.send({
        name:name ? name : "",
-       image:imageSrc ? `${HOST}:${PORT}/music/${imageSrc}` : "",
-       src: src ? `${HOST}:${PORT}/music/${src}` :""
+       image:imageSrc ? `${HOST}${PORT}/music/${imageSrc}` : "",
+       src: src ? `${HOST}${PORT}/music/${src}` :""
    })
    next();
 })
@@ -49,9 +49,9 @@ router.post('/uploadMusic',(req,res,next)=>{
         res.send({
             success:1,
             data:{
-                src:src &&  `${HOST}:${PORT}/music/${src}` || "",
+                src:src &&  `${HOST}${PORT}/music/${src}` || "",
                 name:name && name || "",
-                imageSrc:imageSrc && `${HOST}:${PORT}/music/${imageSrc}`|| ""
+                imageSrc:imageSrc && `${HOST}${PORT}/music/${imageSrc}`|| ""
             }
         })
     })

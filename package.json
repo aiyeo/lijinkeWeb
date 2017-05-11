@@ -8,7 +8,7 @@
     "start": "npm run dev",
     "clean": "rimraf public/static",
     "prod-server": "npm run build && cross-env NODE_ENV=PROD node server.js",
-    "dev-server": "npm run build && set debug=*,-not_this && cross-env NODE_ENV=DEV nodemon server.js",
+    "dev-server": "set debug=*,-not_this && cross-env NODE_ENV=DEV nodemon server.js",
     "build": "npm run clean && webpack --env.mode=PROD --progress --config webpack.config.js",
     "dev": "npm run clean &&  webpack-dev-server --config webpack.config.js",
     "upgrade": "yarn upgrade"

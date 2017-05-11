@@ -20,7 +20,7 @@ export default class Root extends React.Component {
             isLoading={isLoading}
           />
         <Header
-          title="山前没相见-山后别相逢"
+          title="李金珂的小屋"
         />
           {this.props.children}
       </div>
@@ -41,7 +41,7 @@ export default class Root extends React.Component {
       }
     }
   }
-  componentWillMount(){
+  componentDidMount(){
     const isFirst= sessionStorage.getItem('welcome') || "yes"
     if(isFirst){
       setTimeout(this.loading,this.weclomeTime)

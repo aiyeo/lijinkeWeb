@@ -3,8 +3,8 @@ const express = require('express')
 const path = require("path")
 const debug = require('debug')('server')
 const bodyParser = require('body-parser')
-const http = require("http")
 const app = express()
+const http = require("http").createServer(app)
 const fs = require('fs')
 const cors = require('cors')
 const writeIndex = require('./server/utils/writeIndex')
@@ -33,5 +33,5 @@ const serverRuningInfo = `
     =============== [ port : ${port} ] ============== 
                         :)
 `
-http.createServer(app)
-    .listen(port,()=> debug( serverRuningInfo) )
+http.listen(port,()=> debug( serverRuningInfo) )
+

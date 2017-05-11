@@ -1,72 +1,96 @@
 @import "~styles/vars.less";
 .talk{
     padding: 20px;
-    >h2{
-        color:@primary-color;
-    }
-    >p{
-        color:#fff;
+    display: flex;
+    flex-direction: column;
+    height: calc(~"100vh - @{header-height} - @{music-player-height} - 20px");
+    .talk-header{
+        flex-basis: 15%;
+        >h2{
+            color:@primary-color;
+        }
+        >p{
+            color:#fff;
+        }
+        .userNum,.username{
+            margin-left: 5px;
+            color:#fff;
+            padding: 2px 10px;
+            background-color: @primary-color;
+            border-radius: 15px;
+        }
+        .name-content{
+            margin-left:10px;
+        }
     }
     .talk-section{
-        height: calc(~"100vh - 220px - @{header-height}");
-        border:1px solid #fff;
+        flex:1;
+        box-shadow: 0 0 10px rgba(255,255,255,1);
         border-radius: 10px;
         overflow-y: auto;
+        overflow-x: hidden;
         padding: 20px;
         font-size:14px;
         position: relative;
         color:#fff;
+        .init{
+            text-align: center;
+            margin: 0 0 20px 0;
+            font-size:12px;
+            &.connect-success{
+                color:@primary-color;
+            }
+            i{
+                font-size:12px;
+                margin-right:5px;
+                vertical-align: middle;
+            }
+        }
+        .user-join-tip{
+            @tip-height:30px;
+            position: absolute;
+            left:0;
+            top:0;
+            width: 100%;
+            height: @tip-height;
+            line-height: @tip-height;
+            text-align: center;
+            background: @warning-color;
+            animation: userJoinTip .3s cubic-bezier(.55,-0.09,.87,.27);
+            @keyframes userJoinTip{
+                from {
+                    transform: translate3d(0,-@tip-height,0)
+                }
+                to{
+                    transform: translate3d(0,0,0)
+                }
+            }
+        }
     }
-    .userJoinTip{
-        position: absolute;
-        width:100%;
-        height:30px;
-        background:@primary-color;
-        color:#FFF;
-        line-height: 30px;
-        text-align:center;
-        left:0;
-        top:0;
-        border-radius: 10px 10px 0 0;
-        animation: join 3s  cubic-bezier(.55,-0.09,.87,.27) forwards;
-    }
-    @keyframes join{
-        from{
-            transform: scale(0) translate3d(0,-1000px,0);
-        }
-        30%{
-            opacity: 1;
-            transform: scale(1) translate3d(0,0px,0);
-        }
-        80%{
-            opacity: 1;
-            transform: scale(1) translate3d(0,0px,0);
-        }
-        to{
-            opacity: 0;
-            transform: scale(0) translate3d(0,-1000px,0);
-        }
-    }
-    .talk-btn{
+    .talk-footer{
+        flex-basis: 7%;
         display: flex;
         margin-top:10px;
         justify-content: space-between;
         .inp-message{
+            height: 100%;
             flex-basis: 69%;
             padding: 5px 10px;
             border:1px solid;
             outline: none;
+            border-radius: 4px;
         }
         .btn-send{
             flex-basis: 30%;
+            height:100%;
             font-size:16px;
             word-spacing: 3px;
-            line-height: 20px;
+            line-height: 18px;
             border:1px solid @primary-color;
         }
     }
     ::-webkit-scrollbar{
-        width: 10px;
+        width: 6px;
         background-color: #f5f5f5;
     }
     /*定义滚动条的轨道，内阴影及圆角*/
@@ -82,6 +106,13 @@
         background-color:@primary-color;
         opacity: 0.5;
     }
+    @message-animate-time:.2s;
+    .message-animte-right{
+        animation:messageAnimateRtoL @message-animate-time cubic-bezier(.55,-0.09,.87,.27) forwards;
+    }
+    .message-animte-right{
+        animation:messageAnimateRtoL @message-animate-time cubic-bezier(.55,-0.09,.87,.27) forwards;
+    }
     .message{
         color:#FFF;
         background:@primary-color;
@@ -92,6 +123,9 @@
         min-width: 100px;
         clear: both;
         position: relative;
+        @media screen and (max-width:768px){
+            padding: 3px 15px;
+        }
         p{
         margin: 0;
         padding: 0;
@@ -105,6 +139,14 @@
             border-radius: 2em;
             padding: 0 .3rem;
             margin-right: .5rem;
+            @media screen and (max-width:768px){
+                font-size:12px;
+            }
+        }
+        .message-time{
+            @media screen and (max-width:768px){
+                font-size:10px;
+            }
         }
     }
     .loading{
@@ -151,4 +193,25 @@
             transform:scale(1) translate3d(0,100px,0);
         }
     }
+    @keyframes messageAnimateRtoL{
+        from{
+            opacity: 0;
+            transform: translate3d(100px,0,0)
+        }
+        to{
+            opacity: 1;
+            transform: translate3d(0,0,0)
+        }
+    }
+    @keyframes messageAnimateLtoR{
+        from{
+            opacity: 0;
+            transform: translate3d(-100px,0,0)
+        }
+        to{
+            opacity: 1;
+            transform: translate3d(0,0,0)
+        }
+    }
+
 }
