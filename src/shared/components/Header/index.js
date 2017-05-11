@@ -21,7 +21,7 @@ export default class Header extends React.Component{
                     ?  <div key="left" className="block left" onClick={()=>this.goBack()}></div>
                     : undefined
                 }
-                <div key="center" className="center">
+                <div key="center" className="center" title="鼠标点击一下就可以返回~">
                     <h2 key="title" className="title" onClick={this.goBack}>{this.props.title}</h2>
                 </div>
                 {

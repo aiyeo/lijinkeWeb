@@ -13,22 +13,35 @@ io.on("connection", function (socket) {
     debug("server socket 连接成功")
     // clientRanDomName ++
     socket.emit('login',{
-        serverTime:new Date(),
-        name:`吃瓜群众${clientRanDomName}`
+        serverTime:new Date()
     })
-    socket.on('userJoin',(userInfo)=>{
-        debug(`[ 用户 : ${userInfo.name} ] 加入聊天室, [ 用户id : ${userInfo.userId} ]`)
-        if( ! onlineUsers.find((user)=> user.userId == userInfo.userId ) ){
-            onlineUsers.push(userInfo)
+    socket.on('userJoin',({userId,name})=>{
+        debug(`[ 用户 : ${name} ] 加入聊天室, [ 用户id : ${userId} ]`)
+        if( ! onlineUsers.find((user)=> user.userId == userId ) ){
+            onlineUsers.push({
+                userId,
+                name
+            })
             onlineNumber++
         }
-        socket.emit('userJoin',{onlineNumber,userName:`吃瓜群众${clientRanDomName}`})
+        //向所有用户 托送当前登录用户
+        io.emit('userJoin',{onlineNumber,userName:`吃瓜群众${clientRanDomName}`})
         debug(`[当前在线人数  : ${onlineNumber} ]`)
-
-        socket.on('message',( messageInfo )=>{
-            //向所有用户 推送当前消息
-            socket.emit('message',messageInfo);
-            debug('客户端发来消息=>',messageInfo)
-        })
+    })
+    
+    socket.on('message',( messageInfo )=>{
+        //向所有用户 推送当前消息
+        io.emit('message',messageInfo);
+        debug('客户端发来消息=>',messageInfo)
+    })
+    //用户断开连接
+    socket.on('disconnect',()=>{
+        console.log('loginout ');
+    })
+    //用户退出
+    socket.on('loginOut',({userId:id,name})=>{
+        onlineNumber -- ;
+        onlineUsers.splice(onlineUsers.findIndex(({userId})=> userId==id),1)
+        io.emit('loginOut',{onlineUsers,onlineNumber,loginOutName:name})
     })
 })
