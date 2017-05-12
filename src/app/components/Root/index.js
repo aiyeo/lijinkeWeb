@@ -22,6 +22,8 @@ export default class Root extends React.Component {
         <Header
           title="李金珂的小屋"
         />
+        {/*消息弹窗放在这里*/}
+        <div key="jk-message" className="jk-message"></div>
           {this.props.children}
       </div>
     )

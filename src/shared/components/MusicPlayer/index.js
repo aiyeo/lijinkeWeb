@@ -1,3 +1,9 @@
+/*
+ * @Author: jinke.li 
+ * @Date: 2017-05-12 13:54:56 
+ * @Last Modified by: jinke.li
+ * @Last Modified time: 2017-05-12 14:37:32
+ */
 import React, { PropTypes } from "react"
 import ReactDOM from "react-dom"
 import { bindActionCreators } from "redux"
@@ -199,7 +205,7 @@ export default class MusicPlayer extends React.Component {
                     <form method="post" name="upload-music-form" encType="multipart/form-data" className="upload-music-form">
                         <div className="upload-music-content">
                             <p>
-                                <input type="file" name="audioImg" ref="audioImg" className="hidden music-img-file-original-btn" onChange={this.selectAudioImgChange} />
+                                <input type="file" name="audioImg"  accept="image/*" ref="audioImg" className="hidden music-img-file-original-btn" onChange={this.selectAudioImgChange} />
                                 {
                                     audioImgReady && audioImg && audioImg.src && audioImg.size
                                         ? (
@@ -217,7 +223,7 @@ export default class MusicPlayer extends React.Component {
                                 <Button type="block" htmlType="button" onClick={this.selectAudioImg}>选择图片</Button>
                             </p>
                             <p>
-                                <input type="file" name="audioFile" accept="*.mp3" ref="audioFile" className="hidden music-file-original-btn" onChange={this.selectAudioChange} />
+                                <input type="file" name="audioFile" ref="audioFile" className="hidden music-file-original-btn" onChange={this.selectAudioChange} />
                                 {
                                     audioFileReady && audioFile && audioFile.name && audioFile.size
                                         ? <span>名字:{audioFile.name} || 大小:{audioFile.size}</span>
@@ -248,7 +254,7 @@ export default class MusicPlayer extends React.Component {
         files.forEach((file) => {
             let { type, name, size } = file;
             if (!/.*\/mp3$/.test(type)) {
-                return alert('请上传mp3文件')
+                return Message.error('请上传mp3文件')
             }
             this.setState({
                 audioFileReady: true,
@@ -270,11 +276,11 @@ export default class MusicPlayer extends React.Component {
         files.forEach((file) => {
             let { type, name, size } = file;
             if (!/.*\/(jpg|jpeg|png)$/.test(type)) {
-                return alert('无效的图片格式')
+                return Message.error('无效的图片格式')
             }
-            if (size / 1024 >= this.IMG_MAX_SIZE) {
-                let max = this.IMG_MAX_SIZE >= 1024 ? `${this.IMG_MAX_SIZE}MB` : `${this.IMG_MAX_SIZE}KB`
-                return alert(`图片最大 ${max}`)
+            if (~~(size / 1024) >= this.IMG_MAX_SIZE) {
+                let max = this.IMG_MAX_SIZE > 1024 ? `${this.IMG_MAX_SIZE}MB` : `${this.IMG_MAX_SIZE}KB`
+                return Message.warning(`图片最大 ${max}`)
             }
             const reader = new FileReader();
             reader.onprogress = () => {
@@ -292,6 +298,7 @@ export default class MusicPlayer extends React.Component {
                     audioImgReady: false,
                     audioImg: {}
                 })
+                Message.error(`${name}读取失败`)
                 console.debug(`${name}读取失败!`)
             };
             reader.onload = function () {
@@ -407,9 +414,7 @@ export default class MusicPlayer extends React.Component {
     }
     loadAudioError = () => {
         this.setState({ playing: false })
-        if (confirm('加载音频失败,重试？')) {
-            this.onPlay()
-        }
+        Message.error('加载音频失败,请刷新重试',undefined,()=>this.onPlay())
     }
     //音频播放结束
     audioEnd = () => {

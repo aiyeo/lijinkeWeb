@@ -1,45 +1,32 @@
+/*
+ * @Author: jinke.li 
+ * @Date: 2017-05-12 13:54:48 
+ * @Last Modified by: jinke.li
+ * @Last Modified time: 2017-05-12 14:19:52
+ */
 import React, { propTypes } from "react"
+import ReactDOM from "react-dom"
 import classNames from "classnames"
 import "./styles.less"
 
-
-export default class Message extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            type: typeConfig.info,
-            visible: false
-        }
+class Element extends React.Component {
+    state = {
+        remove: false
     }
-    info = (content, duration, onClose) => {
-        setTypeState(
-            this.typeConfig['info'],
-            content,
-            duration,
-            onClose
-        )
-    }
-    setTypeState = (type = {}, content = "message", duration = 1.5, onClose) => {
-        this.setState({
-            visible: true,
-            type
-        })
-        this.onClose(duration, onClose)
-    }
-    onClose = (duration, cb) => {
+    componentDidMount() {
+        const { duration, onClose } = this.props
         setTimeout(() => {
-            this.setState({ visible: false })
-            cb && (cb instanceof Function) && cb()
+            this.setState({remove:true})
+            onClose && onClose instanceof Function && onClose()
         }, duration * 1000)
     }
     render() {
         const {
+             type,
             content,
-            duration,
-            onClose,
-            visible,
-            type
-        } = this.state
+            duration
+         } = this.props
+        const { remove } = this.state;
 
         const typeConfig = {
             info: "info",
@@ -47,24 +34,22 @@ export default class Message extends React.Component {
             error: "error",
             warning: "warning",
             loading: "loading"
-        }[type]
+        }
 
         const isShowClassName = type === typeConfig
+
         return (
-            <div key="jk-message" className="jk-message">
+            <div>
                 {
-                    visible
-                        ? (
+                    remove
+                        ? undefined
+                        : (
                             <div key="message" className="jk-message-notice-content">
                                 <div
                                     className={
                                         classNames(
                                             'jk-message-custom-content',
-                                            { "message-info":isShowClassName },
-                                            { "message-success":isShowClassName },
-                                            { "message-error":isShowClassName },
-                                            { "message-warning": isShowClassName },
-                                            { "message-loading": isShowClassName },
+                                            `message-${typeConfig[type]}`
                                         )
                                     }
 
@@ -73,11 +58,11 @@ export default class Message extends React.Component {
                                         <i className={
                                             classNames(
                                                 "icon",
-                                                { "icon-laba": isShowClassName },
-                                                { "icon-true": isShowClassName },
-                                                { "icon-guanbi": isShowClassName },
-                                                { "icon-gantanhao": isShowClassName },
-                                                { "icon-dianzan": isShowClassName }
+                                                { "icon-laba": type === typeConfig['info'] },
+                                                { "icon-true": type === typeConfig['success'] },
+                                                { "icon-guanbi": type === typeConfig['error'] },
+                                                { "icon-gantanhao": type === typeConfig['warning'] },
+                                                { "icon-dianzan": type === typeConfig['loading'] }
                                             )
                                         }
                                             key="message-icon">
@@ -89,9 +74,43 @@ export default class Message extends React.Component {
                                 </div>
                             </div>
                         )
-                        : undefined
                 }
             </div>
         )
     }
 }
+
+const Message = {
+    defaultContent: "提示",
+    defaultDuration: 2,
+    RenderElement(type, content, duration, onClose) {
+        const ele = React.createElement(Element, {
+            type,
+            content,
+            duration,
+            onClose
+        }, null)
+        ReactDOM.render(
+            ele,
+            document.querySelector(".jk-message")
+        )
+    },
+    info(content = this.defaultContent, duration = this.defaultDuration, onClose) {
+        this.RenderElement("info", content, duration, onClose)
+    },
+    success(content = this.defaultContent, duration = this.defaultDuration, onClose) {
+        this.RenderElement("success", content, duration, onClose)
+    },
+    warning(content = this.defaultContent, duration = this.defaultDuration, onClose) {
+        this.RenderElement("warning", content, duration, onClose)
+    },
+    error(content = this.defaultContent, duration = this.defaultDuration, onClose) {
+        this.RenderElement("error", content, duration, onClose)
+    },
+    loading(content = this.defaultContent, duration = this.defaultDuration, onClose) {
+        this.RenderElement("loading", content, duration, onClose)
+    }
+
+}
+
+export default Message

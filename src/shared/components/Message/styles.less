@@ -4,20 +4,28 @@
     position: fixed;
     z-index: 999;
     pointer-events:none;
-    margin:0;
+    top:0;
     right:0;
     left:0;
     bottom:0;
     margin:auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     .jk-message-notice-content{
         .clearfix();
-        padding: 20px;
+        max-width: 80%;
+        max-height:80%;
+        min-width: 140px;
+        min-height: 30px;
+        padding: 5px 10px;
         border-radius: 4px;
         box-shadow: 0 2px 8px rgba(0,0,0,.2);
         background: #fff;
         display:inline-block;
         pointer-events: all;
         text-align: center;
+        animation: messageAnimate .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         .jk-message-custom-content{
             &.message-info{
                 i{
@@ -47,12 +55,28 @@
             }
             .icon{
                 i{
-                    font-size: 20px
+                    font-size: 30px;
+                    @media screen and (max-width:768px){
+                        font-size:20px
+                    }
                 }
             }
             .text{
-                font-size: 18px;
+                font-size: 20px;
+                @media screen and (max-width:768px){
+                    font-size:16px
+                }
             }
+        }
+    }
+    @keyframes messageAnimate{
+        from {
+            opacity: 0;
+            transform: scale(0) translate3d(0,-100px,0);
+        }
+        to{
+            opacity: 1;
+            transform: scale(1) translate3d(0,0,0); 
         }
     }
 }

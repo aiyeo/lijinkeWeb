@@ -1,6 +1,10 @@
-/**
- * Created by lijinke on 17/1/12.
+/*
+ * @Author: jinke.li 
+ * @Date: 2017-05-12 13:55:04 
+ * @Last Modified by:   jinke.li 
+ * @Last Modified time: 2017-05-12 13:55:04 
  */
+
 import React,{PropTypes} from "react"
 import classNames from "classnames"
 
