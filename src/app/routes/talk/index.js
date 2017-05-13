@@ -210,9 +210,8 @@ export default class Talk extends React.Component {
       const messages = this.state.messages.concat(messageInfo)
       messages.length >= 1 && sessionStorage.setItem("historyMessage", JSON.stringify(messages))
 
-      this.section.scrollTop(this.section.scrollHeight)
-
       this.setState({ messages })
+      this.section.scrollTop = this.section.scrollHeight
 
     })
   }
