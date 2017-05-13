@@ -45,7 +45,7 @@ export default class Home extends React.Component {
       title:"有话说",
       text:"说一说",
       iconName:"icon-luyinshuohuashengyin",
-      href:"/about"
+      href:"/article"
     }]
     return (
       <div key="home">

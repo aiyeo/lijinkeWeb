@@ -18,6 +18,7 @@ const loadComponent = ( importor, name = 'default' ) => (location,cb)=>{
         console.debug(`动态路由加载失败:${err}`)
     })
 }
+
 export default {
     path: "/",
     component: Root,
@@ -36,6 +37,11 @@ export default {
         {
             path:"talk",
             getComponent:loadComponent(System.import('app/routes/talk'))
+        },
+        {
+            path:"article",
+            getComponent:loadComponent(System.import('app/routes/article'))
         }
     ]
 }
+

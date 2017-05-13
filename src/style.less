@@ -1,13 +1,14 @@
 @import "shared/styles/vars.less";
 @import "shared/styles/font.less";
 
-html,body,#root{
+html,body{
   height:100%;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 #root{
   background: url("../images/banner.jpg") no-repeat; 
   background-size:cover;
+  min-height: 100%;
   background-attachment: fixed;
 }
 *, :before, :after { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }

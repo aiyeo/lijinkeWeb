@@ -31,3 +31,17 @@
         background-color: lighten(@color,@lighten)
     }
 }
+
+.ellipsis-n(@n){
+    -webkit-line-clamp:@n;
+    display:-webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    justify-content: center;
+    -webkit-box-orient: vertical;
+}
+.ellipsis-1(){
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
