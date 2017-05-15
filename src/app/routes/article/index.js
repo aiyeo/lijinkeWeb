@@ -5,7 +5,7 @@ import { bindActionCreators } from "redux"
 import Container from "shared/components/Container"
 import { Link } from "react-router"
 import classNames from "classnames"
-import getArticleLists, { getArticleRanking } from "./action"
+import  getArticleLists ,{getArticleRanking } from "./action"
 
 import "./styles.less"
 
@@ -27,7 +27,6 @@ export default class Article extends React.Component {
     }
     render() {
         const { articleLists, ranking } = this.props
-        console.log(this.props);
         const { rankingType } = this.state
         return (
             <Container className="article-section">
@@ -40,22 +39,30 @@ export default class Article extends React.Component {
                     <section className="article-content">
 
                         {
-                            articleLists && articleLists.list && articleLists.list.length >= 1
+                            articleLists && articleLists.length >= 1
                                 ?
                                 (
                                     <ul>
                                         {
-                                            articleLists.list.map((list, i) => {
-                                                const { title, content, author, publishDate, pageView, like } = list
+                                            articleLists.map((list, i) => {
+                                                const { title, content, author, publishDate, pageView, like,category } = list
                                                 return (
-                                                    <li className="item publicTranslateYAnimate2" key={i}  style={{"animation-delay":`${i*0.1}s`}}>
+                                                    <li className="item articleListAnimate" key={i}  style={{"animationDelay":`${i*0.1}s`}}>
                                                         <h2 className="title"><Link to="/">{title}</Link></h2>
                                                         <p className="content">{content}</p>
                                                         <div className="info">
                                                             <div>
                                                                 <span className="auth">{author}</span>
                                                                 <span className="time">{publishDate}</span>
-                                                                <span className="label"><span>杂文</span><span>感想</span></span>
+                                                                <span className="label">
+                                                                    {
+                                                                        category.map((item,index)=>{
+                                                                            return (
+                                                                            <span key={index}>{item}</span>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </span>
                                                             </div>
 
                                                             <div className="like">
@@ -92,7 +99,7 @@ export default class Article extends React.Component {
                                 ? ranking.rankingData.map((data, i) => {
                                     let { title, like, pageView } = data
                                     return (
-                                        <li key={i} className="ranking-item" style={{"animation-delay":`${i*0.1}s`}}>
+                                        <li key={i} className="ranking-item" style={{"animationDelay":`${i*0.1}s`}}>
                                             <span className="article-name">{title}</span>
                                             {
                                                 rankingType === 'like'
@@ -117,9 +124,8 @@ export default class Article extends React.Component {
         this.setState({ rankingType })
         this.props.getArticleRanking(rankingType)
     }
-    componentWillMount() {
-        const { getArticleLists, getArticleRanking } = this.props
-        getArticleLists()
-        getArticleRanking(this.state.rankingType)
+    componentDidMount() {
+        this.props.getArticleLists()
+        this.props.getArticleRanking(this.state.rankingType)
     }
 }

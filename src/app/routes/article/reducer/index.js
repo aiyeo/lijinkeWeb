@@ -3,14 +3,15 @@ const nameInitialState = []
 
 export default function (state = nameInitialState, action) {
     const { type } = action;
-    console.log(action);
     switch (type) {
         case ARTICLE_LIST:
             return {
-                lists:action.lists
+                ...state,
+                lists:action.lists.list
             }
         case ARTICLE_RANKING:
             return {
+                ...state,
                 ranking:action.ranking
             }
         default:
