@@ -20,12 +20,15 @@ writeIndex();
 app.set('port', process.env.PORT || 1996);
 const port = app.get('port')
 //路由
-app.get("/",(req,res,next)=>{
+app.get("/", (req, res, next) => {
     debug("PortalApp start");
     next();
 })
+
+//api部分
 require("./server/api/talk")
-app.use('/music',require("./server/api/music"))
+app.use('/music', require("./server/api/music"))
+app.use('/article', require("./server/api/article"))
 
 const serverRuningInfo = `
     =============== [ My React App ] ===============
@@ -33,5 +36,5 @@ const serverRuningInfo = `
     =============== [ port : ${port} ] ============== 
                         :)
 `
-http.listen(port,()=> debug( serverRuningInfo) )
+http.listen(port, () => debug(serverRuningInfo))
 

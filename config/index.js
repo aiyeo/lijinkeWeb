@@ -6,7 +6,8 @@ const options = {
     host: mode == "DEV" ? "http://localhost" : "http://lijinke.xicp.io",
     PORT: 1996,
     socket_port: 1997,
-    staticPath: __dirname + '/../public'
+    staticPath: __dirname + '/../public',
+    db_path: mode == "DEV" ? 'mongodb://localhost/lijinkeWeb' : 'mongodb://lijinke.xicp.io/lijinkeWeb'
 }
 options.port = mode === "DEV" ?  ":" + options.PORT : ""
 
