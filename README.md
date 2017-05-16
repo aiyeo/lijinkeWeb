@@ -10,7 +10,7 @@ http://lijinke.xicp.io/
 ##### 访问不了就是没启动 node:(
 #### 使用技术栈
 - `React`
-- `ECMA 2015`
+- `ES6,ES7`
 - `webpack2`
 - `Redux`
 - `React-Redux`
