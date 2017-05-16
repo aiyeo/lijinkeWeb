@@ -1,4 +1,4 @@
-import { ARTICLE_LIST,ARTICLE_RANKING } from "../action"
+import { ARTICLE_LIST,ARTICLE_RANKING,ARTICLE_UPLOAD } from "../action"
 const nameInitialState = []
 
 export default function (state = nameInitialState, action) {
@@ -13,6 +13,11 @@ export default function (state = nameInitialState, action) {
             return {
                 ...state,
                 ranking:action.ranking
+            }
+        case ARTICLE_UPLOAD:
+            return {
+                ...state,
+                uploadInfo:action.info
             }
         default:
             return state

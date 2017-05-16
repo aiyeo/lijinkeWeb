@@ -21,10 +21,10 @@ const articleSchema = new mongoose.Schema({
     },        
     pageView: String,         //点击量
     like: String,             //喜欢数量
-    approve:Boolean           //是否审核通过
+    approve:Boolean,           //是否审核通过
+    category:Array
 }, {
-        collection: "article",
-        timestamps: { createdAt: 'publishDate' }
+        collection: "article"
     })
 
 module.exports = {

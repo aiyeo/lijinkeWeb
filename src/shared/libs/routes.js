@@ -40,7 +40,13 @@ export default {
         },
         {
             path:"article",
-            getComponent:loadComponent(System.import('app/routes/article'))
+            getComponent:loadComponent(System.import('app/routes/article')),
+            childRoutes:[
+                {
+                    path:"detail/:id",
+                    getComponent:loadComponent(System.import('app/routes/articleDetail')),
+                }
+            ]
         }
     ]
 }

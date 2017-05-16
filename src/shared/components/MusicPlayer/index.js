@@ -2,7 +2,7 @@
  * @Author: jinke.li 
  * @Date: 2017-05-12 13:54:56 
  * @Last Modified by: jinke.li
- * @Last Modified time: 2017-05-12 14:37:32
+ * @Last Modified time: 2017-05-16 17:10:42
  */
 import React, { PropTypes } from "react"
 import ReactDOM from "react-dom"
@@ -162,7 +162,7 @@ export default class MusicPlayer extends React.Component {
                                                 <li className={classNames("item", { "active": isLoop })} key="setting1" onClick={this.audioLoop}>
                                                     <i className="icon icon-iconfontdanquxunhuan2eps" title="单曲循环"></i>
                                                 </li>
-                                                <li className="item" key="setting2" onClick={this.audioReload}>
+                                                <li className="item reload-btn" key="setting2" onClick={this.audioReload}>
                                                     <i className="icon icon-shuaxin" title="重放"></i>
                                                 </li>
                                             </ul>

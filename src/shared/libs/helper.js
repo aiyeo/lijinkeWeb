@@ -6,6 +6,20 @@ const helper = {
   jsonToString(params) {
     return obj2Query.toQueryString(params)
   },
+  getCurrentTime(){
+      const date = new Date(),
+      year = date.getFullYear(),
+      month = date.getMonth() + 1,
+      day = date.getDate(),
+      h = date.getHours(),
+      m = date.getMinutes(),
+      s = date.getSeconds(),
+      hh = h < 10 ? `0${h}` : h,
+      mm = h < 10 ? `0${m}` : m,
+      ss = h < 10 ? `0${s}` : s
+
+      return `${year}/${month}/${day} ${hh}:${mm}:${s}` //当前时间
+  },
 
   /**
    * get 请求
@@ -32,16 +46,13 @@ const helper = {
     const fetchConfig = {
       method: "POST",
       mode: "cors",
+      body : isForm ? params : JSON.stringify(params)
     }
-    if (isForm === false) {
-      fetchConfig.headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      }
-      fetchConfig.body = JSON.stringify(params)
-    } else {
-      fetchConfig.body = params
-    }
+      //跨域请求不能自定义头部  ... 否者post请求会变成options请求 第一次遇到。。
+      // fetchConfig.headers = {
+      //   'Accept': 'application/json',
+      //   'Content-Type': 'application/json',
+      // }
     return (await
       fetch(`${host}${port}${url}`, fetchConfig)
     ).json()

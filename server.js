@@ -11,7 +11,12 @@ const writeIndex = require('./server/utils/writeIndex')
 
 //中间键部分
 app.use(express.static(`${__dirname}/public`));
-app.use(bodyParser())
+// 转换 application/json
+app.use(bodyParser.json())
+// 转换 application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({
+    extended:false
+}))
 // app.use(bodyParser.json())
 app.use(cors())
 //将打包的dist/index.html  写入到  public/index.html

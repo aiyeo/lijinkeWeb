@@ -1,3 +1,9 @@
+/*
+ * @Author: jinke.li 
+ * @Date: 2017-05-16 16:19:29 
+ * @Last Modified by:   jinke.li 
+ * @Last Modified time: 2017-05-16 16:19:29 
+ */
 import React from "react"
 import ReactDOM from "react-dom"
 import { AppContainer as HotLoader } from "react-hot-loader"     //react-hot-loader  热更新可以保存状态  

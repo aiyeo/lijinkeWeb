@@ -6,6 +6,7 @@ import { host, socket_port, PORT } from "config"
 import classNames from "classnames"
 import { connect } from "react-redux"
 import { bindActionCreators } from "redux"
+import helper from "shared/libs/helper"
 import io from "socket.io-client"
 import Message from "shared/components/Message"
 
@@ -123,18 +124,7 @@ export default class Talk extends React.Component {
   }
   //发送消息
   sendMessage = () => {
-    const date = new Date(),
-      year = date.getFullYear(),
-      month = date.getMonth() + 1,
-      day = date.getDate(),
-      h = date.getHours(),
-      m = date.getMinutes(),
-      s = date.getSeconds(),
-      hh = h < 10 ? `0${h}` : h,
-      mm = h < 10 ? `0${m}` : m,
-      ss = h < 10 ? `0${s}` : s
-
-    const currentTime = `${year}/${month}/${day} ${hh}:${mm}:${s}` //当前时间
+    const currentTime = helper.getCurrentTime() //当前时间
     const { currentMessage } = this.state
     this.socket.send({
       message: currentMessage,
