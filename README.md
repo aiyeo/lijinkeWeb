@@ -10,6 +10,7 @@ http://lijinke.xicp.io/
 ##### 访问不了就是没启动 node:(
 #### 使用技术栈
 - `React`
+- `ECMA 2015`
 - `webpack2`
 - `Redux`
 - `React-Redux`
@@ -17,6 +18,9 @@ http://lijinke.xicp.io/
 - `node.js`
 - `yarn`
 - `mongodb`
+- `mongoose`
+- `socket.io`
+
 ##### :)
 
 - 安装依赖 `yarn`
