@@ -47,7 +47,7 @@ router.post("/add-article", (req, res, next) => {
             pageView,
             like,
             approve
-        } = postData
+        } = JSON.parse(postData)
         debug('[client body]: ',postData)
         //TODO 这里处理自增长 id 有点欠妥..
         const maxIds = (await tArticle.find({},{id:1}).sort({"id":-1}).limit(1))[0].id
