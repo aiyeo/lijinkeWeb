@@ -23,7 +23,7 @@ module.exports = (env) => {
 
     const options = {
         //开发工具
-        devtool: mode === "dev" ? "source-map" : false,
+        devtool: mode === "DEV" ? "source-map" : false,
 
         //开发服务器
         devServer: {

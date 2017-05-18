@@ -21,6 +21,9 @@ http://lijinke.xicp.io/
 - `mongoose`
 - `socket.io`
 
+#### node环境
+- `v7.10.0`
+
 ##### :)
 
 - 安装依赖 `yarn`
