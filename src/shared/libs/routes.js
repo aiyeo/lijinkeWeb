@@ -23,12 +23,12 @@ export default {
     path: "/",
     component: Root,
     indexRoute: {
-        getComponent:loadComponent(System.import('home'))
+        getComponent:loadComponent(System.import('Home'))
     },    
     childRoutes: [
         {
             path:"home",
-            getComponent:loadComponent(System.import('home'))
+            getComponent:loadComponent(System.import('Home'))
         },
         {
             path:"photo",
