@@ -34,7 +34,11 @@ router.get('/ranking', async (req, res, next) => {
 router.post("/add-article", (req, res, next) => {
     // 这里express 解析不了 fetch 的body 有问题 body是 "" console.log(req.body); 
     // 这里用原生 的 on('data')  来解析   Buffer
-    req.on('data', async (body) => {
+    let postData = ""
+    req.on("data",(data)=>{
+        postData +=data
+    })
+    req.on('end', async () => {
         const {
             editTitle,
             editAuthor,
@@ -43,8 +47,8 @@ router.post("/add-article", (req, res, next) => {
             pageView,
             like,
             approve
-        } = (body.toString())
-        debug('[client body]: ',body+"")
+        } = postData
+        debug('[client body]: ',postData)
         //TODO 这里处理自增长 id 有点欠妥..
         const maxIds = (await tArticle.find({},{id:1}).sort({"id":-1}).limit(1))[0].id
         debug('[max Id 查找成功]: ',maxIds)
