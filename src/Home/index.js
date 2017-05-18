@@ -37,10 +37,10 @@ export default class Home extends React.Component {
       iconName:"icon-zhaopian-copy",
       href:"/photo"
     },{
-      title:"关于我",
-      text:"看一看",
+      title:"工资条",
+      text:"发邮件",
       iconName:"icon-2guanyuwomeneps",
-      href:"/about"
+      href:"/excel"
     },{
       title:"有话说",
       text:"说一说",

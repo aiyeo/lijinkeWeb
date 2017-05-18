@@ -50,12 +50,12 @@ router.post("/add-article", (req, res, next) => {
         } = JSON.parse(postData)
         debug('[client body]: ',postData)
         //TODO 这里处理自增长 id 有点欠妥..
-        const maxIds = (await tArticle.find({},{id:1}).sort({"id":-1}).limit(1))[0].id
+        let maxIds = (await tArticle.find({},{id:1}).sort({"id":-1}).limit(1))[0].id
         debug('[max Id 查找成功]: ',maxIds)
         // tArticle.insertMany
         const data = await tArticle.insertMany(
             {
-                id:"11",
+                id:++maxIds+"",
                 title:editTitle,
                 content:editContent,
                 author:editAuthor,

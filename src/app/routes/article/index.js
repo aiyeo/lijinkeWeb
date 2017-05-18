@@ -160,7 +160,7 @@ export default class Article extends React.Component {
         this.setState({ articleModalVisible: false })
     }
     //上传文章
-    publishArticle = () => {
+    publishArticle = async() => {
         const {
             editTitle,
             editAuthor = "匿名",
@@ -179,7 +179,13 @@ export default class Article extends React.Component {
         values.pageView = "0"
         values.like= "0",         
         values.approve = false,           //是否审核通过
-        this.props.uploadArticle(values)
+        await this.props.uploadArticle(values)
+        if(this.props.uploadInfo && this.props.uploadInfo.success === 1){
+            Message.success('上传成功,请等待审核!')
+            this.setState({articleModalVisible:false})
+        }else{
+              Message.error('上传失败!')
+        }
     }
     toggleRanking = (rankingType) => {
         this.setState({ rankingType })

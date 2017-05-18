@@ -34,6 +34,7 @@ app.get("/", (req, res, next) => {
 require("./server/api/talk")
 app.use('/music', require("./server/api/music"))
 app.use('/article', require("./server/api/article"))
+app.use('/excel', require("./server/api/excel"))
 
 const serverRuningInfo = `
     =============== [ My React App ] ===============
