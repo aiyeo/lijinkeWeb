@@ -8,7 +8,7 @@
 ##### PC访问
 http://lijinke.xicp.io/
 ##### 访问不了就是没启动 node:(
-#### 使用技术栈
+#### 使用技术栈:
 - `React`
 - `ES6,ES7`
 - `webpack2`
