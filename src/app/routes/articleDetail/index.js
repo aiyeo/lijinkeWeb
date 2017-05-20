@@ -9,8 +9,8 @@ import moment from "moment"
 import getArticleDetail from "./action"
 
 @connect(
-    ({ ArticleInfoAction }) => ({
-        articleInfo: ArticleInfoAction.articleInfo,
+    ({ ArticleDetailAction }) => ({
+        articleInfo: ArticleDetailAction.articleInfo,
     }),
     (dispatch) => (
         bindActionCreators({
@@ -23,18 +23,20 @@ export default class ArticleDetail extends React.Component{
     render(){
         const { articleInfo } = this.props
         return(
-            <div key="article-detail">
-                <article class="article-detail">
-                    <p>
-                        {articleInfo}
-                    </p>
-                </article>
+            <div key="articleDetail">
+                <Container>
+                    <article className="article-detail">
+                        <p>
+                            11
+                            {articleInfo}
+                        </p>
+                    </article>
+                </Container>
             </div>
         )
     }
     componentDidMount(){
-        console.log(this.props);
-        const {params:{id},getArticleDetail} = this.props
-        getArticleDetail(id)
+        const {params:{_id},getArticleDetail} = this.props
+        getArticleDetail(_id)
     }
 }

@@ -9,7 +9,7 @@ export default class Button extends React.Component {
         htmlType: "button"
     }
     static PropTypes = {
-        type: PropTypes.oneOf(['primary', 'default', 'warning', 'success', 'error'])
+        type: PropTypes.oneOf(['primary', 'default', 'warning', 'success', 'error','info'])
     }
     render() {
         const { children, type, className, htmlType,onClick } = this.props
@@ -30,6 +30,7 @@ export default class Button extends React.Component {
                         { 'btn-error': Type("error") },
                         { 'btn-default': Type("default") },
                         { 'btn-disbled': Type("disbled") },
+                        { 'btn-info': Type("info") },
                         { 'btn-block': Type("block")},
                         className
                     )

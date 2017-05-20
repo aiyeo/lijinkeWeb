@@ -34,7 +34,8 @@ export default class Article extends React.Component {
         articleModalVisible: false,
         editTitle: "",              //上传文章标题
         editAuthor: "",            //上传文章作者
-        editContent: ""            //上传文章内容
+        editContent: "",            //上传文章内容
+        editCategory:["杂文"]       //上传文章分类
     }
     render() {
         const { articleLists, ranking } = this.props
@@ -57,10 +58,10 @@ export default class Article extends React.Component {
                                     <ul>
                                         {
                                             articleLists.map((list, i) => {
-                                                const { title, content, author, publishDate, pageView, like, category, id } = list
+                                                const { title, content, author, publishDate, pageView, like, category, _id } = list
                                                 return (
                                                     <li className="item articleListAnimate" key={i} style={{ "animationDelay": `${i * 0.1}s` }}>
-                                                        <h2 className="title"><Link to={`/article/detail/${id}`}>{title}</Link></h2>
+                                                        <h2 className="title"><Link to={`/article/detail/${_id}`}>{title}</Link></h2>
                                                         <p className="content">{content}</p>
                                                         <div className="info">
                                                             <div>
@@ -146,12 +147,25 @@ export default class Article extends React.Component {
                             <textarea name="editContent" onChange={(e) => this.setState({ editContent: e.target.value })} className="edit-textarea" placeholder="有啥想说的~" required></textarea>
                         </fieldset>
                         <fieldset>
+                            <p>文章分类：</p>
+                            <select onChange={this.categoryChange}>
+                                <option value="杂文">杂文</option>
+                                <option value="日记">日记</option>
+                                <option value="心得">心得</option>
+                                <option value="感悟">感悟</option>
+                                <option value="其他">其他</option>
+                            </select>
+                        </fieldset>
+                        <fieldset>
                             <Button htmlType="button" onClick={this.publishArticle} type="primary block">发表</Button>
                         </fieldset>
                     </form>
                 </Modal>
             </Container>
         )
+    }
+    categoryChange = (e)=>{
+        this.setState({ editCategory:[e.target.value] })
     }
     openArticleModal = () => {
         this.setState({ articleModalVisible: true })
@@ -164,7 +178,8 @@ export default class Article extends React.Component {
         const {
             editTitle,
             editAuthor = "匿名",
-            editContent
+            editContent,
+            editCategory
         } = this.state
 
         if (!editTitle) return Message.error('请填写文章标题!')
@@ -175,6 +190,7 @@ export default class Article extends React.Component {
         values.editTitle = editTitle
         values.editAuthor = editAuthor
         values.editContent = editContent
+        values.editCategory = editCategory
         values.publishDate = helper.getCurrentTime()
         values.pageView = "0"
         values.like= "0",         

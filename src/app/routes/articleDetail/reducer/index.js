@@ -6,6 +6,7 @@ export default function (state = nameInitialState, action) {
     switch (type) {
         case ARTICLE_DETAIL:
             return {
+                ...state,
                 articleInfo:action.info
             }
         default:

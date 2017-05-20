@@ -46,24 +46,22 @@ router.post("/add-article", (req, res, next) => {
             publishDate,
             pageView,
             like,
-            approve
+            approve,
+            editCategory
         } = JSON.parse(postData)
         debug('[client body]: ',postData)
-        //TODO 这里处理自增长 id 有点欠妥..
-        let maxIds = (await tArticle.find({},{id:1}).sort({"id":-1}).limit(1))[0].id
-        debug('[max Id 查找成功]: ',maxIds)
+
         // tArticle.insertMany
         const data = await tArticle.insertMany(
             {
-                id:++maxIds+"",
                 title:editTitle,
                 content:editContent,
-                author:editAuthor,
+                author:editAuthor || "匿名",
                 publishDate:momnet(publishDate).format("YYYY-MM-DD HH:mm:ss"),
                 pageView:pageView,
                 like:like,
                 approve:approve,
-                category:['测试插入数据']
+                category:editCategory
             }
         )
         debug('新增文章成功')
@@ -76,13 +74,20 @@ router.post("/add-article", (req, res, next) => {
 /**
  * parmas {articleId}  String
  */
-router.get("articleDetail", async (req, res, next) => {
-    const { articleId } = req.query
-    const articleDetail = await tArticle.find({ id: articleId }, { _id: -1 }) || []
-    res.send({
-        articleDetail
+router.post("/articleDetail", (req, res, next) => {
+    let postData = ""
+    req.on("data",(data)=>{
+        postData +=data
     })
-    debug('获取文章详情成功')
+    req.on('end',async ()=>{
+        const { articleId } = postData
+        debug( '【articleId】',articleId)
+        const articleDetail = (await tArticle.find({ _id: articleId })) || []
+        res.send({
+            articleDetail
+        })
+        debug('获取文章详情成功')
+    })
 })
 
 module.exports = router

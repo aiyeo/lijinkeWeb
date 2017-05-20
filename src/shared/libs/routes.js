@@ -9,49 +9,47 @@ import Root from "app/components/Root"
  * importor 加载器
  * name 懒加载组件的名字   export deafult class Home ...  这里默认就是Home
  */
-const loadComponent = ( importor, name = 'default' ) => (location,cb)=>{
-    importor.then((module)=>{
-        console.info(`动态路由加载成功!`)
-        cb(null,module[name])
-    })
-    .catch((err)=>{
-        console.debug(`动态路由加载失败:${err}`)
+const loadComponent = (importor, name = 'default') => (location, cb) => {
+  importor.then((module) => {
+    console.info(`动态路由加载成功!`)
+    cb(null, module[name])
+  })
+    .catch((err) => {
+      console.debug(`动态路由加载失败:${err}`)
     })
 }
 
 export default {
-    path: "/",
-    component: Root,
-    indexRoute: {
-        getComponent:loadComponent(System.import('Home'))
-    },    
-    childRoutes: [
-        {
-            path:"home",
-            getComponent:loadComponent(System.import('Home'))
-        },
-        {
-            path:"photo",
-            getComponent:loadComponent(System.import('app/routes/photo'))
-        },
-        {
-            path:"talk",
-            getComponent:loadComponent(System.import('app/routes/talk'))
-        },
-        {
-            path:"article",
-            getComponent:loadComponent(System.import('app/routes/article')),
-            childRoutes:[
-                {
-                    path:"detail/:id",
-                    getComponent:loadComponent(System.import('app/routes/articleDetail')),
-                }
-            ]
-        },
-        {
-            path:"excel",
-            getComponent:loadComponent(System.import('app/routes/excel'))
-        }
-    ]
+  path: "/",
+  component: Root,
+  indexRoute: {
+    getComponent: loadComponent(System.import('Home'))
+  },
+  childRoutes: [
+    {
+      path: "home",
+      getComponent: loadComponent(System.import('Home'))
+    },
+    {
+      path: "photo",
+      getComponent: loadComponent(System.import('app/routes/photo'))
+    },
+    {
+      path: "talk",
+      getComponent: loadComponent(System.import('app/routes/talk'))
+    },
+    {
+      path: "article",
+      getComponent: loadComponent(System.import('app/routes/article'))
+    },
+    {
+      path: "article/detail/:_id",
+      getComponent: loadComponent(System.import('app/routes/articleDetail')),
+    },
+    {
+      path: "excel",
+      getComponent: loadComponent(System.import('app/routes/excel'))
+    }
+  ]
 }
 

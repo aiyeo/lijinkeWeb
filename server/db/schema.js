@@ -11,7 +11,6 @@ const musicSchema = new mongoose.Schema({
     })
 
 const articleSchema = new mongoose.Schema({
-    id: String,              //文章id
     title: String,           //文章标题
     content: String,          //文章内容
     author: String,           //作者
