@@ -4,10 +4,11 @@ const mode = process.env.NODE_ENV || "DEV"
 
 const options = {
   host: mode == "DEV" ? "http://localhost" : "http://lijinke.xicp.io",
+  dev_port:666,
   PORT: 1996,
   socket_port: 1997,
   staticPath: __dirname + '/../public',
-  db_path: mode == "DEV" ? 'mongodb://localhost/lijinkeWeb' : 'mongodb://localhost/lijinkeWeb',
+  db_path:  'mongodb://localhost/lijinkeWeb',
   emailService: "qq", //邮件服务商
   adminEmail: "1359518268@qq.com", //发邮件的人邮箱
   AUTHCODE: "uctllvpdfeekiefi", //授权码
@@ -15,7 +16,7 @@ const options = {
   currentMonth: new Date().getMonth() + 1,
   companyName: "金珂拉皮条有限公司", //公司名字
   toolInfo: "工资条发放小工具v0.1", //工具名字
-  currentTime() {
+  currentTime:function() {
     const date = new Date(),
       year = date.getFullYear(),
       month = date.getMonth() + 1,
@@ -23,9 +24,9 @@ const options = {
       h = date.getHours(),
       m = date.getMinutes(),
       s = date.getSeconds(),
-      hh = h < 10 ? `0${h}` : h,
-      mm = m < 10 ? `0${m}` : m,
-      ss = s < 10 ? `0${s}` : s
+      hh = h < 10 ? "0" + h  : h,
+      mm = m < 10 ? "0" + m : m,
+      ss = s < 10 ? "0" + s : s
 
     return year + "/" + month + "/" + day + " " + hh + ":" + mm + ":" + ss //当前时间
   },

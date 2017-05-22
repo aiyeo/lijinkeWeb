@@ -140,7 +140,7 @@ export default class Article extends React.Component {
                         </fieldset>
                         <fieldset>
                             <span>作者名：</span>
-                            <input type="text" onChange={(e) => this.setState({ editAuthor: e.target.value })} name="editAuthor" className="edit-author" placeholder="默认【匿名】" maxLength="10" />
+                            <input type="text" onChange={(e) => this.setState({ editAuthor: e.target.value })} name="editAuthor" className="edit-author" placeholder="默认【佚名】" maxLength="10" />
                         </fieldset>
                         <fieldset>
                             <p>文章内容：</p>
@@ -177,7 +177,7 @@ export default class Article extends React.Component {
     publishArticle = async() => {
         const {
             editTitle,
-            editAuthor = "匿名",
+            editAuthor = "佚名",
             editContent,
             editCategory
         } = this.state

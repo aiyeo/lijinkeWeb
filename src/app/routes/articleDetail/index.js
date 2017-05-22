@@ -6,15 +6,17 @@ import Container from "shared/components/Container"
 import { Link } from "react-router"
 import classNames from "classnames"
 import moment from "moment"
-import getArticleDetail from "./action"
+import getArticleDetail,{addPageView} from "./action"
 
 @connect(
     ({ ArticleDetailAction }) => ({
         articleInfo: ArticleDetailAction.articleInfo,
+        pageViewInfo:ArticleDetailAction.pageViewInfo
     }),
     (dispatch) => (
         bindActionCreators({
-            getArticleDetail
+            getArticleDetail,
+            addPageView
         }, dispatch)
     )
 )
@@ -36,7 +38,8 @@ export default class ArticleDetail extends React.Component{
         )
     }
     componentDidMount(){
-        const {params:{_id},getArticleDetail} = this.props
+        const {params:{_id},getArticleDetail,addPageView} = this.props
         getArticleDetail(_id)
+        addPageView(_id)
     }
 }

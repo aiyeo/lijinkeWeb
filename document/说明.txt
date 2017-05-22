@@ -24,8 +24,9 @@
 #yarn
 
 然后
-#运行 npm start
+#开发 npm start
 #打包 npm run build
+#生产 npm run prod-server
 
 /*====================== 【高清模式转换规则】================================*/
 100px == 1rem

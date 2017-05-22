@@ -22,7 +22,8 @@ router.get('/lists', async (req, res, next) => {
 //文章排行榜
 router.get('/ranking', async (req, res, next) => {
     const { type = "like" } = req.query
-    const data = await tArticle.find({ approve: true }, { title: 1, like: 1, pageView: 1 }, { sort: { [type]: -1 } }).limit(5)
+    debug(`[排行榜Type:]${type}`);
+    const data = await tArticle.find({ approve: true }, { title: 1, like: 1, pageView: 1 }).sort({[type]:-1}).limit(5)
     res.send({
         rankingData: data
     })
@@ -56,7 +57,7 @@ router.post("/add-article", (req, res, next) => {
             {
                 title:editTitle,
                 content:editContent,
-                author:editAuthor || "匿名",
+                author:editAuthor || "佚名",
                 publishDate:momnet(publishDate).format("YYYY-MM-DD HH:mm:ss"),
                 pageView:pageView,
                 like:like,
@@ -87,6 +88,25 @@ router.post("/articleDetail", (req, res, next) => {
             articleDetail
         })
         debug('获取文章详情成功')
+    })
+})
+
+
+//TODO 接口有问题
+router.post('/addPageView',(req,res,next)=>{
+    let postData = ""
+    req.on("data",(data)=>{
+        postData +=data
+    })
+    req.on('end',async ()=>{
+        const { articleId } = postData
+        debug( '【articleId】',articleId)
+        const pageView = (await tArticle.find({_id:articleId},{pageView:1})).pageView
+        const articleDetail = await tArticle.update({ _id: articleId },{$set:{'pageView':++pageView}})
+        res.send({
+            success:1
+        })
+        debug('[浏览量 pv +1]')
     })
 })
 

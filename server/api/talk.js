@@ -1,4 +1,3 @@
-//socket 服务器
 const { socket_port } = require('../../config')
 const debug = require('debug')('talk')
 const http = require("http")
@@ -36,7 +35,7 @@ io.on("connection", function (socket) {
     })
     //用户断开连接
     socket.on('disconnect',()=>{
-        console.log('loginout ');
+        debug('logino');
     })
     //用户退出
     socket.on('loginOut',({userId:id,name})=>{

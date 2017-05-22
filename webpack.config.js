@@ -14,8 +14,8 @@ const autoprefixer = require('autoprefixer')                       //自动加�
 const CptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin') //压缩css
 const ImageminPlugin = require('imagemin-webpack-plugin').default         //压缩图片
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')       //生成打包图
-const HOST = "localhost"             //IP
-const PORT = 666                    //端口
+
+const {host,dev_port} = require("./config")
 
 module.exports = (env) => {
     //env 是npm script 运行webpack时传进来的  判断是否是开发环境
@@ -29,7 +29,7 @@ module.exports = (env) => {
         devServer: {
             contentBase: path.resolve(__dirname, "dist"),   //静态资源根目录
             compress: true,       //压缩
-            port: PORT,           //端口
+            port: dev_port,           //端口
             hot: true,            //热更新
             inline: true,         //iframe 模式
             historyApiFallback: true,    //浏览器 history
@@ -46,7 +46,7 @@ module.exports = (env) => {
         entry: mode === "DEV"
             ? [
                 "react-hot-loader/patch",        //热更新
-                `webpack-dev-server/client?http://${HOST}:${PORT}`,
+                `webpack-dev-server/client?${host}:${dev_port}`,   
                 "webpack/hot/only-dev-server",
                 path.resolve(__dirname, "src/index.js")
             ]
@@ -65,7 +65,7 @@ module.exports = (env) => {
                 ? "js/[name].js"
                 : "js/[name].[chunkhash:8]js",
             publicPath: mode === "DEV"
-                ? `http://${HOST}:${PORT}/`
+                ? `${host}:${dev_port}/`
                 : "/static/"
         },
 
@@ -96,7 +96,7 @@ module.exports = (env) => {
                                 "postcss-loader",
                                 {
                                     loader: "less-loader",
-                                    query: {
+                                    options: {
                                         sourceMap: false,
                                     },
                                 },
@@ -150,6 +150,7 @@ module.exports = (env) => {
 
         //自动补全后缀
         resolve: {
+            enforceExtension:false,        //2.0 后 不能写 extensions :[""]
             extensions: ['.js', '.jsx','.json'],      //比如 test.js   可以写成 require('test')
             modules: [
                 path.resolve("src"),         //比如 src/app/components/xx  可以写成 app/components/xx
@@ -167,12 +168,13 @@ module.exports = (env) => {
         options.plugins = options.plugins.concat([
             new webpack.NamedModulesPlugin(),                   //打印更具可读性模块名称在浏览器控制台
             new webpack.NoEmitOnErrorsPlugin(),                 //错误不打断
+            new webpack.NoErrorsPlugin(),
             new webpack.DefinePlugin({                          //调试
                 __DEBUG__: true,
             }),
             new webpack.HotModuleReplacementPlugin(),           //热加载插件  
             new OpenBrowserPlugin({                            //编译完成打开浏览器
-                url: `http://${HOST}:${PORT}`
+                url: `${host}:${dev_port}`
             })
         ])
     } else {
@@ -242,7 +244,7 @@ module.exports = (env) => {
     }
     options.plugins.push(
         new HtmlWebpackPlugin({
-            title: "react-redux-webpack2 项目构建练习 ：）",
+            title: "李金珂的小屋",
             filename: "index.html",           //自动把打包的js文件引入进去
             template: path.resolve(__dirname, "src/index.html"),  //模板文件
             hash: true,        //添加hash码
