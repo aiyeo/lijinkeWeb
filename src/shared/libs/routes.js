@@ -47,8 +47,20 @@ export default {
       getComponent: loadComponent(System.import('app/routes/articleDetail')),
     },
     {
+      path: "about",
+      getComponent: loadComponent(System.import('app/routes/about')),
+    },
+    {
+      path: "admin",
+      getComponent: loadComponent(System.import('app/routes/admin')),
+    },
+    {
       path: "excel",
       getComponent: loadComponent(System.import('app/routes/excel'))
+    },
+    {
+      path: "test",
+      getComponent: loadComponent(System.import('app/routes/test'))
     }
   ]
 }

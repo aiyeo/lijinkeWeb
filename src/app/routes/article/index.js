@@ -35,7 +35,8 @@ export default class Article extends React.Component {
         editTitle: "",              //上传文章标题
         editAuthor: "",            //上传文章作者
         editContent: "",            //上传文章内容
-        editCategory:["杂文"]       //上传文章分类
+        editCategory:["杂文"],       //上传文章分类
+        editEmail:""               //作者邮箱
     }
     render() {
         const { articleLists, ranking } = this.props
@@ -143,6 +144,10 @@ export default class Article extends React.Component {
                             <input type="text" onChange={(e) => this.setState({ editAuthor: e.target.value })} name="editAuthor" className="edit-author" placeholder="默认【佚名】" maxLength="10" />
                         </fieldset>
                         <fieldset>
+                            <span>邮箱：</span>
+                            <input type="email" onChange={(e) => this.setState({ editEmail: e.target.value })} name="editAuthor" className="edit-author" placeholder="审核通过将通过此邮箱通知你" required />
+                        </fieldset>
+                        <fieldset>
                             <p>文章内容：</p>
                             <textarea name="editContent" onChange={(e) => this.setState({ editContent: e.target.value })} className="edit-textarea" placeholder="有啥想说的~" required></textarea>
                         </fieldset>
@@ -179,18 +184,20 @@ export default class Article extends React.Component {
             editTitle,
             editAuthor = "佚名",
             editContent,
+            editEmail,
             editCategory
         } = this.state
 
         if (!editTitle) return Message.error('请填写文章标题!')
         if (!editContent) return Message.error('文章内容不能为空!')
+        if (!editEmail) return Message.error('邮箱不能为空!')
 
-        // Message.info('开发中!')
         let values = {}
         values.editTitle = editTitle
         values.editAuthor = editAuthor
         values.editContent = editContent
         values.editCategory = editCategory
+        values.editEmail = editEmail
         values.publishDate = helper.getCurrentTime()
         values.pageView = "0"
         values.like= "0",         

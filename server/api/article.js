@@ -5,6 +5,7 @@ const fs = require("fs")
 const debug = require('debug')('article')
 const { tArticle } = require("../db/connect")
 const momnet = require("moment")
+const sendEmail = require("../utils/sendEmai")
 
 //文章列表
 
@@ -23,7 +24,9 @@ router.get('/lists', async (req, res, next) => {
 router.get('/ranking', async (req, res, next) => {
     const { type = "like" } = req.query
     debug(`[排行榜Type:]${type}`);
-    const data = await tArticle.find({ approve: true }, { title: 1, like: 1, pageView: 1 }).sort({[type]:-1}).limit(5)
+    const data = await tArticle.find({ approve: true }, { title: 1, like: 1, pageView: 1 })
+        .sort({[type]:-1})
+        .limit(5)
     res.send({
         rankingData: data
     })
@@ -45,6 +48,7 @@ router.post("/add-article", (req, res, next) => {
             editAuthor,
             editContent,
             publishDate,
+            editEmail,
             pageView,
             like,
             approve,
@@ -53,7 +57,7 @@ router.post("/add-article", (req, res, next) => {
         debug('[client body]: ',postData)
 
         // tArticle.insertMany
-        const data = await tArticle.insertMany(
+        const data = await tArticle.create(
             {
                 title:editTitle,
                 content:editContent,
@@ -62,6 +66,7 @@ router.post("/add-article", (req, res, next) => {
                 pageView:pageView,
                 like:like,
                 approve:approve,
+                email:editEmail,
                 category:editCategory
             }
         )
@@ -81,7 +86,7 @@ router.post("/articleDetail", (req, res, next) => {
         postData +=data
     })
     req.on('end',async ()=>{
-        const { articleId } = postData
+        const { articleId} = postData
         debug( '【articleId】',articleId)
         const articleDetail = (await tArticle.find({ _id: articleId })) || []
         res.send({
@@ -93,15 +98,15 @@ router.post("/articleDetail", (req, res, next) => {
 
 
 //TODO 接口有问题
-router.post('/addPageView',(req,res,next)=>{
+router.post('/addPageView',async (req,res,next)=>{
     let postData = ""
     req.on("data",(data)=>{
         postData +=data
     })
     req.on('end',async ()=>{
-        const { articleId } = postData
-        debug( '【articleId】',articleId)
-        const pageView = (await tArticle.find({_id:articleId},{pageView:1})).pageView
+        const { articleId ,countTime} = postData
+        debug( '【articleId】',articleId,'【countTime】',countTime)
+        const pageView = (await tArticle.find({_id:articleId},{pageView:1}))[0].pageView
         const articleDetail = await tArticle.update({ _id: articleId },{$set:{'pageView':++pageView}})
         res.send({
             success:1
@@ -109,5 +114,6 @@ router.post('/addPageView',(req,res,next)=>{
         debug('[浏览量 pv +1]')
     })
 })
+
 
 module.exports = router

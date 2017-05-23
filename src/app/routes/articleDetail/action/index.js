@@ -11,9 +11,9 @@ export default function getArticleDetail (id) {
             })
         }
 }
-export function addPageView (id) {
+export function addPageView (id,countTime) {
     return async function (dispatch) {
-        const info = await helper.postJson("/article/addPageView",{articleId:id})
+        const info = await helper.postJson("/article/addPageView",{articleId:id,countTime})
             dispatch({
                 type: PAGE_VIEW,
                 info

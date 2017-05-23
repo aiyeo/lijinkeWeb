@@ -14,7 +14,7 @@ const options = {
   AUTHCODE: "uctllvpdfeekiefi", //授权码
   staticPath: __dirname + '/../public',
   currentMonth: new Date().getMonth() + 1,
-  companyName: "金珂拉皮条有限公司", //公司名字
+  companyName: "李金珂的小屋", //公司名字
   toolInfo: "工资条发放小工具v0.1", //工具名字
   currentTime:function() {
     const date = new Date(),

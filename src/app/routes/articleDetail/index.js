@@ -37,9 +37,13 @@ export default class ArticleDetail extends React.Component{
             </div>
         )
     }
+    countPageView = (id)=>{
+        const countTime = localStorage.getItem('countTime') || new Date().getTime()
+        this.props.addPageView(id,countTime)
+    }
     componentDidMount(){
         const {params:{_id},getArticleDetail,addPageView} = this.props
         getArticleDetail(_id)
-        addPageView(_id)
+        this.countPageView(_id)
     }
 }

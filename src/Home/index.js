@@ -37,15 +37,15 @@ export default class Home extends React.Component {
       iconName:"icon-zhaopian-copy",
       href:"/photo"
     },{
-      title:"工资条",
-      text:"发邮件",
-      iconName:"icon-2guanyuwomeneps",
-      href:"/excel"
-    },{
       title:"有话说",
       text:"说一说",
       iconName:"icon-luyinshuohuashengyin",
       href:"/article"
+    },{
+      title:"关于我",
+      text:"瞧一瞧",
+      iconName:"icon-2guanyuwomeneps",
+      href:"/about"
     }]
     return (
       <div key="home">

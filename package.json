@@ -7,12 +7,12 @@
   "scripts": {
     "start": "npm run dev",
     "clean": "rimraf public/static",
-    "prod-server": "npm run build && cross-env NODE_ENV=PROD pm2 restart ./server.js",
+    "prod-server": "npm run build && cross-env NODE_ENV=PROD node server.js",
     "dev-server": "set debug=*,-not_this && cross-env NODE_ENV=DEV nodemon server.js",
     "build": "npm run clean && webpack --env.mode=PROD --progress --config webpack.config.js",
     "dev": "npm run clean &&  webpack-dev-server --config webpack.config.js",
     "upgrade": "yarn upgrade",
-    "stop":"pm2 stop all",
+    "stop": "pm2 stop all",
     "connect-db": "mongod --dbpath ./db/lijinkeWeb",
     "restore": "mongorestore -d lijinkeWeb --drop ./db/lijinkeWeb",
     "dump": "mongodump -d lijinkeWeb -o ./db"
@@ -24,6 +24,7 @@
     "babel-runtime": "^6.23.0",
     "body-parser": "^1.17.1",
     "classnames": "^2.2.5",
+    "compression": "^1.6.2",
     "cors": "^2.8.3",
     "cross-env": "^4.0.0",
     "cssnano": "^3.10.0",
