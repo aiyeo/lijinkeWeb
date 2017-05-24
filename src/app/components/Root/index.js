@@ -1,6 +1,7 @@
 import React from "react"
 import Loading from "shared/components/Loading"
 import Header from "shared/components/Header"
+import Weather from "shared/components/Weather"
 //将所有组件包裹起来  react-router 会根据对应路由加载对应组件
 
 export default class Root extends React.Component {
@@ -21,6 +22,11 @@ export default class Root extends React.Component {
           />
         <Header
           title="李金珂的小屋"
+        />
+        <Weather
+          type = {"rain"}                          // snow 下雪 rain 下雨
+          snowR ={ Math.random() * 5 + 1 }        //雪花半径
+          num= {12}                             //数量
         />
         {/*消息弹窗放在这里*/}
         <div key="jk-message" className="jk-message"></div>
