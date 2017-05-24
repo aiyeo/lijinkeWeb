@@ -24,7 +24,7 @@ export default class Root extends React.Component {
           title="李金珂的小屋"
         />
         <Weather
-          type = {"rain"}                          // snow 下雪 rain 下雨
+          type = {"snow"}                          // snow 下雪 rain 下雨
           snowR ={ Math.random() * 5 + 1 }        //雪花半径
           num= {12}                             //数量
         />

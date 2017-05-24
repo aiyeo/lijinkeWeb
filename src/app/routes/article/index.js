@@ -91,7 +91,7 @@ export default class Article extends React.Component {
                                     </ul>
                                 )
 
-                                : <p><i className="icon icon-article"></i>暂无文章</p>
+                                : <p style={{"textAlign":"center"}}><i className="icon icon-article"></i>努力加载中 :)</p>
                         }
 
                     </section>
@@ -136,15 +136,15 @@ export default class Article extends React.Component {
                 >
                     <form method="post" className="edit-form">
                         <fieldset>
-                            <span>文章名：</span>
+                            <span className="label">文章名：</span>
                             <input type="text" onChange={(e) => this.setState({ editTitle: e.target.value })} name="editTile" className="edit-title" placeholder="做个标题党" maxLength="20" required />
                         </fieldset>
                         <fieldset>
-                            <span>作者名：</span>
+                            <span className="label">作者名：</span>
                             <input type="text" onChange={(e) => this.setState({ editAuthor: e.target.value })} name="editAuthor" className="edit-author" placeholder="默认【佚名】" maxLength="10" />
                         </fieldset>
                         <fieldset>
-                            <span>邮箱：</span>
+                            <span className="label">邮箱：</span>
                             <input type="email" onChange={(e) => this.setState({ editEmail: e.target.value })} name="editAuthor" className="edit-author" placeholder="审核通过将通过此邮箱通知你" required />
                         </fieldset>
                         <fieldset>

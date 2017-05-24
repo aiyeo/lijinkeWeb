@@ -40,7 +40,7 @@ export default class Weather extends React.Component {
     draw = () => {
         const { num, snowR , type, strokeColor,speed,rainLen} = this.props
         const data = this.data
-        this.context.clearRect(0, 0, this.canvasHeight, this.canvasHeight)
+        this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
         this.context.save()
         this.context.fillStyle = strokeColor
         this.context.lineWidth =2 
@@ -88,7 +88,7 @@ export default class Weather extends React.Component {
                 r: snowR
             })
         }
-        setInterval(this.draw, 40)
+        setInterval(this.draw.bind(this), 40)
         this._resize()
     }
 }

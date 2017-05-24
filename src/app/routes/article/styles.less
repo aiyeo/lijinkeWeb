@@ -205,6 +205,10 @@
 .edit-article-modal{
     .jinke-modal{
         width:calc(~"100vw - 200px")
+        
+    }
+    .modal-content{
+        padding: 10px 20px !important;
     }
     .edit-form{
         fieldset{
@@ -212,14 +216,19 @@
             margin: 0 auto 10px auto;
             padding: 0;
             width: 95%;
-            display: flex;
+            display: inline-block;
             align-items: center;
+            justify-content: space-around;
+            .label{
+                display: inline-block;
+                width: 28%;     
+            }
             input,textarea{
                 padding: 4px 10px;
                 outline: none;
             }
             input{
-                width: 100%;
+                flex-basis: 80%;
                 margin-top:6px;
             }
             textarea{
