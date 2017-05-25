@@ -11,6 +11,7 @@ const cors = require('cors')
 const writeIndex = require('./server/utils/writeIndex')
 const getFetchData = require('./server/middleware/getFetchData')
 const { PORT } = require("./config")
+const mode = process.env.NODE_ENV || "DEV"
 
 
 //中间键部分
@@ -46,9 +47,15 @@ const serverRuningInfo = `
     =============== [ My React App ] ===============
     =============== [ lijinke house ] ================
     =============== [ port : ${port} ] ============== 
+    =============== [ mode : ${mode} ] ============== 
                         :)
 `
-http.listen(port, () => debug(serverRuningInfo))
+http.listen(
+    port, 
+    () => mode === "DEV" 
+        ? debug(serverRuningInfo) 
+        : console.log(serverRuningInfo)
+)
 
 module.exports = http
 

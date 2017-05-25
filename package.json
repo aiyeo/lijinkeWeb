@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "start": "npm run dev",
-    "clean": "rimraf public/static",
+    "clean": "rimraf public/static && npm run clean-info",
+    "clean-info":"node -e \"console.log('=======[ static delete success ]======== :)');\" ",
     "prod-server": "npm run build && cross-env NODE_ENV=PROD node server.js",
     "dev-server": "set debug=*,-not_this && cross-env NODE_ENV=DEV nodemon server.js",
     "build": "npm run clean && webpack --env.mode=PROD --progress --config webpack.config.js",
