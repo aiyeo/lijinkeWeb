@@ -27,7 +27,7 @@ io.on("connection", function (socket) {
         io.emit('userJoin',{onlineNumber,userName:`吃瓜群众${clientRanDomName}`})
         debug(`[当前在线人数  : ${onlineNumber} ]`)
     })
-    
+    //监听用户消息
     socket.on('message',( messageInfo )=>{
         //向所有用户 推送当前消息
         io.emit('message',messageInfo);

@@ -23,11 +23,11 @@ export default class Root extends React.Component {
         <Header
           title="李金珂的小屋"
         />
-        <Weather
+        {/*<Weather
           type = {"snow"}                          // snow 下雪 rain 下雨
           snowR ={ Math.random() * 5 + 1 }        //雪花半径
           num= {12}                             //数量
-        />
+        />*/}
         {/*消息弹窗放在这里*/}
         <div key="jk-message" className="jk-message"></div>
           {this.props.children}

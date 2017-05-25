@@ -35,8 +35,8 @@ export default class Article extends React.Component {
         editTitle: "",              //上传文章标题
         editAuthor: "",            //上传文章作者
         editContent: "",            //上传文章内容
-        editCategory:["杂文"],       //上传文章分类
-        editEmail:""               //作者邮箱
+        editCategory: ["杂文"],       //上传文章分类
+        editEmail: ""               //作者邮箱
     }
     render() {
         const { articleLists, ranking } = this.props
@@ -91,7 +91,7 @@ export default class Article extends React.Component {
                                     </ul>
                                 )
 
-                                : <p style={{"textAlign":"center"}}><i className="icon icon-article"></i>努力加载中 :)</p>
+                                : <p style={{ "textAlign": "center" }}><i className="icon icon-article"></i>努力加载中 :)</p>
                         }
 
                     </section>
@@ -136,16 +136,16 @@ export default class Article extends React.Component {
                 >
                     <form method="post" className="edit-form">
                         <fieldset>
-                            <span className="label">文章名：</span>
-                            <input type="text" onChange={(e) => this.setState({ editTitle: e.target.value })} name="editTile" className="edit-title" placeholder="做个标题党" maxLength="20" required />
+                            {/*<span className="label">文章名：</span>*/}
+                            <input type="text" onChange={(e) => this.setState({ editTitle: e.target.value })} name="editTile" className="edit-title" placeholder="标题,做个标题党" maxLength="20" required />
                         </fieldset>
                         <fieldset>
-                            <span className="label">作者名：</span>
-                            <input type="text" onChange={(e) => this.setState({ editAuthor: e.target.value })} name="editAuthor" className="edit-author" placeholder="默认【佚名】" maxLength="10" />
+                            {/*<span className="label">作者名：</span>*/}
+                            <input type="text" onChange={(e) => this.setState({ editAuthor: e.target.value })} name="editAuthor" className="edit-author" placeholder="姓名,默认【佚名】" maxLength="10" />
                         </fieldset>
                         <fieldset>
-                            <span className="label">邮箱：</span>
-                            <input type="email" onChange={(e) => this.setState({ editEmail: e.target.value })} name="editAuthor" className="edit-author" placeholder="审核通过将通过此邮箱通知你" required />
+                            {/*<span className="label">邮箱：</span>*/}
+                            <input type="email" onChange={(e) => this.setState({ editEmail: e.target.value })} name="editAuthor" className="edit-author" placeholder="邮箱,审核通过将通过此邮箱通知你" required />
                         </fieldset>
                         <fieldset>
                             <p>文章内容：</p>
@@ -169,8 +169,8 @@ export default class Article extends React.Component {
             </Container>
         )
     }
-    categoryChange = (e)=>{
-        this.setState({ editCategory:[e.target.value] })
+    categoryChange = (e) => {
+        this.setState({ editCategory: [e.target.value] })
     }
     openArticleModal = () => {
         this.setState({ articleModalVisible: true })
@@ -179,7 +179,7 @@ export default class Article extends React.Component {
         this.setState({ articleModalVisible: false })
     }
     //上传文章
-    publishArticle = async() => {
+    publishArticle = async () => {
         const {
             editTitle,
             editAuthor = "佚名",
@@ -200,14 +200,14 @@ export default class Article extends React.Component {
         values.editEmail = editEmail
         values.publishDate = helper.getCurrentTime()
         values.pageView = "0"
-        values.like= "0",         
-        values.approve = false,           //是否审核通过
-        await this.props.uploadArticle(values)
-        if(this.props.uploadInfo && this.props.uploadInfo.success === 1){
+        values.like = "0",
+            values.approve = false,           //是否审核通过
+            await this.props.uploadArticle(values)
+        if (this.props.uploadInfo && this.props.uploadInfo.success === 1) {
             Message.success('上传成功,请等待审核!')
-            this.setState({articleModalVisible:false})
-        }else{
-              Message.error('上传失败!')
+            this.setState({ articleModalVisible: false })
+        } else {
+            Message.error('上传失败!')
         }
     }
     toggleRanking = (rankingType) => {

@@ -7,6 +7,7 @@ import { Link } from "react-router"
 import classNames from "classnames"
 import helper from "shared/libs/helper"
 import moment from "moment"
+import {adminEmail} from "../../../../config"
 
 import "./styles.less"
 
@@ -51,14 +52,14 @@ export default class Admin extends React.Component {
                                         pageView,
                                         like,
                                         approve,
-                                        email,
+                                        email = adminEmail,
                                         category
                                     } = item
                                     let date = moment(publishDate).format("YYYY-MM-DD HH:mm:ss")
                                     return (
                                         <tr>
                                             <td>{title}</td>
-                                            <td><a onClick={()=>this.showContent(content)} className="btn">查看内容</a></td>
+                                            <td><a onClick={()=>this.showContent(content)} className="btn btn-info">查看内容</a></td>
                                             <td>{author}</td>
                                             <td>{date}</td>
                                             <td>{pageView}</td>
@@ -110,9 +111,13 @@ export default class Admin extends React.Component {
         })
     }
     onApprove = async (id,title,publishDate,email)=>{
-        if(confirm(`确认通过 [${title}]?`)){
-            const data = await helper.postJson('/admin/approve',{id,title,publishDate,email})
+        if(confirm(`确认通过 【${title}】?`)){
+            await helper.postJson('/admin/approve',{id,title,publishDate,email})
             Message.success('审核通过！')
+            const data = await helper.getJson('/admin/articleList')
+            this.setState({
+                articleList:data.data
+            })
         }
     }
     async componentDidMount(){

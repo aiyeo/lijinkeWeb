@@ -11,17 +11,17 @@ import Root from "app/components/Root"
  */
 const loadComponent = (importor, name = 'default') => (location, cb) => {
   importor.then((module) => {
-    console.info(`动态路由加载成功!`)
+    console.info(`[success] 动态路由加载成功!`)
     cb(null, module[name])
   })
     .catch((err) => {
-      console.debug(`动态路由加载失败:${err}`)
+      console.debug(`[error] 动态路由加载失败,失败原因:${err}`)
     })
 }
 
 export default {
   path: "/",
-  component: Root,
+  getComponent: loadComponent(System.import('app/components/Root')),
   indexRoute: {
     getComponent: loadComponent(System.import('Home'))
   },

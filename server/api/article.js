@@ -25,7 +25,7 @@ router.get('/ranking', async (req, res, next) => {
     const { type = "like" } = req.query
     debug(`[排行榜Type:]${type}`);
     const data = await tArticle.find({ approve: true }, { title: 1, like: 1, pageView: 1 })
-        .sort({[type]:-1})
+        .sort({ [type]: -1 })
         .limit(5)
     res.send({
         rankingData: data
@@ -35,83 +35,88 @@ router.get('/ranking', async (req, res, next) => {
 
 //新增文章
 
-router.post("/add-article", (req, res, next) => {
-    // 这里express 解析不了 fetch 的body 有问题 body是 "" console.log(req.body); 
-    // 这里用原生 的 on('data')  来解析   Buffer
-    let postData = ""
-    req.on("data",(data)=>{
-        postData +=data
-    })
-    req.on('end', async () => {
-        const {
-            editTitle,
-            editAuthor,
-            editContent,
-            publishDate,
-            editEmail,
-            pageView,
-            like,
-            approve,
-            editCategory
-        } = JSON.parse(postData)
-        debug('[client body]: ',postData)
+router.post("/add-article", async (req, res, next) => {
+    const {
+        editTitle,
+        editAuthor,
+        editContent,
+        publishDate,
+        editEmail = config.adminEmail,
+        pageView,
+        like,
+        approve,
+        editCategory
+        } = req.body
+    debug('[client body]: ', req.body)
 
-        // tArticle.insertMany
-        const data = await tArticle.create(
-            {
-                title:editTitle,
-                content:editContent,
-                author:editAuthor || "佚名",
-                publishDate:momnet(publishDate).format("YYYY-MM-DD HH:mm:ss"),
-                pageView:pageView,
-                like:like,
-                approve:approve,
-                email:editEmail,
-                category:editCategory
-            }
-        )
-        debug('新增文章成功')
-        res.send({success: 1})
-    })
+    // tArticle.insertMany
+    const data = await tArticle.create(
+        {
+            title: editTitle,
+            content: editContent,
+            author: editAuthor || "佚名",
+            publishDate: momnet(publishDate).format("YYYY-MM-DD HH:mm:ss"),
+            pageView: pageView,
+            like: like,
+            approve: approve,
+            email: editEmail,
+            category: editCategory
+        }
+    )
+    debug('新增文章成功')
+    res.send({ success: 1 })
 })
 
 
 //获取文章详情
 /**
- * parmas {articleId}  String
+ * parmas {articleId}  String    文章id
  */
-router.post("/articleDetail", (req, res, next) => {
-    let postData = ""
-    req.on("data",(data)=>{
-        postData +=data
+router.post("/articleDetail", async (req, res, next) => {
+    const { articleId } = req.body
+    debug('【articleId】', articleId)
+    const articleDetail = (await tArticle.find({ _id: articleId }))[0] || []
+    res.send({
+        articleDetail
     })
-    req.on('end',async ()=>{
-        const { articleId} = postData
-        debug( '【articleId】',articleId)
-        const articleDetail = (await tArticle.find({ _id: articleId })) || []
-        res.send({
-            articleDetail
-        })
-        debug('获取文章详情成功')
-    })
+    debug('获取文章详情成功')
 })
 
-
-//TODO 接口有问题
-router.post('/addPageView',async (req,res,next)=>{
-    let postData = ""
-    req.on("data",(data)=>{
-        postData +=data
+/**
+ * 文章浏览量
+ * parmas {articleId} String 文章id
+ */
+router.post('/addPageView', async (req, res, next) => {
+    const { articleId } = req.body
+    let pageView = (await tArticle.find({ _id: articleId }, { pageView: 1 }))[0].pageView
+    debug('【articleId】', articleId, '【pageView】:',pageView)
+    const articleDetail = await tArticle.update({ _id: articleId }, { $set: { pageView:++pageView} })
+    res.send({
+        success: 1
     })
-    req.on('end',async ()=>{
-        const { articleId ,countTime} = postData
-        debug( '【articleId】',articleId,'【countTime】',countTime)
-        const pageView = (await tArticle.find({_id:articleId},{pageView:1}))[0].pageView
-        const articleDetail = await tArticle.update({ _id: articleId },{$set:{'pageView':++pageView}})
-        res.send({
-            success:1
-        })
-        debug('[浏览量 pv +1]')
+    debug('[浏览量 pv +1]')
+})
+
+/**
+ * 点赞
+ * @parmas {isLike} Boolean  点赞 true or 取消赞 false
+ * @parmas {id}  String  文章id
+ */
+router.post("/toggleLike", async (req,res,next)=>{
+    const {isLike,id} = req.body
+    debug('[喜欢]:',isLike)
+    let likeNum = (await tArticle.find({ _id: id }, { like: 1 }))[0].like
+
+    if(isLike === true){
+        likeNum ++
+    }else if(isLike === false){
+        likeNum --
+    }
+    debug('喜欢量',likeNum)
+    const data = await tArticle.update({ _id: id }, { $set: { like:likeNum} })
+    debug('[喜欢点赞成功]')
+    res.send({
+        success:1
     })
 })
 

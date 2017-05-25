@@ -6,7 +6,7 @@ module.exports = {
     sendEmail( options = {} ) {
         let defaultOptions = {
             from: adminEmail,
-            to: "jinke@pokerlegend.cn",
+            to: adminEmail,
             subject: defaultEmailTitle,
             pass: AUTHCODE,
             html: "<p>无内容</p>"
@@ -35,7 +35,7 @@ module.exports = {
                     rej(err)
                 }
                 debug(`邮件发送成功!`, messageId, response)
-                res()
+                res(true)
             })
         })
     }

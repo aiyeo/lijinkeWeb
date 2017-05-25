@@ -9,17 +9,19 @@ const http = require("http").createServer(app)
 const fs = require('fs')
 const cors = require('cors')
 const writeIndex = require('./server/utils/writeIndex')
-const {PORT} = require("./config")
+const getFetchData = require('./server/middleware/getFetchData')
+const { PORT } = require("./config")
 
 
 //中间键部分
 app.use(express.static(`${__dirname}/public`));
 // 转换 application/json
-app.use(compression())         //GZIP 压缩
-app.use(bodyParser.json())
+// app.use(compression())         //GZIP 压缩
+// app.use(bodyParser.json())
 // 转换 application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cors())
+app.use(getFetchData)
 
 //将打包的dist/index.html  写入到  public/index.html
 writeIndex();

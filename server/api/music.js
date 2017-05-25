@@ -17,6 +17,7 @@ router.get('/', (req, res, next) => {
     next();
 })
 
+//获取音乐信息  只有一首歌 没存数据库 直接io操作
 function getMusicInfo(fs) {
     const musicFile = fs.readdirSync(`${staticPath}/music`)
     debug('音乐文件读取成功')
@@ -38,6 +39,11 @@ const fieldsConfig = {
     img: "audioImg",
     file: "audioFile"
 }
+
+/**
+ * 上传音乐               
+ * TODO 音乐上传上来保存的时候文件损坏  :(
+ */
 router.post('/uploadMusic', (req, res, next) => {
     const form = new multiparty.Form();
     form.parse(req, (err, fields, files) => {
@@ -57,7 +63,7 @@ router.post('/uploadMusic', (req, res, next) => {
     })
 })
 
-
+//保存上传的音乐文件
 function saveUploadAudio(files, fileType) {
     let fileData = {};
     if (files && files.length >= 1) {

@@ -7,7 +7,7 @@ const multiparty = require('multiparty')
 const xls2json = require("xls-to-json")
 const { host, port, staticPath, tableFields, companyName, toolInfo } = require("./../../config")
 
-const email = require('../utils/sendEmai')
+const email = require('../utils/sendEmail')
 
 let excelInfo = []
 const outputJsonPath = `${staticPath}/json/excelInfo.json`
@@ -45,29 +45,24 @@ router.post('/getExcelInfo', async (req, res, next) => {
 })
 
 //发送邮件
-router.post('/sendEmail', (req, res, next) => {
-    let postData = ""
+router.post('/sendEmail', async (req, res, next) => {
     let successUser = []
-    req.on('data', (data) => {
-        postData += data
-    })
-    req.on('end', async () => {
-        let tdStyle = "padding:3px 5px; text-align:center;"
-        const { sendEmailTime, emailTitle } = JSON.parse(postData)
-        debug('[接收到客户端数据]: ', postData)
-        const jsonResult = JSON.parse(fs.readFileSync(outputJsonPath).toString())
-        let fields = ""
-        Object.values(tableFields).map((value) => fields += `<td style="${tdStyle}">${value}</td>`)
-        
-        
-        for (let item of jsonResult) {
-            let content = ""
-            let str = ""
-             Object.keys(tableFields).forEach((key)=>{
-                 str += `<td style="${tdStyle}">${item[tableFields[key]]}</td>`
-             })
-             content += `<tr>${str}</tr>`
-            const html = `<table style="margin-top:20px;border:1px solid;width:100%;">
+    let tdStyle = "padding:3px 5px; text-align:center;"
+    const { sendEmailTime, emailTitle } = req.body
+    debug('[接收到客户端数据]: ', req.body)
+    const jsonResult = JSON.parse(fs.readFileSync(outputJsonPath).toString())
+    let fields = ""
+    Object.values(tableFields).map((value) => fields += `<td style="${tdStyle}">${value}</td>`)
+
+
+    for (let item of jsonResult) {
+        let content = ""
+        let str = ""
+        Object.keys(tableFields).forEach((key) => {
+            str += `<td style="${tdStyle}">${item[tableFields[key]]}</td>`
+        })
+        content += `<tr>${str}</tr>`
+        const html = `<table style="margin-top:20px;border:1px solid;width:100%;">
                     <thead>
                         <tr>${fields}</tr>
                     </thead>
@@ -75,18 +70,17 @@ router.post('/sendEmail', (req, res, next) => {
                 </table>
                 <p style=" text-align: right;margin-top:25px;">${companyName}</p>
                 <p style=" text-align: right;margin:5px 0;">${toolInfo} ---${sendEmailTime}</p>`
-            await email.sendEmail({
-                to: item[tableFields["email"]],
-                subject: `${emailTitle.replace('{name}', item[tableFields["name"]])}`,
-                html: html
-            })
-            debug(`${item[tableFields["name"]]}发送成功!`)
-            successUser.push(item[tableFields["name"]])
-        }
-        // setTimeout(()=>res.send(successUser),3000)
-        res.send(successUser)
+        await email.sendEmail({
+            to: item[tableFields["email"]],
+            subject: `${emailTitle.replace('{name}', item[tableFields["name"]])}`,
+            html: html
+        })
+        debug(`${item[tableFields["name"]]}发送成功!`)
+        successUser.push(item[tableFields["name"]])
+    }
+    // setTimeout(()=>res.send(successUser),3000)
+    res.send(successUser)
 
-    })
 })
 
 module.exports = router
