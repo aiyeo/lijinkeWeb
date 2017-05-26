@@ -3,7 +3,7 @@ import ReactDOM from "react-dom"
 import classNames from "classnames"
 import "./styles.less"
 
-export default class Madal extends React.Component {
+export default class Madal extends React.PureComponent {
     static deafultProps = {
         title: "标题",
     }

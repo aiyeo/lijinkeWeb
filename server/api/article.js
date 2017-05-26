@@ -55,7 +55,7 @@ router.post("/add-article", async (req, res, next) => {
             title: editTitle,
             content: editContent,
             author: editAuthor || "佚名",
-            publishDate: momnet(publishDate).format("YYYY-MM-DD HH:mm:ss"),
+            publishDate: publishDate,
             pageView: pageView,
             like: like,
             approve: approve,

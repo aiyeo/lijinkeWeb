@@ -25,7 +25,7 @@ import "./styles.less"
     )
 )
 
-export default class Excel extends React.Component {
+export default class Excel extends React.PureComponent {
     state = {
         excelReady: false,   //表格是否能上传
         excelInfo: [],

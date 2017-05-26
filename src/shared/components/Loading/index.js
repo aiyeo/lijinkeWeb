@@ -1,7 +1,7 @@
 import React,{PropTypes} from 'react'
 import "./styles.less"
 
-export default class Loading extends React.Component {
+export default class Loading extends React.PureComponent {
     static defaultProps = {
         time:6
     }

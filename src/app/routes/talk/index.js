@@ -22,7 +22,7 @@ import userJoin from "./action"
     }, dispatch)
   )
 )
-export default class Talk extends React.Component {
+export default class Talk extends React.PureComponent {
   constructor(props) {
     super(props)
     this.socket = null

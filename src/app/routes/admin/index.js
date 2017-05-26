@@ -12,7 +12,7 @@ import {adminEmail} from "../../../../config"
 import "./styles.less"
 
 //暂时性的管理后台  用来管理文章审核
-export default class Admin extends React.Component {
+export default class Admin extends React.PureComponent {
     state = {
         articleList:[],
         contentModalVisible:false,

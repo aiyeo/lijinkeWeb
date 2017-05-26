@@ -1,7 +1,7 @@
 import React from "react"
 import "./styles.less"
 
-export default class Header extends React.Component{
+export default class Header extends React.PureComponent{
     static defaultProps= {
         title :"李金珂"
     }

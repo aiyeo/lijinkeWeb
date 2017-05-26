@@ -26,7 +26,7 @@ import "./styles.less"
         }, dispatch)
     )
 )
-export default class MusicPlayer extends React.Component {
+export default class MusicPlayer extends React.PureComponent {
     state = {
         toggle: false,       //显示隐藏
         playing: false,      //是否播放

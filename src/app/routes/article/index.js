@@ -28,7 +28,7 @@ import "./styles.less"
         }, dispatch)
     )
 )
-export default class Article extends React.Component {
+export default class Article extends React.PureComponent {
     state = {
         rankingType: "like",       //默认喜欢 降序排列
         articleModalVisible: false,

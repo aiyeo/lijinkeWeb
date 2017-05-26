@@ -10,7 +10,7 @@ import classNames from "classnames"
 
 import './styles.less'
 
-export default class RotatePhoto extends React.Component {
+export default class RotatePhoto extends React.PureComponent {
     static defaultProps = {
         space:30,
         width:300,

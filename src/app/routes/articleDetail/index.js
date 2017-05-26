@@ -24,7 +24,7 @@ import "./styles.less"
     )
 )
 
-export default class ArticleDetail extends React.Component {
+export default class ArticleDetail extends React.PureComponent {
     state = {
         isLike: false,        //true 为点赞 false 为取消赞
         likeNum: 0,           //喜欢数

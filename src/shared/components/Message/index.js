@@ -9,7 +9,7 @@ import ReactDOM from "react-dom"
 import classNames from "classnames"
 import "./styles.less"
 
-class Element extends React.Component {
+class Element extends React.PureComponent {
     state = {
         remove: false
     }

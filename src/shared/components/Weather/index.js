@@ -3,7 +3,7 @@ import ReactDOM from "react-dom"
 import classNames from "classnames"
 import "./styles.less"
 
-export default class Weather extends React.Component {
+export default class Weather extends React.PureComponent {
     static defaultProps = {
         strokeColor: "rgba(255,255,255,.4)",
         speed: Math.random() * 5 + 5,          //速度

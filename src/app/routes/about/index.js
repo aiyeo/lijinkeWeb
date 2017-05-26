@@ -11,7 +11,7 @@ import classNames from "classnames"
 
 import "./styles.less"
 
-export default class About extends React.Component {
+export default class About extends React.PureComponent {
     state = {
     }
     render() {

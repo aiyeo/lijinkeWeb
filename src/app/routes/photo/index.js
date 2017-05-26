@@ -58,7 +58,7 @@ photoCovers.map((v, i) => {
     v.content = `content${i}`
   }
 })
-export default class Photo extends React.Component{
+export default class Photo extends React.PureComponent{
   constructor(props){
     super(props)
   }
