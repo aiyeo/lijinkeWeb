@@ -57,10 +57,6 @@ export default {
     {
       path: "excel",
       getComponent: loadComponent(System.import('app/routes/excel'))
-    },
-    {
-      path: "test",
-      getComponent: loadComponent(System.import('app/routes/test'))
     }
   ]
 }

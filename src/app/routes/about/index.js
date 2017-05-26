@@ -28,4 +28,7 @@ export default class About extends React.PureComponent {
             </Container>
         )
     }
+    componentDidMount(){
+        if(! window.DeviceOrientationEvent) return Message.info('你的设备不支持陀螺仪:(')
+    }
 }
