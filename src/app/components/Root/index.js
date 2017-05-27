@@ -17,11 +17,11 @@ export default class Root extends React.PureComponent {
     const {isLoading} = this.state
     return (
       <div>
-         <Loading
+         {/*<Loading
             isLoading={isLoading}
-          />
+          />*/}
         <Header
-          title="李金珂的小屋"
+          title="test"
         />
         {/*<Weather
           type = {"snow"}                          // snow 下雪 rain 下雨
