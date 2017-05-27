@@ -29,7 +29,8 @@ http://lijinke.xicp.io/
 - 安装依赖 `yarn`
 - 跑起来 `yarn start`
 - 打包 `yarn run build`
-- 服务端 `node server`
+- 开发server `yarn run dev-server`
+- 生产server `yarn run prod-server`
 
 #### 
 - `赵日天,李日天师出同门,同为CV战神 ,终有一日,李觉得不能再如此,便勤奋撸码，提升自己`
