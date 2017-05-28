@@ -6,7 +6,7 @@ import Container from "shared/components/Container"
 import { Link } from "react-router"
 import classNames from "classnames"
 import moment from "moment"
-import getArticleDetail, { addPageView, toggleLike } from "./action"
+import getArticleDetail, { toggleLike } from "./action"
 
 import "./styles.less"
 
@@ -18,7 +18,6 @@ import "./styles.less"
     (dispatch) => (
         bindActionCreators({
             getArticleDetail,
-            addPageView,
             toggleLike
         }, dispatch)
     )
@@ -75,16 +74,16 @@ export default class ArticleDetail extends React.PureComponent {
         }, 500)
     }
     //增加点击量
-    countPageView = (id) => {
-        // const countTime = localStorage.getItem('countTime') || new Date().getTime()
-        this.props.addPageView(id)
-    }
+    // countPageView = (id) => {
+    //     // const countTime = localStorage.getItem('countTime') || new Date().getTime()
+    //     this.props.addPageView(id)
+    // }
     async componentDidMount() {
         const { params: { _id }, getArticleDetail, addPageView } = this.props
         const { articleInfo } = this.props
         const detail = articleInfo && articleInfo.articleDetail
         await getArticleDetail(_id)
-        await this.countPageView(_id)
+        // await this.countPageView(_id)
         detail && this.setState({ likeNum: detail.like })
     }
 }

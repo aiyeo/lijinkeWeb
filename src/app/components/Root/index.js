@@ -21,7 +21,7 @@ export default class Root extends React.PureComponent {
             isLoading={isLoading}
           />*/}
         <Header
-          title="test"
+          title="李金珂的小屋"
         />
         {/*<Weather
           type = {"snow"}                          // snow 下雪 rain 下雨

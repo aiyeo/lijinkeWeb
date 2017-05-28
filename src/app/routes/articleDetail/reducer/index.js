@@ -1,4 +1,4 @@
-import { ARTICLE_DETAIL, PAGE_VIEW, TOGGLE_LIKE } from "../action"
+import { ARTICLE_DETAIL, TOGGLE_LIKE } from "../action"
 const nameInitialState = []
 
 export default function (state = nameInitialState, action) {
@@ -8,11 +8,6 @@ export default function (state = nameInitialState, action) {
             return {
                 ...state,
                 articleInfo: action.info
-            }
-        case PAGE_VIEW:
-            return {
-                ...state,
-                pageViewInfo: action.info
             }
         case TOGGLE_LIKE:
             return state

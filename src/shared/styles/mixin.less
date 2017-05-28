@@ -28,7 +28,8 @@
 .btn-hover(@color:@default-color,@lighten:3%){
     color:#fff;
     background-color: @color;
-    &:hover{
+    border:1px solid @color;
+    &:hover,&:active{
         background-color: lighten(@color,@lighten)
     }
 }

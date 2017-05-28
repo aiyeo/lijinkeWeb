@@ -2,6 +2,7 @@ import helper from "libs/helper"
 export const ARTICLE_LIST = "article_list"
 export const ARTICLE_RANKING = "article_ranking"
 export const ARTICLE_UPLOAD = "article_upload"
+export const PAGE_VIEW = "pageView"
 
 export default function getArticleLists () {
     return async function (dispatch) {
@@ -31,6 +32,16 @@ export function uploadArticle (articleInfo) {
         dispatch({
             type:ARTICLE_UPLOAD,
             info
+        })
+    }
+}
+
+//pv统计
+export function addPageView(id, countTime) {
+    return async function (dispatch) {
+        const data = await helper.postJson("/article/addPageView", { articleId: id, countTime })
+        dispatch({
+            type: PAGE_VIEW
         })
     }
 }

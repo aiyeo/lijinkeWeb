@@ -460,6 +460,14 @@ export default class MusicPlayer extends React.PureComponent {
             this.setState({ toggle: true })
         }
     }
+    componentWillUnmount(){
+        this.audio.removeEventListener('waiting', this.loadAudio)
+        this.audio.removeEventListener('canplay', this.onPlay)
+        this.audio.removeEventListener('error', this.loadAudioError)
+        this.audio.removeEventListener('ended', this.audioEnd)
+        this.audio.removeEventListener('timeupdate', this.audioTimeUpdate)
+        this.audio.removeEventListener('volumechange', this.audioVolumeChange)
+    }
     componentDidMount() {
         this.dom = ReactDOM.findDOMNode(this)
         this.progress = this.dom.querySelector('.progress')

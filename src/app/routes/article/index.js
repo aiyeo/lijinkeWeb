@@ -10,7 +10,7 @@ import helper from "shared/libs/helper"
 import { Link } from "react-router"
 import classNames from "classnames"
 import moment from "moment"
-import getArticleLists, { getArticleRanking, uploadArticle } from "./action"
+import getArticleLists, { getArticleRanking,addPageView, uploadArticle } from "./action"
 
 import "./styles.less"
 
@@ -24,7 +24,8 @@ import "./styles.less"
         bindActionCreators({
             getArticleLists,
             getArticleRanking,
-            uploadArticle
+            uploadArticle,
+            addPageView
         }, dispatch)
     )
 )
@@ -61,7 +62,12 @@ export default class Article extends React.PureComponent {
                                             articleLists.map((list, i) => {
                                                 const { title, content, author, publishDate, pageView, like, category, _id } = list
                                                 return (
-                                                    <li className="item articleListAnimate" key={i} style={{ "animationDelay": `${i * 0.1}s` }}>
+                                                    <li 
+                                                        className="item articleListAnimate"
+                                                        key={i} 
+                                                        style={{ "animationDelay": `${i * 0.1}s` }}
+                                                        onClick={()=>this.addPageView(_id)}
+                                                    >
                                                         <h2 className="title"><Link to={`/article/detail/${_id}`}>{title}</Link></h2>
                                                         <p className="content">{content}</p>
                                                         <div className="info">
@@ -168,6 +174,9 @@ export default class Article extends React.PureComponent {
                 </Modal>
             </Container>
         )
+    }
+    addPageView = (id)=>{
+        this.props.addPageView(id)
     }
     categoryChange = (e) => {
         this.setState({ editCategory: [e.target.value] })
