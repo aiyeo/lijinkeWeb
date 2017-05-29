@@ -12,7 +12,8 @@ import classNames from "classnames"
 import Modal from "shared/components/Modal"
 import Button from "shared/components/Button"
 import Message from "shared/components/Message"
-import uploadAudio from "./action"
+import {browserHistory} from  "react-router"
+import uploadAudio,{toogleWeather} from "./action"
 
 import "./styles.less"
 
@@ -22,7 +23,8 @@ import "./styles.less"
     }),
     (dispatch) => (
         bindActionCreators({
-            uploadAudio
+            uploadAudio,
+            toogleWeather
         }, dispatch)
     )
 )
@@ -41,7 +43,8 @@ export default class MusicPlayer extends React.PureComponent {
         audioFileReady: false,
         audioImgReady: false,
         audioFile: {},
-        audioImg: {}
+        audioImg: {},
+        weather:true         //默认雨雪天气
     }
     IMG_MAX_SIZE = 1024
     static defaultProps = {
@@ -86,7 +89,8 @@ export default class MusicPlayer extends React.PureComponent {
             uploadModalVisible,
             audioFile,
             audioFileReady,
-            audioImgReady
+            audioImgReady,
+            weather
         } = this.state
         //当前播放进度
         const progress = ((currentTime / duration) * 100).toFixed(2)
@@ -164,6 +168,16 @@ export default class MusicPlayer extends React.PureComponent {
                                                 </li>
                                                 <li className="item reload-btn" key="setting2" onClick={this.audioReload}>
                                                     <i className="icon icon-shuaxin" title="重放"></i>
+                                                </li>
+                                                <li className="item weather-btn" key="setting3" onClick={this.toggleWeather}>
+                                                    {
+                                                        weather 
+                                                        ? <i className="icon icon-xiayu active" title="雨雪天气"></i>
+                                                        : <i className="icon icon-shouye active" title="晴朗天气"></i>
+                                                    }
+                                                </li>
+                                                <li>
+                                                    <i className="icon icon-gantanhao" title="神秘功能" onClick={this.goAdmin}></i>
                                                 </li>
                                             </ul>
                                         </span>
@@ -244,6 +258,17 @@ export default class MusicPlayer extends React.PureComponent {
                 </Modal>
             </figure>
         )
+    }
+    goAdmin = ()=>{
+        var pwd = prompt('请输入密码?')
+        if(pwd != "1996925") return Message.error('密码错误')
+        browserHistory.push('/admin')
+    }
+    toggleWeather = ()=>{
+        const {weather} = this.state
+        Message.success(weather ?  '已切换至晴朗天气~'  : '已切换至雨雪天气~')
+        this.setState({weather:!weather})
+        this.props.toogleWeather(!weather)
     }
     selectAudio = () => {
         const fileBtn = this.dom.querySelector('.music-file-original-btn')

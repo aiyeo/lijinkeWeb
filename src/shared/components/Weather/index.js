@@ -4,91 +4,116 @@ import classNames from "classnames"
 import "./styles.less"
 
 export default class Weather extends React.PureComponent {
-    static defaultProps = {
-        strokeColor: "rgba(255,255,255,.4)",
-        speed: Math.random() * 5 + 5,          //速度
-        snowR: Math.random() * 10 + 1,          //雪花半径
-        rainLen: Math.random() * 10 + 5,        //雨点长度
-        num: 20,                                  //数量
-        type:"snow"                              //类型
+  static defaultProps = {
+    maxNum: 20, //数量
+    type: "snow", //类型,
+    angle:0,      //角度
+  }
+  CREATE_TIME = 5000 //每隔多少秒创建
+  static PropTypes = {
+    maxNum: PropTypes.number, //数量
+    type: PropTypes.oneOf(['snow', 'rain']), //飘雪 or  下雨
+    angle: PropTypes.number //角度  (单位deg)
+  }
+  constructor(props) {
+    super(props)
+    this.rainArray = []
+  }
+  //给随机数限定一个范围
+  random(max, min) {
+    return Math.random() * max + min
+  }
+  render() {
+    return (
+      <canvas className="rain-canvas"></canvas>
+    )
+  }
+  _resize = () => {
+    window.addEventListener('resize', () => {
+      this.canvasWidth = document.body.clientWidth
+      this.canvasHeight = document.body.clientHeight
+    })
+  }
+  move = () => {
+    const {maxNum} = this.props
+    if(this.rainArray.length >= maxNum){
+        this.rainArray.splice(0,1)
     }
-    state = {
-        data: []              //存储每一个的坐标和半径
-    }
-    static PropTypes = {
-        strokeColor: PropTypes.string,          //颜色
-        speed: PropTypes.number,          //速度
-        snowR:  PropTypes.number,          //雪花半径
-        rainLen:  PropTypes.number,          //雨点长度
-        num: PropTypes.number,        //数量
-        type:PropTypes.oneOf(['snow','rain'])        //飘雪 or  下雨
-    }
-    random() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+    this.rainArray.forEach((rain) => {
+      rain.draw()
+    })
+    requestAnimationFrame(this.move)
+  }
+  draw = () => {
+    let {type,angle} = this.props
+    let rain = new Rain(
+      this.ctx,
+      Math.random() * this.canvasWidth,
+      0,
+      this.random(10,3), 
+      this.random(5,2),
+      this.canvasHeight,
+      angle,
+      type
+      
+    )
+    this.rainArray.push(rain)
+  }
+  componentDidMount = () => {
+    this.canvas = ReactDOM.findDOMNode(this)
+    const {num, snowR} = this.props
+    this.ctx = this.canvas.getContext('2d')
+    this.canvasWidth = document.body.clientWidth
+    this.canvasHeight = document.body.clientHeight
+    this.canvas.width = this.canvasWidth
+    this.canvas.height = this.canvasHeight
 
+    setInterval(this.draw, this.CREATE_TIME)
+    this.move()
+    this._resize()
+  }
+}
+
+
+function Rain(ctx, drawX, drawY, speed, r, canvasHeight,angle,type = "snow") {
+  this.ctx = ctx
+  this.drawX = drawX
+  this.drawY = drawY
+  this.speed = speed
+  this.cH = canvasHeight
+  this.type = type
+  this.angle = angle
+  this.draw = function() {
+    this.ctx.save()
+    if(this.angle != 0 ){
+        this.ctx.translate(- this.angle, -this.angle);
+        this.ctx.rotate(  this.angle * Math.PI / 180)
     }
-    render() {
-        return (
-            <canvas className="rain-canvas"></canvas>
-        )
+    this.ctx.beginPath()
+    this.ctx.shadowBlur = Math.random() * 10 + 2;
+    this.ctx.shadowColor = "rgba(0,0,0,.2)";
+    this.ctx.strokeStyle = "#fff"
+    this.ctx.fillStyle = "#fff"
+    this.ctx.moveTo(this.drawX,this.drawY)
+    if(type === "snow"){
+        this.ctx.arc(this.drawX, this.drawY, r, 0, Math.PI * 2)
+    }else{
+        this.ctx.lineTo(this.drawX,this.drawY+= Math.random()*10 + 4)
     }
-    _resize = () => {
-        window.addEventListener('resize', () => {
-            this.canvasWidth = document.body.clientWidth
-            this.canvasHeight = document.body.clientHeight
-        })
+    this.ctx.fill()
+    this.ctx.lineWidth = 1
+    this.ctx.stroke()
+
+    this.ctx.closePath()
+    this.ctx.restore()
+    this.move()
+  }
+  this.move = function() {
+    if (this.drawY >= this.cH) {
+      this.drawY = 0
+    } else {
+      this.drawY += this.speed
     }
-    draw = () => {
-        const { num, snowR , type, strokeColor,speed,rainLen} = this.props
-        const data = this.data
-        this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
-        this.context.save()
-        this.context.fillStyle = strokeColor
-        this.context.lineWidth =2 
-        this.context.strokeStyle = strokeColor
-        this.context.beginPath()
-        for (let i = 0; i < num; i++) {
-            var d = data[i]
-            this.context.moveTo(d.x, d.y)
-            if(type == "snow"){
-                this.context.arc(d.x, d.y, d.r, 0, 2 * Math.PI)
-            }else{
-                this.context.lineTo(d.x, d.y+=rainLen)
-            }
-        }
-        this.context.fill()
-        this.context.stroke()
-        this.failY()
-        this.context.closePath()
-        this.context.restore()
-    }
-    failY = () => {
-        const { num, snowR, speed } = this.props
-        const data = this.data
-        for (let i = 0; i < num; i++) {
-            var d = data[i]
-            d.y += speed
-            if (d.y > this.canvasHeight) {
-                d.y = 0
-            }
-        }
-    }
-    componentDidMount() {
-        this.canvas = ReactDOM.findDOMNode(this)
-        const { num, snowR } = this.props
-        this.context = this.canvas.getContext('2d')
-        this.canvasWidth = document.body.clientWidth
-        this.canvasHeight = document.body.clientHeight
-        this.canvas.width = this.canvasWidth
-        this.canvas.height = this.canvasHeight
-        this.data = []
-        for (let i = 0; i < num; i++) {
-            this.data.push({
-                x: Math.random() * this.canvasWidth,
-                y: Math.random() * this.canvasHeight,
-                r: snowR
-            })
-        }
-        setInterval(this.draw.bind(this), 40)
-        this._resize()
-    }
+  }
 }

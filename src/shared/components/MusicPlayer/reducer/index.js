@@ -1,13 +1,22 @@
-import { UPLOAD_MUSIC } from "../action"
+import { UPLOAD_MUSIC,TOGGLE_WEATHER } from "../action"
 const nameInitialState = {}
 export default function (state = nameInitialState, action) {
-    const { type, audioFile } = action;
+    const { type } = action;
     switch (type) {
         case UPLOAD_MUSIC:
             return {
-                audioUploadFile: audioFile
+                ...state,
+                audioUploadFile: action.audioFile
             }
+        case TOGGLE_WEATHER:
+            return {
+                ...state,
+                weather: action.weather
+            } 
         default:
-            return state
+            return {
+                ...state,
+                weather: true
+            }
     }
 }

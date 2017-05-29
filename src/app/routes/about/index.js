@@ -33,7 +33,13 @@ export default class About extends React.PureComponent {
         qrCodeModalVisible:false
     }
     render() {
-        const {headerImgModalVisible,qrCodeModalVisible} = this.state
+        const {
+            headerImgModalVisible,
+            qrCodeModalVisible,
+            alpha,
+            beta,
+            gamma
+        } = this.state
         return (
             <Container className="about-section">
                 <div className="header-img-content">
@@ -65,7 +71,7 @@ export default class About extends React.PureComponent {
                 </section>
                 {/*TOTO  1.打赏二维码  2.留言  */}
                 <section className="qr-section">
-                    <Button type="info" onClick={this.openQrCodeModal}>打赏</Button>
+                    <Button type="error" onClick={this.openQrCodeModal}>打赏</Button>
                 </section>
                 {/*撞击头像小块块*/}
                 <div className="strike-section">
@@ -75,7 +81,7 @@ export default class About extends React.PureComponent {
 
                 {/*查看照片*/}
                 <Modal
-                    title="感谢支持"
+                    title="长按识别二维码"
                     visible={qrCodeModalVisible}
                     onCancel={this.onCloseQrCodeModal}
                     className="qr-code-modal"
@@ -119,13 +125,6 @@ export default class About extends React.PureComponent {
         this.setState({headerImgModalVisible:true})
     }
     componentDidMount(){
-        if(window.DeviceOrientationEvent) {
-            window.addEventListener("deviceorientation",(e)=>{
-                const alpha = e.alpha
-                const beta = e.beta            //x轴旋转的角度
-                const gamma = e.gamma          //z轴角度
-            })
-        }
 
         console.info('关于我们动画设计制作 By:李金珂 :)')
 
