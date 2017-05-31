@@ -24,11 +24,12 @@ router.get('/lists', async (req, res, next) => {
 router.get('/ranking', async (req, res, next) => {
     const { type = "like" } = req.query
     debug(`[排行榜Type:]${type}`);
-    const data = await tArticle.find({ approve: true }, { title: 1, like: 1, pageView: 1 })
-        .sort({ [type]: -1 })
-        .limit(5)
+    const data = await tArticle.find({ approve: true }, { _id:1,title: 1, like: 1, pageView: 1 })
+        // .sort({ [type]: -1 })
+        // .limit(5)
+    const rankingData = data.sort((a,b)=> ~~a[type] + ~~b[type] ).slice(0,5)
     res.send({
-        rankingData: data
+        rankingData
     })
     debug('获取文章排行成功')
 })

@@ -10,7 +10,7 @@ import helper from "shared/libs/helper"
 import { Link } from "react-router"
 import classNames from "classnames"
 import moment from "moment"
-import getArticleLists, { getArticleRanking,addPageView, uploadArticle } from "./action"
+import getArticleLists, { getArticleRanking, addPageView, uploadArticle } from "./action"
 
 import "./styles.less"
 
@@ -62,11 +62,11 @@ export default class Article extends React.PureComponent {
                                             articleLists.map((list, i) => {
                                                 const { title, content, author, publishDate, pageView, like, category, _id } = list
                                                 return (
-                                                    <li 
+                                                    <li
                                                         className="item articleListAnimate"
-                                                        key={i} 
+                                                        key={i}
                                                         style={{ "animationDelay": `${i * 0.1}s` }}
-                                                        onClick={()=>this.addPageView(_id)}
+                                                        onClick={() => this.addPageView(_id)}
                                                     >
                                                         <h2 className="title"><Link to={`/article/detail/${_id}`}>{title}</Link></h2>
                                                         <p className="content">{content}</p>
@@ -117,10 +117,10 @@ export default class Article extends React.PureComponent {
                         {
                             ranking && ranking.rankingData && ranking.rankingData.length >= 1
                                 ? ranking.rankingData.map((data, i) => {
-                                    let { title, like, pageView } = data
+                                    let { title, like, pageView, _id } = data
                                     return (
                                         <li key={i} className="ranking-item" style={{ "animationDelay": `${i * 0.1}s` }}>
-                                            <span className="article-name">{title}</span>
+                                            <span className="article-name" onClick={() => this.addPageView(_id)}><Link to={`/article/detail/${_id}`}>{title}</Link></span>
                                             {
                                                 rankingType === 'like'
                                                     ? <span className={classNames("type", "like")}>喜欢量: {like}</span>
@@ -130,7 +130,7 @@ export default class Article extends React.PureComponent {
                                         </li>
                                     )
                                 })
-                                : undefined
+                                : <li>正在拼命加载...</li>
                         }
                     </ul>
                 </div>
@@ -176,7 +176,7 @@ export default class Article extends React.PureComponent {
             </Container>
         )
     }
-    addPageView = (id)=>{
+    addPageView = (id) => {
         this.props.addPageView(id)
     }
     categoryChange = (e) => {

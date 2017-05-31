@@ -62,8 +62,8 @@ module.exports = (env) => {
                 ? "js/[name].js"
                 : "js/[name].[chunkhash:8].js",
             chunkFilename: mode === "DEV"
-                ? "js/[name].js"
-                : "js/[name].[chunkhash:8]js",
+                ? "js/[name].chunk.js"
+                : "js/[name].chunk.[chunkhash:8].js",
             publicPath: mode === "DEV"
                 ? `${host}:${dev_port}/`
                 : "/static/"
@@ -198,6 +198,7 @@ module.exports = (env) => {
             }),
             //[1]
             //找到所有node_modules的依赖包  分离出来
+            // /axios/ 没有用到的模块
             new webpack.optimize.CommonsChunkPlugin({
                 async:"common-in-lazy",
                 minChunks:({ resource } = {} )=>(
