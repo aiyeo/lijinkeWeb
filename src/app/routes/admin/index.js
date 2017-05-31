@@ -16,10 +16,11 @@ export default class Admin extends React.PureComponent {
     state = {
         articleList:[],
         contentModalVisible:false,
-        content:"无"
+        content:"无",
+        loading:false
     }
     render() {
-        const {articleList,contentModalVisible,content} = this.state
+        const {articleList,contentModalVisible,content,loading} = this.state
         return (
             <section className="admin-section">
                 <h2 className="title">文章审核</h2>
@@ -70,7 +71,11 @@ export default class Admin extends React.PureComponent {
                                             <td>
                                               {
                                                   !approve 
-                                                  ? <Button type="info" onClick={()=>this.onApprove(_id,title,date,email)}>确认通过</Button>
+                                                  ? 
+                                                    loading 
+                                                        ? <Button type="disbled">审核中...</Button>
+                                                        : <Button type="info" onClick={()=>this.onApprove(_id,title,date,email)}>确认通过</Button>
+
                                                   : <span>已审核</span>
                                               }
                                             </td>
@@ -112,10 +117,12 @@ export default class Admin extends React.PureComponent {
     }
     onApprove = async (id,title,publishDate,email)=>{
         if(confirm(`确认通过 【${title}】?`)){
+            this.setState({loading:true})
             await helper.postJson('/admin/approve',{id,title,publishDate,email})
             Message.success('审核通过！')
             const data = await helper.getJson('/admin/articleList')
             this.setState({
+                loading:false,
                 articleList:data.data
             })
         }

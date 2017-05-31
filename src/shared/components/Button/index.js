@@ -9,7 +9,7 @@ export default class Button extends React.PureComponent {
         htmlType: "button"
     }
     static PropTypes = {
-        type: PropTypes.oneOf(['primary', 'default', 'warning', 'success', 'error','info'])
+        type: PropTypes.oneOf(['primary', 'default', 'warning', 'success', 'error','info','disbled'])
     }
     render() {
         const { children, type, className, htmlType,onClick } = this.props

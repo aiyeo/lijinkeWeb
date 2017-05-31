@@ -197,6 +197,7 @@ module.exports = (env) => {
                 allChunks: true
             }),
             //[1]
+            //找到所有node_modules的依赖包  分离出来
             new webpack.optimize.CommonsChunkPlugin({
                 async:"common-in-lazy",
                 minChunks:({ resource } = {} )=>(
@@ -207,6 +208,7 @@ module.exports = (env) => {
             }),
             // [2]
             //[1]和[2] 有点不明白
+            //找到模块次数使用两次的  分离出来
             new webpack.optimize.CommonsChunkPlugin({
                 async: 'used-twice',
                 minChunks: (module, count) => (

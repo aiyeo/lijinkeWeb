@@ -1,8 +1,69 @@
 //使用webpack2 新增import 方法 来实现按需加载
+//webpack 2.4.0 ↑  按需加载写法
 //使用 bable-pluginsyntax-dynamic 来解析import 语法
-import Root from "app/components/Root"
-// import Home from "home"
-// const Home = ()=> import('home')
+//并且使用第三提案 stage-3
+
+// const loadComponent = (importor, name = 'default')  => {
+//   import(importor).then(module => {
+//     return module[name]
+//   }).catch(err=>{
+
+//   })
+// }
+
+// const Root = () => import('app/components/Root')
+// const Home = () => import('Home')
+// const Photo = () => import('app/routes/photo')
+// const Talk = () => import('app/routes/talk')
+// const Aritlce = () => import('app/routes/article')
+// const ArticleDetail = () => import('app/routes/articleDetail')
+// const About = () => import('app/routes/about')
+// const Admin = () => import('app/routes/admin')
+// const Excel = () => import('app/routes/excel')
+
+// export default {
+//   path: "/",
+//   component: Root,
+//   indexRoute: {
+//     component: Home
+//   },
+//   childRoutes: [
+//     {
+//       path: "home",
+//       component: Home
+//     },
+//     {
+//       path: "photo",
+//       component: Photo
+//     },
+//     {
+//       path: "talk",
+//       component: Talk
+//     },
+//     {
+//       path: "article",
+//       component: Aritlce
+//     },
+//     {
+//       path: "article/detail/:_id",
+//       component: ArticleDetail
+//     },
+//     {
+//       path: "about",
+//       component: About
+//     },
+//     {
+//       path: "admin",
+//       component: Admin
+//     },
+//     {
+//       path: "excel",
+//       component: Excel
+//     }
+//   ]
+// }
+
+//webpack 2.2 ↓  按需加载写法
 
 //赖加载组件
 /**

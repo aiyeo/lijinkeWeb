@@ -164,6 +164,7 @@ export default class Article extends React.PureComponent {
                                 <option value="日记">日记</option>
                                 <option value="心得">心得</option>
                                 <option value="感悟">感悟</option>
+                                <option value="随笔">随笔</option>
                                 <option value="其他">其他</option>
                             </select>
                         </fieldset>
