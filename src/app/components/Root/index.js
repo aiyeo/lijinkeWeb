@@ -3,12 +3,19 @@ import Loading from "shared/components/Loading"
 import Header from "shared/components/Header"
 import Weather from "shared/components/Weather"
 import {connect} from "react-redux"
+import { bindActionCreators } from "redux"
+import loaded from "./action"
 //将所有组件包裹起来  react-router 会根据对应路由加载对应组件
 
 @connect(
   ({UploadAudioAction})=>({
     weather:UploadAudioAction.weather            //接受MusicPlayer组件传过来的 天气状态
-  })
+  }),
+  (dispatch) => (
+    bindActionCreators({
+      loaded
+    }, dispatch)
+  )
 )
 export default class Root extends React.PureComponent {
   weclomeTime = 6000
@@ -24,9 +31,9 @@ export default class Root extends React.PureComponent {
     const {weather} = this.props
     return (
       <div>
-         <Loading
+         {/*<Loading
             isLoading={isLoading}
-          />
+          />*/}
         <Header
           title="李金珂的小屋"
         />
@@ -51,12 +58,14 @@ export default class Root extends React.PureComponent {
       this.setState({
         isLoading:false
       })
+      this.props.loaded(this.state.isLoading)
     } else {
       document.onreadystatechange = ()=>{
         if (document.readyState === this.COMPLETE) {
             this.setState({
               isLoading:false
             })
+            this.props.loaded(this.state.isLoading)
         }
       }
     }
@@ -64,8 +73,8 @@ export default class Root extends React.PureComponent {
   componentDidMount(){
     const isFirst= sessionStorage.getItem('welcome') || "yes"
     if(isFirst){
-      setTimeout(this.loading,this.weclomeTime)
       sessionStorage.setItem('welcome',"no")
+      setTimeout(this.loading,this.weclomeTime)
     }else{
       this.loading()
     }

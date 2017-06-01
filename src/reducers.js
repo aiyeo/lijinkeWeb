@@ -1,4 +1,5 @@
-import MusicPlayerAction from "Home/reducer"
+import MusicPlayerAction from "Home/reducer" 
+import RootAction from "app/components/Root/reducer" 
 import UploadAudioAction from "shared/components/MusicPlayer/reducer"
 import TalkAction from "app/routes/talk/reducer"
 import ArticleAction from "app/routes/article/reducer"
@@ -14,7 +15,8 @@ const chatReducer = combineReducers({
   TalkAction,
   ArticleAction,
   ArticleDetailAction,
-  ExcelAction
+  ExcelAction,
+  RootAction
 })
 
 export default chatReducer

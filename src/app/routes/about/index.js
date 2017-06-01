@@ -29,16 +29,13 @@ const interestConfig = [
 // 人生就像函数式编程,传入一个参数,返回一个Function,每个阶段付出的东西不一样得到的东西也就不一样,只有不断的执行函数Fun()()()才会得到你想要的结果,我想:人生也是如此
 export default class About extends React.PureComponent {
     state = {
-        headerImgModalVisible:false,
-        qrCodeModalVisible:false
+        headerImgModalVisible:false,      //照片弹框
+        qrCodeModalVisible:false          //二维码弹框
     }
     render() {
         const {
             headerImgModalVisible,
             qrCodeModalVisible,
-            alpha,
-            beta,
-            gamma
         } = this.state
         return (
             <Container className="about-section">
@@ -69,19 +66,19 @@ export default class About extends React.PureComponent {
                         }
                     </ul>
                 </section>
-                {/*TOTO  1.打赏二维码  2.留言  */}
+                {/*TODO  留言  */}
                 <section className="qr-section">
                     <Button type="error" onClick={this.openQrCodeModal}>打赏</Button>
                 </section>
                 {/*撞击头像小块块*/}
                 <div className="strike-section">
-                    <img src={require("images/strike.jpg")} alt="铁头娃"/>
+                    <img src={require("images/photo3.jpg")} alt="铁头娃"/>
                     {/*<img src={require("images/app.png")} alt="铁头娃"/>*/}
                 </div>
 
                 {/*查看照片*/}
                 <Modal
-                    title="长按识别二维码"
+                    title="听说长得帅的都打赏了~"
                     visible={qrCodeModalVisible}
                     onCancel={this.onCloseQrCodeModal}
                     className="qr-code-modal"
@@ -106,7 +103,7 @@ export default class About extends React.PureComponent {
                     className="header-img-modal"
                 >
                     <div className="header-img-modal-content">
-                         <img src={require("images/head-img.jpg")} alt="丑照"/>
+                         <img src={require("images/head-img.jpg")} alt="成都草莓音乐节,网易云音乐展台"/>
                     </div>
                 </Modal>
             </Container>

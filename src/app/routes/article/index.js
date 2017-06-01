@@ -37,11 +37,14 @@ export default class Article extends React.PureComponent {
         editAuthor: "",            //上传文章作者
         editContent: "",            //上传文章内容
         editCategory: ["杂文"],       //上传文章分类
-        editEmail: ""               //作者邮箱
+        editEmail: "",               //作者邮箱
+        rankingLoading: true,
+        articleLoading: true
+
     }
     render() {
         const { articleLists, ranking } = this.props
-        const { rankingType, articleModalVisible } = this.state
+        const { rankingType, articleModalVisible, rankingLoading, articleLoading } = this.state
         return (
             <Container className="article-section">
                 <div className="article-list">
@@ -52,52 +55,54 @@ export default class Article extends React.PureComponent {
                         </h2>
                     </section>
                     <section className="article-content">
-
                         {
-                            articleLists && articleLists.length >= 1
-                                ?
-                                (
-                                    <ul>
-                                        {
-                                            articleLists.map((list, i) => {
-                                                const { title, content, author, publishDate, pageView, like, category, _id } = list
-                                                return (
-                                                    <li
-                                                        className="item articleListAnimate"
-                                                        key={i}
-                                                        style={{ "animationDelay": `${i * 0.1}s` }}
-                                                        onClick={() => this.addPageView(_id)}
-                                                    >
-                                                        <h2 className="title"><Link to={`/article/detail/${_id}`}>{title}</Link></h2>
-                                                        <p className="content">{content}</p>
-                                                        <div className="info">
-                                                            <div>
-                                                                <span className="auth">{author}</span>
-                                                                <span className="time">{moment(publishDate).format("YYYY-MM-DD HH:mm:ss")}</span>
-                                                                <span className="label">
-                                                                    {
-                                                                        category.map((item, index) => {
-                                                                            return (
-                                                                                <span key={index}>{item}</span>
-                                                                            )
-                                                                        })
-                                                                    }
-                                                                </span>
-                                                            </div>
+                            articleLoading
+                                ? <p className="text-center"><i className="icon icon-shouye"></i> 拼了老命加载中...</p>
+                                :
+                                articleLists && articleLists.length >= 1
+                                    ?
+                                    (
+                                        <ul>
+                                            {
+                                                articleLists.map((list, i) => {
+                                                    const { title, content, author, publishDate, pageView, like, category, _id } = list
+                                                    return (
+                                                        <li
+                                                            className="item articleListAnimate"
+                                                            key={i}
+                                                            style={{ "animationDelay": `${i * 0.1}s` }}
+                                                            onClick={() => this.addPageView(_id)}
+                                                        >
+                                                            <h2 className="title"><Link to={`/article/detail/${_id}`}>{title}</Link></h2>
+                                                            <p className="content">{content}</p>
+                                                            <div className="info">
+                                                                <div>
+                                                                    <span className="auth">{author}</span>
+                                                                    <span className="time">{moment(publishDate).format("YYYY-MM-DD HH:mm:ss")}</span>
+                                                                    <span className="label">
+                                                                        {
+                                                                            category.map((item, index) => {
+                                                                                return (
+                                                                                    <span key={index}>{item}</span>
+                                                                                )
+                                                                            })
+                                                                        }
+                                                                    </span>
+                                                                </div>
 
-                                                            <div className="like">
-                                                                <span>阅读量:<i className="num">{pageView}</i></span>
-                                                                <span><i className="icon icon-dianzan"></i><i className="num">{like}</i></span>
+                                                                <div className="like">
+                                                                    <span>阅读量:<i className="num">{pageView}</i></span>
+                                                                    <span><i className="icon icon-dianzan"></i><i className="num">{like}</i></span>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
-                                                )
-                                            })
-                                        }
-                                    </ul>
-                                )
+                                                        </li>
+                                                    )
+                                                })
+                                            }
+                                        </ul>
+                                    )
 
-                                : <p style={{ "textAlign": "center" }}><i className="icon icon-article"></i>努力加载中 :)</p>
+                                    : <p className="text-center"><i className="icon icon-xiayu"></i> 暂无文章</p>
                         }
 
                     </section>
@@ -115,22 +120,25 @@ export default class Article extends React.PureComponent {
                     </section>
                     <ul className="article-ranking-list">
                         {
-                            ranking && ranking.rankingData && ranking.rankingData.length >= 1
-                                ? ranking.rankingData.map((data, i) => {
-                                    let { title, like, pageView, _id } = data
-                                    return (
-                                        <li key={i} className="ranking-item" style={{ "animationDelay": `${i * 0.1}s` }}>
-                                            <span className="article-name" onClick={() => this.addPageView(_id)}><Link to={`/article/detail/${_id}`}>{title}</Link></span>
-                                            {
-                                                rankingType === 'like'
-                                                    ? <span className={classNames("type", "like")}>喜欢量: {like}</span>
-                                                    : <span className={classNames("type", "pageView")}>阅读量: {pageView}</span>
-                                            }
+                            rankingLoading
+                                ? <p className="text-center"><i className="icon icon-shouye"></i> 拼了老命加载中...</p>
+                                :
+                                ranking && ranking.rankingData && ranking.rankingData.length >= 1
+                                    ? ranking.rankingData.map((data, i) => {
+                                        let { title, like, pageView, _id } = data
+                                        return (
+                                            <li key={i} className="ranking-item" style={{ "animationDelay": `${i * 0.1}s` }}>
+                                                <span className="article-name" onClick={() => this.addPageView(_id)}><Link to={`/article/detail/${_id}`}>{title}</Link></span>
+                                                {
+                                                    rankingType === 'like'
+                                                        ? <span className={classNames("type", "like")}>喜欢量: {like}</span>
+                                                        : <span className={classNames("type", "pageView")}>阅读量: {pageView}</span>
+                                                }
 
-                                        </li>
-                                    )
-                                })
-                                : <li>正在拼命加载...</li>
+                                            </li>
+                                        )
+                                    })
+                                    : <li>暂无排行</li>
                         }
                     </ul>
                 </div>
@@ -200,7 +208,7 @@ export default class Article extends React.PureComponent {
 
         if (!editTitle) return Message.error('请填写文章标题!')
         if (!editContent) return Message.error('文章内容不能为空!')
-        if (!editEmail) return Message.error('邮箱不能为空!')
+        if (!/^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/.test(editEmail)) return Message.error('请填写正确的邮箱')
 
         let values = {}
         values.editTitle = editTitle
@@ -215,7 +223,7 @@ export default class Article extends React.PureComponent {
             await this.props.uploadArticle(values)
         if (this.props.uploadInfo && this.props.uploadInfo.success === 1) {
             Message.success('上传成功,请等待审核!')
-            this.setState({ articleModalVisible: false })
+            this.cancelArticleModal()
         } else {
             Message.error('上传失败!')
         }
@@ -224,8 +232,12 @@ export default class Article extends React.PureComponent {
         this.setState({ rankingType })
         this.props.getArticleRanking(rankingType)
     }
-    componentDidMount() {
-        this.props.getArticleLists()
-        this.props.getArticleRanking(this.state.rankingType)
+    async componentDidMount() {
+        await this.props.getArticleLists()
+        await this.props.getArticleRanking(this.state.rankingType)
+        this.setState({
+            articleLoading:false,
+            rankingLoading:false
+        })
     }
 }

@@ -15,10 +15,10 @@ router.get('/articleList', async (req, res, next) => {
 
 /**
  * 审核文章
- * @params {id}  String 文章id
- * @params {title}  String 文章标题
- * @params {email}  String 作者邮箱
- * @params {publishDate}  String 发表日期
+ * @param {id}  String 文章id
+ * @param {title}  String 文章标题
+ * @param {email}  String 作者邮箱
+ * @param {publishDate}  String 发表日期
  */
 router.post('/approve', async (req, res, next) => {
 

@@ -10,8 +10,9 @@ import getMusic from "./action"
 import "./styles.less"
 
 @connect(
-  ({ MusicPlayerAction }) => ({
-    musicData: MusicPlayerAction.musicData
+  ({ MusicPlayerAction,RootAction }) => ({
+    musicData: MusicPlayerAction.musicData,
+    isLoading:RootAction.isLoading
   }),
   (dispatch) => (
     bindActionCreators({
@@ -83,7 +84,9 @@ export default class Home extends React.PureComponent {
       </div>
     )
   }
-  componentWillMount() {
-    this.props.getMusic()
+  componentDidMount() {
+    const {isLoading} = this.props
+    //文档加载完成  加载音乐
+    !isLoading &&  this.props.getMusic()
   }
 }

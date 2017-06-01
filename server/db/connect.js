@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const debug = require('debug')('connect-db')
 const { db_path } = require('../../config')
-const { musicSchema, articleSchema } = require("./schema")
+const { musicSchema, articleSchema,commentSchema } = require("./schema")
 
 mongoose.connect(db_path)
 
@@ -13,8 +13,10 @@ db.on('error', (e) => { debug(`[errr] : 连接失败 ${e}`) })
 
 const tMusic = mongoose.model('music', musicSchema)
 const tArticle = mongoose.model('article', articleSchema)
+const tComment = mongoose.model('comment', commentSchema)
 
 module.exports = {
     tMusic,
-    tArticle
+    tArticle,
+    tComment
 }

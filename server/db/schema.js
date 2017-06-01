@@ -27,7 +27,22 @@ const articleSchema = new mongoose.Schema({
         collection: "article"
     })
 
+const commentSchema = new mongoose.Schema({
+        articleId:String,           //文章id
+        commentName:String,         //姓名
+        commentEmail:String,        //邮箱
+        commentContent:String,      //内容
+        like:String,                //点赞量
+        publishDate:{               //发布日期
+            type:Date,
+            dafault:Date.now
+        }          
+},{
+    collection:"comment"
+})
+
 module.exports = {
     musicSchema,
-    articleSchema
+    articleSchema,
+    commentSchema
 }

@@ -44,7 +44,7 @@ export default class MusicPlayer extends React.PureComponent {
         audioImgReady: false,
         audioFile: {},
         audioImg: {},
-        weather:true         //默认雨雪天气
+        weather:false         //默认雨雪天气
     }
     IMG_MAX_SIZE = 1024
     static defaultProps = {
