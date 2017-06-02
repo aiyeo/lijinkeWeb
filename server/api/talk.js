@@ -2,12 +2,15 @@ const { socket_port } = require('../../config')
 const debug = require('debug')('talk')
 const mode = process.env.NODE_ENV || "DEV"
 
-if(mode === "DEV"){
-    const http = require("http")
-        .createServer(function (req, res) { }).listen(socket_port)
+let http;
+
+if (mode === "DEV") {
+    http = require("http")
+        .createServer(function (req, res) { })
+        .listen(socket_port)
     io = require("socket.io")(http);
-}else{
-    const http = require('../../server')
+} else {
+    http = require('../../server')
     io = require("socket.io")(http);
 }
 
@@ -19,12 +22,13 @@ let clientRanDomName = Date.now().toString(36)    //客户端随机显示的用�
 io.on("connection", function (socket) {
     debug("server socket 连接成功")
     // clientRanDomName ++
-    socket.emit('login',{
-        serverTime:new Date()
+    socket.emit('login', {
+        serverTime: new Date()
     })
-    socket.on('userJoin',({userId,name})=>{
+    //用户加入
+    socket.on('userJoin', ({ userId, name }) => {
         debug(`[ 用户 : ${name} ] 加入聊天室, [ 用户id : ${userId} ]`)
-        if( ! onlineUsers.find((user)=> user.userId == userId ) ){
+        if (!onlineUsers.find((user) => user.userId == userId)) {
             onlineUsers.push({
                 userId,
                 name
@@ -32,23 +36,23 @@ io.on("connection", function (socket) {
             onlineNumber++
         }
         //向所有用户 托送当前登录用户
-        io.emit('userJoin',{onlineNumber,userName:`吃瓜群众${clientRanDomName}`})
+        io.emit('userJoin', { onlineNumber, userName: `吃瓜群众${clientRanDomName}` })
         debug(`[当前在线人数  : ${onlineNumber} ]`)
     })
     //监听用户消息
-    socket.on('message',( messageInfo )=>{
+    socket.on('message', (messageInfo) => {
         //向所有用户 推送当前消息
-        io.emit('message',messageInfo);
-        debug('客户端发来消息=>',messageInfo)
+        io.emit('message', messageInfo);
+        debug('客户端发来消息=>', messageInfo)
     })
     //用户断开连接
-    socket.on('disconnect',()=>{
-        debug('logino');
+    socket.on('disconnect', () => {
+        debug('用户断开连接');
     })
     //用户退出
-    socket.on('loginOut',({userId:id,name})=>{
-        onlineNumber -- ;
-        onlineUsers.splice(onlineUsers.findIndex(({userId})=> userId==id),1)
-        io.emit('loginOut',{onlineUsers,onlineNumber,loginOutName:name})
+    socket.on('loginOut', ({ userId: id, name }) => {
+        onlineNumber--;
+        onlineUsers.splice(onlineUsers.findIndex(({ userId }) => userId == id), 1)
+        io.emit('loginOut', { onlineUsers, onlineNumber, loginOutName: name })
     })
 })

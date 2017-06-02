@@ -4,9 +4,9 @@ export const ARTICLE_RANKING = "article_ranking"
 export const ARTICLE_UPLOAD = "article_upload"
 export const PAGE_VIEW = "pageView"
 
-export default function getArticleLists () {
+export default function getArticleLists (params) {
     return async function (dispatch) {
-        const lists = await helper.getJson("/article/lists")
+        const lists = await helper.getJson("/article/lists",params)
             dispatch({
                 type: ARTICLE_LIST,
                 lists

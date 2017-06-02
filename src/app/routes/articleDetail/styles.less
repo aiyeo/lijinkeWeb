@@ -175,9 +175,15 @@
                 .like{
                     cursor: pointer;
                     transition: color .3 ease-in-out;
-                    &:active,&:hover{
+                    &.active{
                         color:@primary-color;
                     }
+                    @media screen and (min-width:768px){
+                        &:hover{
+                            color:@primary-color;
+                        }
+                    }
+      
                     i{
                         vertical-align: middle;
                     }

@@ -1,8 +1,8 @@
 /*
  * @Author: jinke.li 
  * @Date: 2017-05-03 16:32:21 
- * @Last Modified by:   jinke.li 
- * @Last Modified time: 2017-05-03 16:32:21 
+ * @Last Modified by: jinke.li
+ * @Last Modified time: 2017-06-02 11:50:06
  */
 const path = require('path')
 const webpack = require('webpack')
@@ -62,8 +62,8 @@ module.exports = (env) => {
                 ? "js/[name].js"
                 : "js/[name].[chunkhash:8].js",
             chunkFilename: mode === "DEV"
-                ? "js/[name].chunk.js"
-                : "js/[name].chunk.[chunkhash:8].js",
+                ? "js/[name]Chunk.js"
+                : "js/[name]Chunk.[chunkhash:8].js",
             publicPath: mode === "DEV"
                 ? `${host}:${dev_port}/`
                 : "/static/"
@@ -168,7 +168,6 @@ module.exports = (env) => {
         options.plugins = options.plugins.concat([
             new webpack.NamedModulesPlugin(),                   //打印更具可读性模块名称在浏览器控制台
             new webpack.NoEmitOnErrorsPlugin(),                 //错误不打断
-            new webpack.NoErrorsPlugin(),
             new webpack.DefinePlugin({                          //调试
                 __DEBUG__: true,
             }),
@@ -208,19 +207,25 @@ module.exports = (env) => {
                 )
             }),
             // [2]
-            //[1]和[2] 有点不明白
             //找到模块次数使用两次的  分离出来
+            //单独打成used-twice.js 减少包的体积
+            /**
+             * 升级到 v2.6 貌似async不起作用  article admin detail 都使用了但是moment都打包进了对应的chunk文件
+             * 导致文件增大了600kb
+             */
             new webpack.optimize.CommonsChunkPlugin({
                 async: 'used-twice',
                 minChunks: (module, count) => (
                     count >= 2
                 ),
             }),
+            //[3]
+            //[1][2][3] 是按需加载 大幅减少打包js体积的关键
+            //遍历node_modules目录 以.js结尾 一道vender chunk
+            //自动化分离第三方依赖
             new webpack.optimize.CommonsChunkPlugin({
                 name:'vender',
                 filename:"js/common.[chunkhash:8].js",
-                //遍历node_modules目录 以.js结尾 一道vender chunk
-                //自动化分离第三方依赖
                 minChunks:({ resource})=>(
                     resource &&
                     resource.indexOf('node_modules') >=0 &&
@@ -252,7 +257,6 @@ module.exports = (env) => {
             template: path.resolve(__dirname, "src/index.html"),  //模板文件
             hash: true,        //添加hash码
             inject: true     //注射所有资源到 body元素的底部     "head" "body" true false  "body" == true
-            // chunks: ["app"],     //允许只添加某些块
         })
     )
     return options

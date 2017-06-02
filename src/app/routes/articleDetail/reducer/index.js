@@ -2,7 +2,8 @@ import {
     ARTICLE_DETAIL, 
     TOGGLE_LIKE,
     PUBLISH_COMMENT,
-    GET_ARTICLE_COMMENTS
+    GET_ARTICLE_COMMENTS,
+    TOGGLE_COMMENT_LIKE
  } from "../action"
  
 const nameInitialState = []
@@ -16,6 +17,8 @@ export default function (state = nameInitialState, action) {
                 articleInfo: action.info
             }
         case TOGGLE_LIKE:
+            return state
+        case TOGGLE_COMMENT_LIKE:
             return state
         case PUBLISH_COMMENT:
             return {

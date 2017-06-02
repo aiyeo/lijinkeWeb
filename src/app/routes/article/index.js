@@ -228,16 +228,39 @@ export default class Article extends React.PureComponent {
             Message.error('上传失败!')
         }
     }
+    //切换排行榜
     toggleRanking = (rankingType) => {
         this.setState({ rankingType })
         this.props.getArticleRanking(rankingType)
     }
-    async componentDidMount() {
-        await this.props.getArticleLists()
-        await this.props.getArticleRanking(this.state.rankingType)
-        this.setState({
-            articleLoading:false,
-            rankingLoading:false
+    /**
+     * 滚动加载
+     * @param {offset} number 距离底部多少开始加载
+     */
+    loadArticleLists = () => {
+        let winH = window.innerHeight
+        let scrollHeight = document.body.scrollHeight
+        let scrollTop = document.body.scrollTop
+        console.log(scrollTop + winH);
+        console.log(scrollHeight);
+        if (scrollTop + winH  >= scrollHeight) {
+            console.log('到底了')
+        }
+        
+    }
+     componentDidMount() {
+         this.props.getArticleLists({
+            pageIndex: 1,
+            pageSize: 3
         })
+         this.props.getArticleRanking(this.state.rankingType)
+        this.setState({
+            articleLoading: false,
+            rankingLoading: false
+        })
+        window.addEventListener('scroll',this.loadArticleLists)
+    }
+    componentWillUnmount(){
+        window.removeEventListener('scroll',this.loadArticleLists)
     }
 }

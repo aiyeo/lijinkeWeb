@@ -9,19 +9,23 @@ const momnet = require("moment")
 
 /**
  * 文章列表
- * @param {pageIndex} 页码
- * @param {pageSize}  每页个数 
+ * @param {pageIndex} 页码      default 1
+ * @param {pageSize}  每页个数   default 3
  */
 
 router.get('/lists', async (req, res, next) => {
-    const { pageIndex = 0, pageSize = 20 } = req.query
+    const { 
+        pageIndex = 1, 
+        pageSize = 3 
+    } = req.query
+
     const articleLists = await tArticle.find({ approve: true })
-        .skip(pageIndex)
-        .limit(pageSize)
+                                        .skip( (pageIndex - 1) * pageSize )
+                                        .limit(pageSize)
     res.send({
         list: articleLists
     })
-    debug('获取文章列表成功')
+    debug(`[获取文章列表成功],页码[${pageIndex}] 每页个数[${pageSize}]`)
 })
 
 /**
@@ -134,6 +138,29 @@ router.post("/toggleLike", async (req,res,next)=>{
     debug('喜欢量',likeNum)
     const data = await tArticle.update({ _id: id }, { $set: { like:likeNum} })
     debug('[喜欢点赞成功]')
+    res.send({
+        success:1
+    })
+})
+
+/**
+ * 评论点赞
+ * @param {isLike} Boolean  点赞 true or 取消赞 false
+ * @param {id}  String  评论id
+ */
+router.post("/toggle-commentLike", async (req,res,next)=>{
+    const {isLike,id} = req.body
+    debug('[点赞]:',isLike)
+    let likeNum = (await tComment.find({ _id: id }, { like: 1 }))[0].like
+
+    if(isLike === true){
+        likeNum ++
+    }else if(isLike === false){
+        likeNum --
+    }
+    debug('评论点赞量',likeNum)
+    const data = await tComment.update({ _id: id }, { $set: { like:likeNum} })
+    debug('[评论点赞成功]')
     res.send({
         success:1
     })

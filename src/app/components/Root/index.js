@@ -31,9 +31,9 @@ export default class Root extends React.PureComponent {
     const {weather} = this.props
     return (
       <div>
-         {/*<Loading
+         <Loading
             isLoading={isLoading}
-          />*/}
+          />
         <Header
           title="李金珂的小屋"
         />

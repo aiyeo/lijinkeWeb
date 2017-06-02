@@ -144,7 +144,9 @@ export default class Talk extends React.PureComponent {
     // this.socket.close()
   }
   componentDidMount() {
-    this.socket = io(`${host}:${socket_port}`)
+    this.socket = io(`${host}:${socket_port}`,{
+      timeout:30000000000 
+    })
     this.section = ReactDOM.findDOMNode(this).querySelector(".talk-section")
     //读取历史聊天记录
     this.setState({
