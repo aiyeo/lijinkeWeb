@@ -138,13 +138,15 @@ export default class Talk extends React.PureComponent {
     })
 
   }
-  componentWillUnmount() {
+  componentWillUnMount() {
     //组件移除，也就是退出时 关闭socket
     this.socket.emit('loginOut', { userId: this.userId, name: this.name })
     // this.socket.close()
   }
   componentDidMount() {
-    this.socket = io(`${host}:${socket_port}`)
+    this.socket = io(`${host}:${socket_port}`,{
+      timeout:300000000000000000000
+    })
     this.section = ReactDOM.findDOMNode(this).querySelector(".talk-section")
     //读取历史聊天记录
     this.setState({

@@ -18,7 +18,7 @@ import loaded from "./action"
   )
 )
 export default class Root extends React.PureComponent {
-  weclomeTime = 6000
+  welcomeTime = 6000
   constructor(props){
     super(props)
     this.state = {
@@ -31,9 +31,9 @@ export default class Root extends React.PureComponent {
     const {weather} = this.props
     return (
       <div>
-         {/*<Loading
+         <Loading
             isLoading={isLoading}
-          />*/}
+          />
         <Header
           title="李金珂的小屋"
         />
@@ -74,7 +74,7 @@ export default class Root extends React.PureComponent {
     const isFirst= sessionStorage.getItem('welcome') || "yes"
     if(isFirst){
       sessionStorage.setItem('welcome',"no")
-      setTimeout(this.loading,this.weclomeTime)
+      setTimeout(this.loading,this.welcomeTime)
     }else{
       this.loading()
     }
