@@ -251,7 +251,7 @@ export default class Article extends React.PureComponent {
      componentDidMount() {
          this.props.getArticleLists({
             pageIndex: 1,
-            pageSize: 3
+            pageSize: 20
         })
          this.props.getArticleRanking(this.state.rankingType)
         this.setState({

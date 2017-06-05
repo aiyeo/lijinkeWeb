@@ -10,13 +10,13 @@
     height:100%;
     z-index: 88;
     transform: scale(0);
-    transition: opacity .3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: opacity .3s cubic-bezier(.29,.32,.36,.78);
     pointer-events: none;
     &.modal-animate{
         transform: scale(1);
         pointer-events:auto;
         .jinke-modal{
-            animation: modalAnimate .5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+            animation: modalAnimate .5s cubic-bezier(.29,.32,.36,.78) forwards;
         }
     }
     .jinke-modal{

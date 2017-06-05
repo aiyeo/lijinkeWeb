@@ -16,7 +16,7 @@ const momnet = require("moment")
 router.get('/lists', async (req, res, next) => {
     const { 
         pageIndex = 1, 
-        pageSize = 3 
+        pageSize = 20 
     } = req.query
 
     const articleLists = await tArticle.find({ approve: true })
