@@ -95,11 +95,9 @@ export default class Admin extends React.PureComponent {
                     onCancel={this.cancelContentModal}
                     className="edit-article-modal"
                 >
-                    <article>
                         {
                             content
                         }
-                    </article>
                 </Modal>
             </section>
         )
