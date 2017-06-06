@@ -19,9 +19,13 @@
         }
     }
     .header-img-content{
-        @margin:530px;       //头像距离顶部的差值  值越大  距离顶部越小
+        @margin:510px;       //头像距离顶部的差值  值越大  距离顶部越小
         @header-img-width:100px;
         @header-img-height:@header-img-width;
+        @media screen and (max-width:768px){
+            @header-img-width:70px !important;
+            @header-img-height:@header-img-width !important;
+        }
         display: flex;
         justify-content: center;
         .header-img{
@@ -143,10 +147,8 @@
         }
     }
     .about-content{
-        margin-top:160px;
-        @media screen and (max-width:768px){
-            margin-top:130px;
-        }
+        margin-top:22%;
+        margin-top:22vh;
         ul.about-interest{
             @animate-time:6s;
             @delay:@header-img-animate-time * .85;
