@@ -44,8 +44,7 @@ export default class ArticleDetail extends React.PureComponent {
     }
     render() {
         const { articleInfo, commentLists } = this.props
-        const comments = commentLists && commentLists.commentLists        //评论列表
-        const detail = articleInfo && articleInfo.articleDetail
+
         const {
             isLike,
             likeNum,
@@ -65,9 +64,11 @@ export default class ArticleDetail extends React.PureComponent {
                             ? <p className="text-align"><i className="icon icon-shouye"></i> 文章加载中..</p>
                             : (
                                 <div key="article-detail-info">
-                                    <h2 className="title">{detail && detail.title}</h2>
-                                    <p className="author">{detail && detail.author} | {moment(detail && detail.publishDate).format("YYYY-MM-DD HH:mm:ss")}</p>
-                                    <p className="content">{detail && detail.content}</p>
+                                    <h2 className="title">{articleInfo && articleInfo.title}</h2>
+                                    <p className="author">{articleInfo && articleInfo.author} | {moment(articleInfo && articleInfo.publishDate).format("YYYY-MM-DD HH:mm:ss")}</p>
+                                    <section className="content">
+                                        <pre>{articleInfo && articleInfo.content}</pre>
+                                    </section>
                                     <p>
                                         <button type="button" onClick={this.toggleLike} className={classNames('label', 'like', { "isLike": isLike })}>
                                             <i className="icon icon-dianzan"></i>
@@ -79,7 +80,7 @@ export default class ArticleDetail extends React.PureComponent {
                                             }
 
                                         </button>
-                                        <span className="label pv">阅读量: {detail && detail.pageView}</span>
+                                        <span className="label pv">阅读量: {articleInfo && articleInfo.pageView}</span>
                                     </p>
                                 </div>
                             )
@@ -90,17 +91,17 @@ export default class ArticleDetail extends React.PureComponent {
                 <section className="article-comments-section">
                     <div className="article-comments-title">
                         <h3 className="title">
-                            <span><i className="icon icon-shuohuaspeak"></i> 评论 ({comments && comments.length || "0"}) 条</span>
+                            <span><i className="icon icon-shuohuaspeak"></i> 评论 ({commentLists && commentLists.length || "0"}) 条</span>
                             <a onClick={this.openCommentModal} className="comment-btn">发表评论</a>
                         </h3>
                     </div>
                     {
                         commentLoading
                             ? <p className="text-center"><i className="icon icon-shouye"></i> 评论加载中...</p>
-                            : comments && comments.length >= 1
+                            : commentLists && commentLists.length >= 1
                                 ? <ul className="article-comments-lists" key="article-comments-lists">
                                     {
-                                        comments.map((item, i) => {
+                                        commentLists.map((item, i) => {
                                             let {
                                                 commentName,
                                                 commentContent,
@@ -195,8 +196,8 @@ export default class ArticleDetail extends React.PureComponent {
                     like: !item.isLike ? (++item.like) : (--item.like)
                 }
                 arr.push(o)
-            }else{
-               arr.push(item)
+            } else {
+                arr.push(item)
             }
             return arr
         }, [])
@@ -224,8 +225,14 @@ export default class ArticleDetail extends React.PureComponent {
             publishDate: helper.getCurrentTime()
         })
         if (this.props.commentInfo && this.props.commentInfo.success === 1) {
-            Message.success('评论成功,请等待审核!')
+            Message.success('评论成功!')
             this.cancelCommentModal()
+            await this.props.getArticleComments(this.props.params._id)
+
+            const commentLikeConfig = this.setComments(this.props.commentLists)
+            this.setState({
+                commentLikeConfig
+            })
         } else {
             Message.error('评论失败!')
         }
@@ -250,29 +257,31 @@ export default class ArticleDetail extends React.PureComponent {
             this.setState({ showTip: false })
         }, 500)
     }
-    async componentDidMount() {
-        const { params: { _id }, getArticleDetail, getArticleComments, addPageView } = this.props
-        await getArticleDetail(_id)
-        await getArticleComments(_id)
-
-        const { articleInfo, commentLists } = this.props
-        const detail = articleInfo && articleInfo.articleDetail
-
-        const comments = commentLists && commentLists.commentLists        //评论列表
-        const commentLikeConfig = comments.map(({ _id, like }) => {
+    setComments = (commentLists) => {
+        const commentLikeConfig = commentLists && commentLists.map(({ _id, like }) => {
             return {
                 commentId: _id,
                 like,
                 isLike: false
             }
         })
+        return commentLikeConfig
+    }
+    async componentDidMount() {
+        const { params: { _id }, getArticleDetail, getArticleComments, addPageView } = this.props
+        await getArticleDetail(_id)
+        await getArticleComments(_id)
 
-        detail &&
+        const { articleInfo, commentLists } = this.props
+        const commentLikeConfig = this.setComments(commentLists)
+
+        articleInfo &&
             this.setState({
-                likeNum: detail.like,
+                likeNum: articleInfo.like,
                 articleLoading: false,
                 commentLoading: false,
                 commentLikeConfig
             })
+
     }
 }

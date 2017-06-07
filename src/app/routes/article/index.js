@@ -123,8 +123,8 @@ export default class Article extends React.PureComponent {
                             rankingLoading
                                 ? <p className="text-center"><i className="icon icon-shouye"></i> 拼了老命加载中...</p>
                                 :
-                                ranking && ranking.rankingData && ranking.rankingData.length >= 1
-                                    ? ranking.rankingData.map((data, i) => {
+                                ranking && ranking.length >= 1
+                                    ? ranking.map((data, i) => {
                                         let { title, like, pageView, _id } = data
                                         return (
                                             <li key={i} className="ranking-item" style={{ "animationDelay": `${i * 0.1}s` }}>
@@ -221,7 +221,8 @@ export default class Article extends React.PureComponent {
         values.like = "0",
             values.approve = false,           //是否审核通过
             await this.props.uploadArticle(values)
-        if (this.props.uploadInfo && this.props.uploadInfo.success === 1) {
+
+        if (this.props.uploadInfo && this.props.uploadInfo.success == 1) {
             Message.success('上传成功,请等待审核!')
             this.cancelArticleModal()
         } else {
@@ -243,24 +244,24 @@ export default class Article extends React.PureComponent {
         let scrollTop = document.body.scrollTop
         console.log(scrollTop + winH);
         console.log(scrollHeight);
-        if (scrollTop + winH  >= scrollHeight) {
+        if (scrollTop + winH >= scrollHeight) {
             console.log('到底了')
         }
-        
+
     }
-     componentDidMount() {
-         this.props.getArticleLists({
+    componentDidMount() {
+        this.props.getArticleLists({
             pageIndex: 1,
             pageSize: 20
         })
-         this.props.getArticleRanking(this.state.rankingType)
+        this.props.getArticleRanking(this.state.rankingType)
         this.setState({
             articleLoading: false,
             rankingLoading: false
         })
-        window.addEventListener('scroll',this.loadArticleLists)
+        window.addEventListener('scroll', this.loadArticleLists)
     }
-    componentWillUnmount(){
-        window.removeEventListener('scroll',this.loadArticleLists)
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.loadArticleLists)
     }
 }

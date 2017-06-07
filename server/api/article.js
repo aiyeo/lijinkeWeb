@@ -3,7 +3,7 @@ const router = express.Router()
 const config = require('../../config')
 const fs = require("fs")
 const debug = require('debug')('article')
-const { tArticle,tComment } = require("../db/connect")
+const { tArticle, tComment } = require("../db/connect")
 const momnet = require("moment")
 
 
@@ -14,18 +14,18 @@ const momnet = require("moment")
  */
 
 router.get('/lists', async (req, res, next) => {
-    const { 
-        pageIndex = 1, 
-        pageSize = 20 
+    const {
+        pageIndex = 1,
+        pageSize = 20
     } = req.query
 
     const articleLists = await tArticle.find({ approve: true })
-                                        .skip( (pageIndex - 1) * pageSize )
-                                        .limit(pageSize)
-    res.send({
-        list: articleLists
-    })
+        .skip((pageIndex - 1) * pageSize)
+        .limit(pageSize)
+
     debug(`[获取文章列表成功],页码[${pageIndex}] 每页个数[${pageSize}]`)
+    res.data = articleLists
+    next()
 })
 
 /**
@@ -35,14 +35,13 @@ router.get('/lists', async (req, res, next) => {
 router.get('/ranking', async (req, res, next) => {
     const { type = "like" } = req.query
     debug(`[排行榜Type:]${type}`);
-    const data = await tArticle.find({ approve: true }, { _id:1,title: 1, like: 1, pageView: 1 })
-        // .sort({ [type]: -1 })
-        // .limit(5)
-    const rankingData = data.sort((a,b)=> (~~a[type]) + (~~b[type]) ).slice(0,5)
-    res.send({
-        rankingData
-    })
+    const data = await tArticle.find({ approve: true }, { _id: 1, title: 1, like: 1, pageView: 1 })
+    // .sort({ [type]: -1 })
+    // .limit(5)
+    const rankingData = data.sort((a, b) => (~~a[type]) + (~~b[type])).slice(0, 5)
     debug('获取文章排行成功')
+    res.data = rankingData
+    next()
 })
 
 /**
@@ -87,7 +86,8 @@ router.post("/add-article", async (req, res, next) => {
         }
     )
     debug('新增文章成功')
-    res.send({ success: 1 })
+    res.data = { success: 1 }
+    next()
 })
 
 
@@ -96,13 +96,13 @@ router.post("/add-article", async (req, res, next) => {
  * @param {articleId}  String    文章id
  */
 router.post("/articleDetail", async (req, res, next) => {
+
     const { articleId } = req.body
     debug('【articleId】', articleId)
     const articleDetail = (await tArticle.find({ _id: articleId }))[0] || []
-    res.send({
-        articleDetail
-    })
+    res.data = articleDetail
     debug('获取文章详情成功')
+    next()
 })
 
 /**
@@ -112,12 +112,13 @@ router.post("/articleDetail", async (req, res, next) => {
 router.post('/addPageView', async (req, res, next) => {
     const { articleId } = req.body
     let pageView = (await tArticle.find({ _id: articleId }, { pageView: 1 }))[0].pageView
-    debug('【articleId】', articleId, '【pageView】:',pageView)
-    const articleDetail = await tArticle.update({ _id: articleId }, { $set: { pageView:++pageView} })
-    res.send({
+    debug('【articleId】', articleId, '【pageView】:', pageView)
+    const articleDetail = await tArticle.update({ _id: articleId }, { $set: { pageView: ++pageView } })
+    res.data = {
         success: 1
-    })
+    }
     debug('[浏览量 pv +1]')
+    next()
 })
 
 /**
@@ -125,22 +126,23 @@ router.post('/addPageView', async (req, res, next) => {
  * @param {isLike} Boolean  点赞 true or 取消赞 false
  * @param {id}  String  文章id
  */
-router.post("/toggleLike", async (req,res,next)=>{
-    const {isLike,id} = req.body
-    debug('[喜欢]:',isLike)
+router.post("/toggleLike", async (req, res, next) => {
+    const { isLike, id } = req.body
+    debug('[喜欢]:', isLike)
     let likeNum = (await tArticle.find({ _id: id }, { like: 1 }))[0].like
 
-    if(isLike === true){
-        likeNum ++
-    }else if(isLike === false){
-        likeNum --
+    if (isLike === true) {
+        likeNum++
+    } else if (isLike === false) {
+        likeNum--
     }
-    debug('喜欢量',likeNum)
-    const data = await tArticle.update({ _id: id }, { $set: { like:likeNum} })
+    debug('喜欢量', likeNum)
+    const data = await tArticle.update({ _id: id }, { $set: { like: likeNum } })
     debug('[喜欢点赞成功]')
-    res.send({
-        success:1
-    })
+    res.data = {
+        success: 1
+    }
+    next()
 })
 
 /**
@@ -148,37 +150,36 @@ router.post("/toggleLike", async (req,res,next)=>{
  * @param {isLike} Boolean  点赞 true or 取消赞 false
  * @param {id}  String  评论id
  */
-router.post("/toggle-commentLike", async (req,res,next)=>{
-    const {isLike,id} = req.body
-    debug('[点赞]:',isLike)
+router.post("/toggle-commentLike", async (req, res, next) => {
+    const { isLike, id } = req.body
+    debug('[点赞]:', isLike)
     let likeNum = (await tComment.find({ _id: id }, { like: 1 }))[0].like
 
-    if(isLike === true){
-        likeNum ++
-    }else if(isLike === false){
-        likeNum --
+    if (isLike === true) {
+        likeNum++
+    } else if (isLike === false) {
+        likeNum--
     }
-    debug('评论点赞量',likeNum)
-    const data = await tComment.update({ _id: id }, { $set: { like:likeNum} })
+    debug('评论点赞量', likeNum)
+    const data = await tComment.update({ _id: id }, { $set: { like: likeNum } })
     debug('[评论点赞成功]')
-    res.send({
-        success:1
-    })
+    res.data = {
+        success: 1
+    }
+    next()
 })
 
 /**
  * 获取评论列表
  * @param {articleId} String 文章id
  */
-router.get('/comment-lists', async (req,res,next)=>{
-    const {articleId} = req.query
-    debug('[文章id]:',articleId)
-    const commentLists = await tComment.find({articleId})
-    res.send({
-        success:1,
-        commentLists
-    })
+router.get('/comment-lists', async (req, res, next) => {
+    const { articleId } = req.query
+    debug('[文章id]:', articleId)
+    const commentLists = await tComment.find({ articleId })
+    res.data = commentLists
     debug('评论列表查询成功!')
+    next()
 })
 
 /**
@@ -188,7 +189,7 @@ router.get('/comment-lists', async (req,res,next)=>{
  * @param {commentEmail} String 邮箱
  * @param {commentContent} String 评论内容
  */
-router.post('/publish-comment', async (req,res,next)=>{
+router.post('/publish-comment', async (req, res, next) => {
     const {
         articleId,
         commentName,
@@ -197,18 +198,22 @@ router.post('/publish-comment', async (req,res,next)=>{
         publishDate
     } = req.body
 
-    debug('[文章评论]',req.body)
-    
+    debug('[文章评论]', req.body)
+
     const data = await tComment.create({
         articleId,
         commentName,
         commentEmail,
         commentContent,
-        publishDate
+        publishDate,
+        like:"0"
     })
     debug('[文章评论成功]');
-    res.send({success:1})
-    
+    res.data = {
+        success: 1
+    }
+    next()
+
 })
 
 /**
@@ -216,22 +221,23 @@ router.post('/publish-comment', async (req,res,next)=>{
  * @param {isLike} Boolean  点赞 true or 取消赞 false
  * @param {id}  String  评论id
  */
-router.post("/toggle-commentLike", async (req,res,next)=>{
-    const {isLike,id} = req.body
-    debug('[喜欢]:',isLike)
+router.post("/toggle-commentLike", async (req, res, next) => {
+    const { isLike, id } = req.body
+    debug('[喜欢]:', isLike)
     let likeNum = (await tArticle.find({ _id: id }, { like: 1 }))[0].like
 
-    if(isLike === true){
-        likeNum ++
-    }else if(isLike === false){
-        likeNum --
+    if (isLike === true) {
+        likeNum++
+    } else if (isLike === false) {
+        likeNum--
     }
-    debug('喜欢量',likeNum)
-    const data = await tArticle.update({ _id: id }, { $set: { like:likeNum} })
+    debug('喜欢量', likeNum)
+    const data = await tArticle.update({ _id: id }, { $set: { like: likeNum } })
     debug('[喜欢点赞成功]')
-    res.send({
-        success:1
+    res.data({
+        success: 1
     })
+    next()
 })
 
 

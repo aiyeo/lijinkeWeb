@@ -39,9 +39,10 @@ export function uploadArticle (articleInfo) {
 //pv统计
 export function addPageView(id, countTime) {
     return async function (dispatch) {
-        const data = await helper.postJson("/article/addPageView", { articleId: id, countTime })
+        const info = await helper.postJson("/article/addPageView", { articleId: id, countTime })
         dispatch({
-            type: PAGE_VIEW
+            type: PAGE_VIEW,
+            info
         })
     }
 }

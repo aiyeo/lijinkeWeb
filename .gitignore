@@ -2,4 +2,5 @@
 /dist/
 /public/music/
 /public/static/
+/server/logs/
 npm-debug.log

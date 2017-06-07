@@ -6,14 +6,14 @@ const debug = require('debug')('music')
 const multiparty = require('multiparty')
 const { host: HOST, port: PORT, staticPath } = config
 
-router.get('/', (req, res, next) => {
+router.get('/getMusic', (req, res, next) => {
 
     const { name, imageSrc, src } = getMusicInfo(fs);
-    res.send({
+    res.data = {
         name: name ? name : "",
         image: imageSrc ? `${HOST}${PORT}/music/${imageSrc}` : "",
         src: src ? `${HOST}${PORT}/music/${src}` : ""
-    })
+    }
     next();
 })
 
@@ -52,14 +52,13 @@ router.post('/uploadMusic', (req, res, next) => {
         const { name, src } = saveUploadAudio(files[fieldsConfig.file], fieldsConfig.file)
         //新音频图片
         const { imageSrc } = saveUploadAudio(files[fieldsConfig.img], fieldsConfig.img)
-        res.send({
-            success: 1,
-            data: {
-                src: src && `${HOST}${PORT}/music/${src}` || "",
-                name: name && name || "",
-                imageSrc: imageSrc && `${HOST}${PORT}/music/${imageSrc}` || ""
-            }
-        })
+
+        res.data = {
+            src: src && `${HOST}${PORT}/music/${src}` || "",
+            name: name && name || "",
+            imageSrc: imageSrc && `${HOST}${PORT}/music/${imageSrc}` || ""
+        }
+        next()
     })
 })
 

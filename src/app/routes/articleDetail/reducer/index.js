@@ -14,7 +14,7 @@ export default function (state = nameInitialState, action) {
         case ARTICLE_DETAIL:
             return {
                 ...state,
-                articleInfo: action.info
+                articleInfo: action.info.data
             }
         case TOGGLE_LIKE:
             return state
@@ -23,12 +23,12 @@ export default function (state = nameInitialState, action) {
         case PUBLISH_COMMENT:
             return {
                 ...state,
-                commentInfo:action.info
+                commentInfo:action.info.data
             }
         case GET_ARTICLE_COMMENTS:
             return {
                 ...state,
-                commentLists:action.lists
+                commentLists:action.lists.data
             }
         default:
             return state

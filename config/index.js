@@ -5,7 +5,9 @@ const mode = process.env.NODE_ENV || "DEV"
 const options = {
   host: mode == "DEV" ? "http://localhost" : "http://lijinke.xicp.io",
   dev_port:666,
+  socket_port:1997,
   PORT: 1996,
+  origin:"lijinkeWeb",
   staticPath: __dirname + '/../public',
   db_path:  'mongodb://localhost/lijinkeWeb',
   emailService: "qq", //邮件服务商
@@ -54,7 +56,7 @@ const options = {
   }
 }
 options.port = mode === "DEV" ? ":" + options.PORT : ""
-options.socket_port =  mode == "DEV" ? 1997 : options.PORT
+// options.socket_port =  mode == "DEV" ? 1997 : options.PORT
 options.defaultEmailTitle = options.companyName + " {name} " + options.currentMonth + "月工资表"
 
 module.exports = options

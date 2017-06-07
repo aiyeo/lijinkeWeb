@@ -4,7 +4,6 @@ export default function (state = nameInitialState, action) {
     const { type, userName } = action;
     switch (type) {
         case USER_JOIN:
-        console.log('reducer',userName);
             return {
                 userName
             }
