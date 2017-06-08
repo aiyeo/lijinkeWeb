@@ -1,4 +1,6 @@
 module.exports = function(req, res, next) {
+    if(req.originalUrl.indexOf('/api/music') !== -1) return next()
+    
     let postData = ""
     req.on('data', (data) => {
         postData += data

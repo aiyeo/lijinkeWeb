@@ -80,7 +80,7 @@ export default class Home extends React.PureComponent {
           imgSrc={musicData && musicData.image}
           name={musicData && musicData.name}
           mode={"mini"}       //full 完整模式  mini  迷你模式
-          isUploadAudio={false}
+          isUploadAudio={true}
         />
       </div>
     )
