@@ -10,7 +10,7 @@ import helper from "shared/libs/helper"
 import { Link } from "react-router"
 import classNames from "classnames"
 import moment from "moment"
-import getArticleDetail, { toggleLike, publishComment, getArticleComments } from "./action"
+import getArticleDetail, { toggleLike, publishComment, getArticleComments, toggleLikeComment } from "./action"
 
 import "./styles.less"
 
@@ -26,7 +26,8 @@ import "./styles.less"
             getArticleDetail,
             getArticleComments,
             toggleLike,
-            publishComment
+            publishComment,
+            toggleLikeComment
         }, dispatch)
     )
 )
@@ -39,142 +40,170 @@ export default class ArticleDetail extends React.PureComponent {
         commentModalVisible: false,
         articleLoading: true,
         commentLoading: true,
+        commentLikeConfig: []          //评论喜欢数,是否点赞
     }
     render() {
         const { articleInfo, commentLists } = this.props
-        const comments = commentLists && commentLists.commentLists        //评论列表
-        const detail = articleInfo && articleInfo.articleDetail
-        const { isLike, likeNum, showTip, commentNum,commentModalVisible, articleLoading, commentLoading } = this.state
 
+        const {
+            isLike,
+            likeNum,
+            showTip,
+            commentNum,
+            commentModalVisible,
+            articleLoading,
+            commentLoading,
+            commentLikeConfig
+        } = this.state
+
+        console.log(commentLists,commentLikeConfig);
         return (
-            <div>
-                <Container>
-                    <article className="article-detail" key="article-detail">
-                        {
-                            articleLoading
-                                ? <p className="text-align"><i className="icon icon-shouye"></i> 文章加载中..</p>
-                                : (
-                                    <div key="article-detail-info">
-                                        <h2 className="title">{detail && detail.title}</h2>
-                                        <p className="author">{detail && detail.author} | {moment(detail && detail.publishDate).format("YYYY-MM-DD HH:mm:ss")}</p>
-                                        <p className="content">{detail && detail.content}</p>
-                                        <p>
-                                            <button type="button" onClick={this.toggleLike} className={classNames('label', 'like', { "isLike": isLike })}>
-                                                <i className="icon icon-dianzan"></i>
-                                                {likeNum}
-                                                {
-                                                    showTip
-                                                        ? <span className={classNames('like-tip')}>{isLike ? '+1' : '-1'}</span>
-                                                        : undefined
-                                                }
+            <Container>
+                <article className="article-detail" key="article-detail">
+                    {
+                        articleLoading
+                            ? <p className="text-align"><i className="icon icon-shouye"></i> 文章加载中..</p>
+                            : (
+                                <div key="article-detail-info">
+                                    <h2 className="title">{articleInfo && articleInfo.title}</h2>
+                                    <p className="author">{articleInfo && articleInfo.author} | {moment(articleInfo && articleInfo.publishDate).format("YYYY-MM-DD HH:mm:ss")}</p>
+                                    <section className="content">
+                                        <p>{articleInfo && articleInfo.content}</p>
+                                    </section>
+                                    <p>
+                                        <button type="button" onClick={this.toggleLike} className={classNames('label', 'like', { "isLike": isLike })}>
+                                            <i className="icon icon-dianzan"></i>
+                                            {likeNum}
+                                            {
+                                                showTip
+                                                    ? <span className={classNames('like-tip')}>{isLike ? '+1' : '-1'}</span>
+                                                    : undefined
+                                            }
 
-                                            </button>
-                                            <span className="label pv">阅读量: {detail && detail.pageView}</span>
-                                        </p>
-                                    </div>
-                                )
-                        }
+                                        </button>
+                                        <span className="label pv">阅读量: {articleInfo && articleInfo.pageView}</span>
+                                    </p>
+                                </div>
+                            )
+                    }
 
-                    </article>
-                    {/*文章评论*/}
-                    <section className="article-comments-section">
-                        <div className="article-comments-title">
-                            <h3 className="title">
-                                <span><i className="icon icon-shuohuaspeak"></i> 评论 ({comments && comments.length || "0"}) 条</span>
-                                <a onClick={this.openCommentModal} className="comment-btn">发表评论</a>
-                            </h3>
-                        </div>
-                        {
-                            commentLoading
-                                ? <p className="text-center"><i className="icon icon-shouye"></i> 评论加载中...</p>
-                                : comments && comments.length >= 1
-                                    ? <ul className="article-comments-lists" key="article-comments-lists">
-                                        {
-                                            comments.map((item, i) => {
-                                                let {
-                                                    commentName,
-                                                    commentContent,
-                                                    publishDate,
-                                                    _id,
-                                                    like = 0
-                                                } = item
-                                                return (
-                                                    <li
-                                                        className="item commentListAnimate"
-                                                        key={i}
-                                                        style={{ "animationDelay": `${i * 0.1}s` }}
-                                                    >
-                                                        <div className="inner">
-                                                            <div className="comments-header">
-                                                                <div className="img">
-                                                                    <img src={require('images/default.jpeg')} alt="head-img" />
-                                                                </div>
-                                                                <span className="name">{commentName}</span>
+                </article>
+                {/*文章评论*/}
+                <section className="article-comments-section">
+                    <div className="article-comments-title">
+                        <h3 className="title">
+                            <span><i className="icon icon-shuohuaspeak"></i> 评论 ({commentLists && commentLists.length || "0"}) 条</span>
+                            <a onClick={this.openCommentModal} className="comment-btn">发表评论</a>
+                        </h3>
+                    </div>
+                    {
+                        commentLoading
+                            ? <p className="text-center"><i className="icon icon-shouye"></i> 评论加载中...</p>
+                            : commentLists && commentLists.length >= 1
+                                ? <ul className="article-comments-lists" key="article-comments-lists">
+                                    {
+                                        commentLists.map((item, i) => {
+                                            let {
+                                                commentName,
+                                                commentContent,
+                                                publishDate,
+                                                _id,
+                                                like = 0
+                                            } = item
+
+                                            const { like: currentLikeNum, isLike } = commentLikeConfig.find(({ commentId }) => commentId == _id)
+
+                                            return (
+                                                <li
+                                                    className="item commentListAnimate"
+                                                    key={i}
+                                                    style={{ "animationDelay": `${i * 0.1}s` }}
+                                                >
+                                                    <div className="inner">
+                                                        <div className="comments-header">
+                                                            <div className="img">
+                                                                <img src={require('images/default.jpeg')} alt="head-img" />
                                                             </div>
-                                                            <div className="comments-content">
-                                                                <p>{commentContent}</p>
-                                                            </div>
-                                                            <div className="comments-footer">
-                                                                <div className="like" onClick={() => this.likeComment(_id)}>
-                                                                    <i className="icon icon-dianzan"></i>
-                                                                    <span className="like-num">
-                                                                        {
-                                                                            like >= 1
-                                                                                ? like
-                                                                                : '赞'
-                                                                        }
-                                                                    </span>
-                                                                </div>
-                                                                <span className="time">{moment(publishDate).format("YYYY-MM-DD HH:mm:ss")}</span>
-                                                            </div>
+                                                            <span className="name">{commentName}</span>
                                                         </div>
-                                                    </li>
-                                                )
-                                            })
-                                        }
+                                                        <div className="comments-content">
+                                                            <p>{commentContent}</p>
+                                                        </div>
+                                                        <div className="comments-footer">
+                                                            <div
+                                                                className={classNames("like", { "active": isLike })}
+                                                                onClick={() => this.likeComment(_id, isLike)}
+                                                            >
+                                                                <i className="icon icon-dianzan"></i>
+                                                                <span className="like-num">
+                                                                    {
+                                                                        currentLikeNum >= 1
+                                                                            ? currentLikeNum
+                                                                            : "赞"
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                            <span className="time">{moment(publishDate).format("YYYY-MM-DD HH:mm:ss")}</span>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            )
+                                        })
+                                    }
 
-                                    </ul>
-                                    : <p className="text-center"><i className="icon icon-xiayu"></i> 暂无评论</p>
-                        }
-                    </section>
-                    <Modal
-                        title="发表评论"
-                        visible={commentModalVisible}
-                        onCancel={this.cancelCommentModal}
-                        className="comment-modal"
-                    >
-                        <form method="post" className="comment-form">
-                            <fieldset>
-                                <p className="label">您的姓名：</p>
-                                <input type="text" autoComplete="true" onChange={(e) => this.setState({ commentName: e.target.value })} name="commentTile" className="comment-name" placeholder="请填写您的名字" minLength="1" maxLength="8" required />
-                            </fieldset>
-                            <fieldset>
-                                <p className="label">您的邮箱：</p>
-                                <input type="email" autoComplete="true" onChange={(e) => this.setState({ commentEmail: e.target.value })} name="commentTile" className="comment-name" placeholder="请填写您的邮箱" required />
-                            </fieldset>
-                            <fieldset>
-                                <p className="label">文章内容：</p>
-                                <textarea name="commentContent" onChange={(e) => this.setState({ commentContent: e.target.value })} className="comment-textarea" placeholder="有啥想说的~" maxLength="100" required></textarea>
-                            </fieldset>
-                            <fieldset>
-                                <Button htmlType="button" onClick={this.publishComment} type="primary block">立即评论</Button>
-                            </fieldset>
-                        </form>
-                    </Modal>
-                </Container>
-            </div>
+                                </ul>
+                                : <p className="not-comments"><i className="icon icon-xiayu"></i> 暂无评论</p>
+                    }
+                </section>
+                <Modal
+                    title="发表评论"
+                    visible={commentModalVisible}
+                    onCancel={this.cancelCommentModal}
+                    className="comment-modal"
+                >
+                    <form method="post" className="comment-form">
+                        <fieldset>
+                            <p className="label">您的姓名：</p>
+                            <input type="text" autoComplete="true" onChange={(e) => this.setState({ commentName: e.target.value })} name="commentTile" className="comment-name" placeholder="请填写您的名字" minLength="1" maxLength="8" required />
+                        </fieldset>
+                        <fieldset>
+                            <p className="label">您的邮箱：</p>
+                            <input type="email" autoComplete="true" onChange={(e) => this.setState({ commentEmail: e.target.value })} name="commentTile" className="comment-name" placeholder="请填写您的邮箱" required />
+                        </fieldset>
+                        <fieldset>
+                            <p className="label">文章内容：</p>
+                            <textarea name="commentContent" onChange={(e) => this.setState({ commentContent: e.target.value })} className="comment-textarea" placeholder="有啥想说的~" maxLength="100" required></textarea>
+                        </fieldset>
+                        <fieldset>
+                            <Button htmlType="button" onClick={this.publishComment} type="primary block">立即评论</Button>
+                        </fieldset>
+                    </form>
+                </Modal>
+            </Container>
         )
     }
     //点赞评论
     //TODO 完成评论点赞
-    likeComment = async (commentId) => {
-        // let { isLike, likeNum } = this.state
-        // await this.props.toggleLikeComment(_id, !isLike)
-        // this.setState({
-        //     isLike: !isLike,
-        //     showTip: true,
-        //     likeNum: !isLike ? (++likeNum) : (--likeNum)
-        // })
+    likeComment = async (id, isLike) => {
+        let { commentLikeConfig } = this.state
+        await this.props.toggleLikeComment(id, !isLike)
+
+        const change = commentLikeConfig.reduce((arr, item) => {
+            let o = {}
+            if (item.commentId == id) {
+                o = {
+                    ...item,
+                    isLike: !item.isLike,
+                    like: !item.isLike ? (++item.like) : (--item.like)
+                }
+                arr.push(o)
+            } else {
+                arr.push(item)
+            }
+            return arr
+        }, [])
+
+        this.setState({ commentLikeConfig: change })
     }
     //发表评论
     publishComment = async (e) => {
@@ -185,7 +214,7 @@ export default class ArticleDetail extends React.PureComponent {
        } = this.state
         if (!commentName) return Message.error('请填写姓名')
         if (!/^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/.test(commentEmail)) return Message.error('请填写正确的邮箱')
-        if (!commentContent) return Message.error('请填写评论')
+        if (!commentContent) return Message.error('请填写评论!')
 
         const { params: { _id } } = this.props
 
@@ -197,8 +226,16 @@ export default class ArticleDetail extends React.PureComponent {
             publishDate: helper.getCurrentTime()
         })
         if (this.props.commentInfo && this.props.commentInfo.success === 1) {
-            Message.success('评论成功,请等待审核!')
+            Message.success('评论成功!')
             this.cancelCommentModal()
+            // await this.props.getArticleComments(this.props.params._id)
+
+
+            // const commentLikeConfig = this.setComments(this.props.commentLists)
+            // this.setState({
+            //     commentLikeConfig,
+            //     commentModalVisible:false
+            // })
         } else {
             Message.error('评论失败!')
         }
@@ -223,12 +260,32 @@ export default class ArticleDetail extends React.PureComponent {
             this.setState({ showTip: false })
         }, 500)
     }
+    setComments = (commentLists) => {
+        console.log('评论',commentLists);
+        const commentLikeConfig = commentLists && commentLists.map(({ _id, like }) => {
+            return {
+                commentId: _id,
+                like,
+                isLike: false
+            }
+        })
+        return commentLikeConfig
+    }
     async componentDidMount() {
         const { params: { _id }, getArticleDetail, getArticleComments, addPageView } = this.props
-        const { articleInfo } = this.props
-        const detail = articleInfo && articleInfo.articleDetail
         await getArticleDetail(_id)
         await getArticleComments(_id)
-        detail && this.setState({ likeNum: detail.like, articleLoading: false, commentLoading: false })
+
+        const { articleInfo, commentLists } = this.props
+        const commentLikeConfig = this.setComments(commentLists)
+
+        articleInfo &&
+            this.setState({
+                likeNum: articleInfo.like,
+                articleLoading: false,
+                commentLoading: false,
+                commentLikeConfig
+            })
+
     }
 }

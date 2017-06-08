@@ -6,6 +6,12 @@
     padding: 20px;
     color:#444;
     animation: articleDetailAnimate .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pre{
+        padding: 0 1em 0 1em;
+        margin:1em 0;
+        overflow: auto;
+        word-wrap: break-word;
+    }
     .content{
         color:@article-content-color;
         text-indent:2em;
@@ -132,13 +138,18 @@
             }
         }
     }
+    .not-comments{
+        text-align: center;
+        padding: 60px 0;
+        color:#444;
+    }
     .article-comments-lists{
         .commentListAnimate{
             animation:  commentListAnimate .4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
         }
         .item{
             background: #fff;
-            box-shadow: 0 4px 10px rgba(0,0,0,.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,.35);
             position: relative;
             padding:@padding;
             border-bottom:@border-color;
@@ -175,9 +186,15 @@
                 .like{
                     cursor: pointer;
                     transition: color .3 ease-in-out;
-                    &:active,&:hover{
+                    &.active{
                         color:@primary-color;
                     }
+                    @media screen and (min-width:768px){
+                        &:hover{
+                            color:@primary-color;
+                        }
+                    }
+      
                     i{
                         vertical-align: middle;
                     }

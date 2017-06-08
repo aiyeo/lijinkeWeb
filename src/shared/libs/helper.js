@@ -29,7 +29,7 @@ const helper = {
 
   async getJson(url, params) {
     return (await
-      fetch(`${host}${port}${url}${params ? '?' + (this.jsonToString(params)) : ''}`, {
+      fetch(`${host}${port}/api${url}${params ? '?' + (this.jsonToString(params)) : ''}`, {
         method: "GET",
         mode: "cors",
       })).json()
@@ -54,7 +54,7 @@ const helper = {
       //   'Content-Type': 'application/json',
       // }
     return (await
-      fetch(`${host}${port}${url}`, fetchConfig)
+      fetch(`${host}${port}/api${url}`, fetchConfig)
     ).json()
   }
 }

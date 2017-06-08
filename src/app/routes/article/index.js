@@ -123,8 +123,8 @@ export default class Article extends React.PureComponent {
                             rankingLoading
                                 ? <p className="text-center"><i className="icon icon-shouye"></i> 拼了老命加载中...</p>
                                 :
-                                ranking && ranking.rankingData && ranking.rankingData.length >= 1
-                                    ? ranking.rankingData.map((data, i) => {
+                                ranking && ranking.length >= 1
+                                    ? ranking.map((data, i) => {
                                         let { title, like, pageView, _id } = data
                                         return (
                                             <li key={i} className="ranking-item" style={{ "animationDelay": `${i * 0.1}s` }}>
@@ -221,23 +221,47 @@ export default class Article extends React.PureComponent {
         values.like = "0",
             values.approve = false,           //是否审核通过
             await this.props.uploadArticle(values)
-        if (this.props.uploadInfo && this.props.uploadInfo.success === 1) {
+
+        if (this.props.uploadInfo && this.props.uploadInfo.success == 1) {
             Message.success('上传成功,请等待审核!')
             this.cancelArticleModal()
         } else {
             Message.error('上传失败!')
         }
     }
+    //切换排行榜
     toggleRanking = (rankingType) => {
         this.setState({ rankingType })
         this.props.getArticleRanking(rankingType)
     }
-    async componentDidMount() {
-        await this.props.getArticleLists()
-        await this.props.getArticleRanking(this.state.rankingType)
-        this.setState({
-            articleLoading:false,
-            rankingLoading:false
+    /**
+     * 滚动加载
+     * @param {offset} number 距离底部多少开始加载
+     */
+    loadArticleLists = () => {
+        let winH = window.innerHeight
+        let scrollHeight = document.body.scrollHeight
+        let scrollTop = document.body.scrollTop
+        console.log(scrollTop + winH);
+        console.log(scrollHeight);
+        if (scrollTop + winH >= scrollHeight) {
+            console.log('到底了')
+        }
+
+    }
+    componentDidMount() {
+        this.props.getArticleLists({
+            pageIndex: 1,
+            pageSize: 20
         })
+        this.props.getArticleRanking(this.state.rankingType)
+        this.setState({
+            articleLoading: false,
+            rankingLoading: false
+        })
+        window.addEventListener('scroll', this.loadArticleLists)
+    }
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.loadArticleLists)
     }
 }

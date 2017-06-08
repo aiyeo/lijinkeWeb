@@ -7,22 +7,22 @@ export default function (state = nameInitialState, action) {
         case ARTICLE_LIST:
             return {
                 ...state,
-                lists:action.lists.list
+                lists:action.lists.data
             }
         case ARTICLE_RANKING:
             return {
                 ...state,
-                ranking:action.ranking
+                ranking:action.ranking.data
             }
         case ARTICLE_UPLOAD:
             return {
                 ...state,
-                uploadInfo:action.info
+                uploadInfo:action.info.data
             }
         case PAGE_VIEW:
             return {
                 ...state,
-                pageViewInfo: action.info
+                pageViewInfo: action.info.data
             }
         default:
             return state

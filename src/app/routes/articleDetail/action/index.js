@@ -2,6 +2,7 @@ import helper from "libs/helper"
 
 export const ARTICLE_DETAIL = "article_detail"
 export const TOGGLE_LIKE = "toggle_like"
+export const TOGGLE_COMMENT_LIKE = "toggle_comment_like"
 export const PUBLISH_COMMENT = "publish_comment"
 export const GET_ARTICLE_COMMENTS = "get_article_comments"
 
@@ -21,6 +22,16 @@ export function toggleLike(id, isLike) {
         const data = await helper.postJson("/article/toggleLike", { id, isLike })
         dispatch({
             type: TOGGLE_LIKE
+        })
+    }
+}
+
+
+export function toggleLikeComment(id, isLike) {
+    return async function (dispatch) {
+        const data = await helper.postJson("/article/toggle-commentLike", { id, isLike })
+        dispatch({
+            type: TOGGLE_COMMENT_LIKE
         })
     }
 }

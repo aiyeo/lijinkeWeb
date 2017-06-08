@@ -4,9 +4,9 @@ export const ARTICLE_RANKING = "article_ranking"
 export const ARTICLE_UPLOAD = "article_upload"
 export const PAGE_VIEW = "pageView"
 
-export default function getArticleLists () {
+export default function getArticleLists (params) {
     return async function (dispatch) {
-        const lists = await helper.getJson("/article/lists")
+        const lists = await helper.getJson("/article/lists",params)
             dispatch({
                 type: ARTICLE_LIST,
                 lists
@@ -39,9 +39,10 @@ export function uploadArticle (articleInfo) {
 //pv统计
 export function addPageView(id, countTime) {
     return async function (dispatch) {
-        const data = await helper.postJson("/article/addPageView", { articleId: id, countTime })
+        const info = await helper.postJson("/article/addPageView", { articleId: id, countTime })
         dispatch({
-            type: PAGE_VIEW
+            type: PAGE_VIEW,
+            info
         })
     }
 }

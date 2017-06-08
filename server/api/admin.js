@@ -10,7 +10,9 @@ const sendEmail = require("../utils/sendEmail")
 //获取文章列表
 router.get('/articleList', async (req, res, next) => {
     const data = await tArticle.find({})
-    res.send({ data })
+    res.data = data 
+    debug('文章列表获取成功')
+    next()
 })
 
 /**
@@ -32,9 +34,10 @@ router.post('/approve', async (req, res, next) => {
         subject: `【${companyName}】文章审核通过通知!`,
         html: `<h3 style="font-weight:500;">您于 ${date} 发表的文章【${title}】已审核通过,请前往<a href="${host}">${companyName}</a>查看~</h3>`
     })
-    res.send({
+    res.data = {
         success:1
-    })
+    }
+    next()
     debug('[文章审核通过,邮箱发送成功] 收件人:', email)
 
 })

@@ -6,14 +6,14 @@ const debug = require('debug')('music')
 const multiparty = require('multiparty')
 const { host: HOST, port: PORT, staticPath } = config
 
-router.get('/', (req, res, next) => {
+router.get('/getMusic', (req, res, next) => {
 
     const { name, imageSrc, src } = getMusicInfo(fs);
-    res.send({
+    res.data = {
         name: name ? name : "",
         image: imageSrc ? `${HOST}${PORT}/music/${imageSrc}` : "",
         src: src ? `${HOST}${PORT}/music/${src}` : ""
-    })
+    }
     next();
 })
 
@@ -52,14 +52,13 @@ router.post('/uploadMusic', (req, res, next) => {
         const { name, src } = saveUploadAudio(files[fieldsConfig.file], fieldsConfig.file)
         //新音频图片
         const { imageSrc } = saveUploadAudio(files[fieldsConfig.img], fieldsConfig.img)
-        res.send({
-            success: 1,
-            data: {
-                src: src && `${HOST}${PORT}/music/${src}` || "",
-                name: name && name || "",
-                imageSrc: imageSrc && `${HOST}${PORT}/music/${imageSrc}` || ""
-            }
-        })
+
+        res.data = {
+            src: src && `${HOST}${PORT}/music/${src}` || "",
+            name: name && name || "",
+            imageSrc: imageSrc && `${HOST}${PORT}/music/${imageSrc}` || ""
+        }
+        next()
     })
 })
 
@@ -70,10 +69,10 @@ function saveUploadAudio(files, fileType) {
         files.forEach((data, index) => {
             const { originalFilename, path, size } = data
             let file = fs.readFileSync(path)
-                .toString()
-                .replace(/%/g, "%25")
-                .replace(/\&/g, "%26")
-                .replace(/\+/g, "%2B");
+                // .toString()
+                // .replace(/%/g, "%25")
+                // .replace(/\&/g, "%26")
+                // .replace(/\+/g, "%2B");
             switch (fileType) {
                 case fieldsConfig['file']:
                     if (size == 0) {
@@ -87,7 +86,7 @@ function saveUploadAudio(files, fileType) {
                         debug(`删除${src}成功!`);
                     }
                     let newMusicPath = `${staticPath}/music/${Date.now()}.mp3`
-                    fs.writeFileSync(newMusicPath, file)
+                    fs.writeFileSync(newMusicPath, file,'binary')
                     debug(`保存${originalFilename}成功`)
                     const { name: newName, src: newSrc } = getMusicInfo(fs);
                     fileData.name = originalFilename && originalFilename.replace(/(.*)\.mp3/, '$1') || "",
@@ -105,7 +104,7 @@ function saveUploadAudio(files, fileType) {
                         debug(`删除${imageSrc}成功!`);
                     }
                     let newPath = `${staticPath}/music/${Date.now()}.${originalFilename.replace(/.*\.(jpg|jpeg|png)$/, '$1')}`
-                    fs.writeFileSync(newPath, file)
+                    fs.writeFileSync(newPath, file,'binary')
                     debug(`保存${originalFilename}成功`)
                     const { imageSrc: newImageSrc } = getMusicInfo(fs);
                     fileData.imageSrc = newImageSrc

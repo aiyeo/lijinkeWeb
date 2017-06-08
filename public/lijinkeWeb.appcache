@@ -1,0 +1,28 @@
+CACHE MANIFEST
+# lijinkeWeb appCache
+# 2017/6/7 17:35:35 v0.31
+/static/css/app.51bf2331.css
+
+/static/fonts/iconfont09cc9c04.eot
+/static/fonts/iconfont5c62b9ab.svg
+/static/fonts/iconfontaad98aa7.ttf
+/static/fonts/iconfontbd733a73.woff
+
+
+/static/images/alipay6239faa1.jpg
+/static/images/bannerab29d28c.jpg
+/static/images/default6033e595.jpeg
+/static/images/head-imge7b417e6.jpg
+/static/images/photo147f92bdb.jpg
+/static/images/photo34d5ad8a9.jpg
+/static/images/photo4a11fdf4d.jpg
+/static/images/photo54d40c68a.jpg
+/static/images/photo65858f0d9.jpg
+/static/images/photo7adf2a5b5.jpg
+/static/images/photo8a4a3bd7f.jpg
+/static/images/weChatPayd9334388.png
+
+/index.ico
+
+NETWORK:
+*

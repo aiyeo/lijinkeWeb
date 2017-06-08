@@ -5,7 +5,8 @@ export default function (state = nameInitialState, action) {
     switch (type) {
         case GET_MUSIC:
             return {
-                musicData
+                ...state,
+                musicData:musicData.data
             }
         default:
             return state
