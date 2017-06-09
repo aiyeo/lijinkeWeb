@@ -167,7 +167,7 @@ export default class Article extends React.PureComponent {
                     <form method="post" className="edit-form">
                         <fieldset>
                             {/*<span className="label">文章名：</span>*/}
-                            <input type="text" onChange={(e) => this.setState({ editTitle: e.target.value })} name="editTile" className="edit-title" placeholder="标题,做个标题党" maxLength="20" required />
+                            <input type="text" onChange={(e) => this.setState({ editTitle: e.target.value })} name="editTile" className="edit-title" placeholder="标题,做个标题党" maxLength="30" required />
                         </fieldset>
                         <fieldset>
                             {/*<span className="label">作者名：</span>*/}

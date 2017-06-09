@@ -5,6 +5,7 @@ const fs = require("fs")
 const debug = require('debug')('article')
 const { tArticle, tComment } = require("../db/connect")
 const momnet = require("moment")
+const sendEmail = require("../utils/sendEmail")
 
 
 /**
@@ -93,6 +94,11 @@ router.post("/add-article", async (req, res, next) => {
     )
     debug('新增文章成功')
     res.data = { success: 1 }
+    await sendEmail.sendEmail({
+        subject: `【${author}】于 [${publishDate}] 发布了文章 [${title}] 请尽快审核!`,
+        html: `<h2>文章内容</h2><p>${content}</p>`
+    })
+    debug('通知管理员审核邮件发送成功')
     next()
 })
 

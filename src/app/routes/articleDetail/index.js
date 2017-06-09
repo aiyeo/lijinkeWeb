@@ -164,8 +164,8 @@ export default class ArticleDetail extends React.PureComponent {
                             <input type="email" autoComplete="true" onChange={(e) => this.setState({ commentEmail: e.target.value })} name="commentTile" className="comment-name" placeholder="请填写您的邮箱" required />
                         </fieldset>
                         <fieldset>
-                            <p className="label">文章内容：</p>
-                            <textarea name="commentContent" onChange={(e) => this.setState({ commentContent: e.target.value })} className="comment-textarea" placeholder="有啥想说的~" maxLength="100" required></textarea>
+                            <p className="label">评论内容：</p>
+                            <textarea name="commentContent" onChange={(e) => this.setState({ commentContent: e.target.value })} className="comment-textarea" placeholder="说鸡不说吧,文明你我他!" maxLength="100" required></textarea>
                         </fieldset>
                         <fieldset>
                             <Button htmlType="button" onClick={this.publishComment} type="primary block">立即评论</Button>
