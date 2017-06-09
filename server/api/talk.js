@@ -2,17 +2,11 @@ const { socket_port } = require('../../config')
 const debug = require('debug')('talk')
 const mode = process.env.NODE_ENV || "DEV"
 
-// let http;
-
-// if (mode === "DEV") {
 const http = require("http")
         .createServer(function (req, res) { })
         .listen(socket_port)
     io = require("socket.io")(http);
-// } else {
-//     http = require('../../server')
-//     io = require("socket.io")(http);
-// }
+
 
 
 let onlineUsers = []        //在线用户

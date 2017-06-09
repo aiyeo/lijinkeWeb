@@ -38,13 +38,13 @@
     }
 }
 
-.ellipsis-n(@n){
+.ellipsis-n(@n:2){
     -webkit-line-clamp:@n;
     display:-webkit-box;
+    -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     justify-content: center;
-    -webkit-box-orient: vertical;
 }
 .ellipsis-1(){
     white-space: nowrap;

@@ -7,6 +7,7 @@ import Message from "shared/components/Message"
 import Button from "shared/components/Button"
 import Modal from "shared/components/Modal"
 import helper from "shared/libs/helper"
+import browser from "shared/libs/browser"
 import { Link } from "react-router"
 import classNames from "classnames"
 import moment from "moment"
@@ -55,8 +56,6 @@ export default class ArticleDetail extends React.PureComponent {
             commentLoading,
             commentLikeConfig
         } = this.state
-
-        console.log(commentLists,commentLikeConfig);
         return (
             <Container>
                 <article className="article-detail" key="article-detail">
@@ -108,10 +107,11 @@ export default class ArticleDetail extends React.PureComponent {
                                                 commentContent,
                                                 publishDate,
                                                 _id,
+                                                device,
                                                 like = 0
                                             } = item
 
-                                            const { like: currentLikeNum, isLike } = commentLikeConfig.find(({ commentId }) => commentId == _id)
+                                            {/*const { like: currentLikeNum, isLike } = commentLikeConfig.find(({ commentId }) => commentId == _id)*/}
 
                                             return (
                                                 <li
@@ -130,17 +130,10 @@ export default class ArticleDetail extends React.PureComponent {
                                                             <p>{commentContent}</p>
                                                         </div>
                                                         <div className="comments-footer">
-                                                            <div
-                                                                className={classNames("like", { "active": isLike })}
-                                                                onClick={() => this.likeComment(_id, isLike)}
-                                                            >
-                                                                <i className="icon icon-dianzan"></i>
-                                                                <span className="like-num">
-                                                                    {
-                                                                        currentLikeNum >= 1
-                                                                            ? currentLikeNum
-                                                                            : "赞"
-                                                                    }
+                                                            <div className="device-content">
+                                                                <i className="icon icon-liaotian"></i>
+                                                                <span className="device">
+                                                                    来自 {device}
                                                                 </span>
                                                             </div>
                                                             <span className="time">{moment(publishDate).format("YYYY-MM-DD HH:mm:ss")}</span>
@@ -216,6 +209,8 @@ export default class ArticleDetail extends React.PureComponent {
         if (!/^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/.test(commentEmail)) return Message.error('请填写正确的邮箱')
         if (!commentContent) return Message.error('请填写评论!')
 
+        const device = this.getDevice()
+
         const { params: { _id } } = this.props
 
         const data = await this.props.publishComment({
@@ -223,12 +218,13 @@ export default class ArticleDetail extends React.PureComponent {
             commentName,
             commentEmail,
             commentContent,
+            device,
             publishDate: helper.getCurrentTime()
         })
         if (this.props.commentInfo && this.props.commentInfo.success === 1) {
             Message.success('评论成功!')
             this.cancelCommentModal()
-            // await this.props.getArticleComments(this.props.params._id)
+            await this.props.getArticleComments(this.props.params._id)
 
 
             // const commentLikeConfig = this.setComments(this.props.commentLists)
@@ -245,6 +241,10 @@ export default class ArticleDetail extends React.PureComponent {
     }
     cancelCommentModal = () => {
         this.setState({ commentModalVisible: false })
+    }
+    //获取设备
+    getDevice = ()=>{
+        return browser.versions.mobile ? '手机' : "PC"
     }
     //喜欢
     toggleLike = async () => {
@@ -277,14 +277,13 @@ export default class ArticleDetail extends React.PureComponent {
         await getArticleComments(_id)
 
         const { articleInfo, commentLists } = this.props
-        const commentLikeConfig = this.setComments(commentLists)
+        // const commentLikeConfig = this.setComments(commentLists)
 
         articleInfo &&
             this.setState({
                 likeNum: articleInfo.like,
                 articleLoading: false,
-                commentLoading: false,
-                commentLikeConfig
+                commentLoading: false
             })
 
     }

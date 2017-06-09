@@ -16,7 +16,7 @@ import "./styles.less"
 
 @connect(
     ({ ArticleAction }) => ({
-        articleLists: ArticleAction.lists,
+        articleData: ArticleAction.lists,
         ranking: ArticleAction.ranking,
         uploadInfo: ArticleAction.uploadInfo
     }),
@@ -39,12 +39,15 @@ export default class Article extends React.PureComponent {
         editCategory: ["杂文"],       //上传文章分类
         editEmail: "",               //作者邮箱
         rankingLoading: true,
-        articleLoading: true
-
+        articleLoading: true,
+        pageIndex: 1,                  //当前页码
     }
+    pageSize = 3          //文章每页个数
     render() {
-        const { articleLists, ranking } = this.props
-        const { rankingType, articleModalVisible, rankingLoading, articleLoading } = this.state
+        const { articleData, ranking } = this.props
+        const articleLists = articleData && articleData.articleLists
+        const count = articleData && articleData.count
+        const { rankingType, articleModalVisible, rankingLoading, articleLoading, pageIndex } = this.state
         return (
             <Container className="article-section">
                 <div className="article-list">
@@ -105,6 +108,19 @@ export default class Article extends React.PureComponent {
                                     : <p className="text-center"><i className="icon icon-xiayu"></i> 暂无文章</p>
                         }
 
+                    </section>
+                    <section className="article-pagination">
+                        {
+                            pageIndex <= "1"
+                                ? <Button type="disbled">上一页</Button>
+                                : <Button type="primary" onClick={() => this.getArticlePageLists("prev")}>上一页</Button>
+                        }
+                        <span className="pages"><span className="pageIndex">{pageIndex}</span> / {count}</span>
+                        {
+                            pageIndex >= count
+                                ? <Button type="disbled">下一页</Button>
+                                : <Button type="primary" onClick={() => this.getArticlePageLists("next")}>下一页</Button>
+                        }
                     </section>
                 </div>
                 { /*文章点击排行*/}
@@ -173,6 +189,8 @@ export default class Article extends React.PureComponent {
                                 <option value="心得">心得</option>
                                 <option value="感悟">感悟</option>
                                 <option value="随笔">随笔</option>
+                                <option value="前端代码">前端代码</option>
+                                <option value="后端代码">后端代码</option>
                                 <option value="其他">其他</option>
                             </select>
                         </fieldset>
@@ -183,6 +201,17 @@ export default class Article extends React.PureComponent {
                 </Modal>
             </Container>
         )
+    }
+    getArticlePageLists = (type) => {
+        let { pageIndex } = this.state
+
+        this.props.getArticleLists({
+            pageIndex: type == "prev" ? --pageIndex : ++pageIndex,
+            pageSize: this.pageSize
+        })
+        this.setState({
+            pageIndex
+        })
     }
     addPageView = (id) => {
         this.props.addPageView(id)
@@ -250,18 +279,18 @@ export default class Article extends React.PureComponent {
 
     }
     componentDidMount() {
+        window.addEventListener('scroll', this.loadArticleLists)
         this.props.getArticleLists({
-            pageIndex: 1,
-            pageSize: 20
+            pageIndex: this.state.pageIndex,
+            pageSize: this.pageSize
         })
         this.props.getArticleRanking(this.state.rankingType)
         this.setState({
             articleLoading: false,
             rankingLoading: false
         })
-        window.addEventListener('scroll', this.loadArticleLists)
     }
-    componentWillUnmount() {
+    componentWillUnMount() {
         window.removeEventListener('scroll', this.loadArticleLists)
     }
 }

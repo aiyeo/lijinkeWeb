@@ -100,7 +100,6 @@ export default class MusicPlayer extends React.PureComponent {
         } = this.state
         //当前播放进度
         const progress = ((currentTime / duration) * 100).toFixed(2)
-        console.log(uploadProgress);
 
         return (
             <figure className={classNames("music-player", className)} key="music-player">

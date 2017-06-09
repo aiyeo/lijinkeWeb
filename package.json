@@ -37,6 +37,7 @@
     "cross-env": "^4.0.0",
     "cssnano": "^3.10.0",
     "debug": "^2.6.6",
+    "express-http-proxy": "^1.0.3",
     "extract-text-webpack-plugin": "^2.1.0",
     "file-stream-rotator": "^0.1.0",
     "imagemin-webpack-plugin": "^1.4.4",

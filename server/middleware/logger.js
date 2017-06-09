@@ -14,5 +14,5 @@ const accessLogStream = fileStreamRotator.getStream({
     frequency:"daliy",     //频率---日常
     verbose:true           //很长的日志
 })
-
-module.exports = morgan('common',{stream:accessLogStream})
+const _morgan = morgan('combined',{stream:accessLogStream})
+module.exports = _morgan

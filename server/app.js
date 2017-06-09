@@ -6,21 +6,29 @@ const bodyParser = require('body-parser')
 const app = express()
 const http = require("http").createServer(app)
 const cors = require('cors')
+const url = require('url')
 const cookieParser = require('cookie-parser')
+const proxy = require('express-http-proxy')
 const writeIndex = require('./utils/writeIndex')
-const logger = require('../server/middleware/logger')
 const timeOut = require('connect-timeout')
-const { PORT } = require("../config")
+const { host,PORT,socket_port } = require("../config")
 const mode = process.env.NODE_ENV || "DEV"
 
 
 //中间键部分
+//代理
+app.use('/socket.io', proxy(`${host}:${socket_port}`, {         
+    forwardPath: function (req, res) {
+        console.log(url.parse(req.url).path);
+        return `/socket.io${url.parse(req.url).path} `;
+    }
+}));
 app.use(express.static(`${__dirname}/../public`));      //设置静态资源目录
-app.use(bodyParser.urlencoded({ extended: false })) // 转换 application/x-www-form-urlencoded
-app.use(cookieParser()) //cookie
-app.use(cors())        //跨域
-app.use(logger)       //日志
-app.use(require('./middleware/getFetchData'))  //转换fetch 过来的body   添加到 req.body
+app.use(bodyParser.urlencoded({ extended: false }))    // 转换 application/x-www-form-urlencoded
+app.use(cookieParser())                                //cookie
+app.use(cors())                                       //跨域
+app.use(require('../server/middleware/logger'))       //日志
+app.use(require('./middleware/getFetchData'))         //转换fetch 过来的body   添加到 req.body
 
 
 //将打包的dist/index.html  写入到  public/index.html

@@ -16,15 +16,21 @@ const momnet = require("moment")
 router.get('/lists', async (req, res, next) => {
     const {
         pageIndex = 1,
-        pageSize = 20
+        pageSize = 3
     } = req.query
 
     const articleLists = await tArticle.find({ approve: true })
+        .sort({publishDate:-1})
         .skip((pageIndex - 1) * pageSize)
         .limit(pageSize)
 
+    const count = ~~((await tArticle.find({approve:true}).count()) / pageSize) +1
+
     debug(`[获取文章列表成功],页码[${pageIndex}] 每页个数[${pageSize}]`)
-    res.data = articleLists
+    res.data = {
+        count,
+        articleLists
+    }
     next()
 })
 
@@ -176,7 +182,7 @@ router.post("/toggle-commentLike", async (req, res, next) => {
 router.get('/comment-lists', async (req, res, next) => {
     const { articleId } = req.query
     debug('[文章id]:', articleId)
-    const commentLists = await tComment.find({ articleId })
+    const commentLists = await tComment.find({ articleId }).sort({publishDate:-1})
     res.data = commentLists
     debug('评论列表查询成功!')
     next()
@@ -195,7 +201,8 @@ router.post('/publish-comment', async (req, res, next) => {
         commentName,
         commentEmail,
         commentContent,
-        publishDate
+        publishDate,
+        device
     } = req.body
 
     debug('[文章评论]', req.body)
@@ -206,6 +213,7 @@ router.post('/publish-comment', async (req, res, next) => {
         commentEmail,
         commentContent,
         publishDate,
+        device,
         like:"0"
     })
     debug('[文章评论成功]');

@@ -33,6 +33,7 @@ const commentSchema = new mongoose.Schema({
         commentEmail:String,        //邮箱
         commentContent:String,      //内容
         like:String,                //点赞量
+        device:String,               //设备
         publishDate:{               //发布日期
             type:Date,
             dafault:Date.now
