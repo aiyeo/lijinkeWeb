@@ -30,29 +30,6 @@ const options = {
       ss = s < 10 ? "0" + s : s
 
     return year + "/" + month + "/" + day + " " + hh + ":" + mm + ":" + ss //当前时间
-  },
-  //配置表格字段  需要和 excel表格一致  key无所谓  value一定要一样
-  tableFields: {
-    "id": "序号",
-    "department": "部门",
-    "name": "姓名",
-    "duty": "职务",
-    "baseWage": "基本工资",
-    "daysLostFromWork": "缺勤天数",
-    "absenceDeductions": "缺勤扣款",
-    "beLate": "迟到",
-    "bonus": "奖金",
-    "wagesPayable": "应计工资",
-    "insurance": "保险",
-    "reservedFunds": "公积金",
-    "subtotal": "小计",
-    "OtherDeduction": "其他扣除",
-    "salary": "应发工资",
-    "taxWage": "计税工资",
-    "ToBeCollectedTax": "代扣个税",
-    "netPayroll": "实发工资",
-    "remark": "备注",
-    "email": "工作邮箱"
   }
 }
 options.port = mode === "DEV" ? ":" + options.PORT : ""

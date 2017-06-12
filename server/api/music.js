@@ -6,6 +6,9 @@ const debug = require('debug')('music')
 const multiparty = require('multiparty')
 const { host: HOST, port: PORT, staticPath } = config
 
+/**
+ * 获取音乐
+ */
 router.get('/getMusic', (req, res, next) => {
 
     const { name, imageSrc, src } = getMusicInfo(fs);
@@ -42,7 +45,6 @@ const fieldsConfig = {
 
 /**
  * 上传音乐               
- * TODO 音乐上传上来保存的时候文件损坏  :(
  */
 router.post('/uploadMusic', (req, res, next) => {
     const form = new multiparty.Form();
