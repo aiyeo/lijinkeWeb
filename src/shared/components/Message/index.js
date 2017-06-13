@@ -15,14 +15,14 @@ export default class Message extends React.PureComponent {
     }
     _container;         //包裹message 的div容器
     _dom;               //message dom节点
-    constructor(props){
+    constructor(props) {
         super(props)
     }
     static defaultProps = {
-        defaultDuration : 2,
-        defaultContent :"提示"
+        defaultDuration: 2,
+        defaultContent: "提示"
     }
-    componentWillUnMount(){
+    componentWillUnMount() {
         console.log('移除');
     }
     componentDidMount() {
@@ -33,16 +33,16 @@ export default class Message extends React.PureComponent {
         }, duration * 1000)
     }
     //移除节点
-    removeNode = ()=>{
-        ReactDOM.unmountComponentAtNode( this._container )
+    removeNode = () => {
+        ReactDOM.unmountComponentAtNode(this._container)
         this._dom.remove()
     }
     /**
      * static 静态方法  不会被继承 可以直接被类调用
      * 所以可以实现 Mesage.info() 这种
      */
-    static renderElement = (type, content="提示", duration =2 , onClose)=>{
-        let div= document.createElement('div')
+    static renderElement = (type, content = "提示", duration = 2, onClose) => {
+        let div = document.createElement('div')
         let _message = ReactDOM.render(
             <Message
                 type={type}
@@ -52,13 +52,26 @@ export default class Message extends React.PureComponent {
             />,
             div
         )
-        let dom =  document.querySelector(".jk-message").appendChild(div)
+        let dom = document.querySelector(".jk-message").appendChild(div)
         _message._container = div
         _message._dom = dom
     }
-    static error(content, duration , onClose) {
+    static error(content, duration, onClose) {
         this.renderElement("error", content, duration, onClose)
     }
+    static info(content, duration, onClose) {
+        this.renderElement("info", content, duration, onClose)
+    }
+    static success(content, duration, onClose) {
+        this.renderElement("success", content, duration, onClose)
+    }
+    static warning(content, duration, onClose) {
+        this.renderElement("warning", content, duration, onClose)
+    }
+    static loading(content, duration, onClose) {
+        this.renderElement("loading", content, duration, onClose)
+    }
+
     render() {
         const {
              type,
