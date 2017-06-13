@@ -36,8 +36,8 @@ writeIndex();
 
 
 //api部分
-//接口 统一 res.data = xxx   apiHandler中间键统一处理包装
-require("./api/talk")
+// //接口 统一 res.data = xxx   apiHandler中间键统一处理包装
+require('./api/talk')
 app.use("/api",timeOut("10s"))
 app.use('/api/music', require("./api/music"))
 app.use('/api/article', require("./api/article"))
@@ -59,6 +59,4 @@ const serverRuningInfo = `
                         :)
 `
 http.listen(port, debug(serverRuningInfo))
-
-module.exports = http
 

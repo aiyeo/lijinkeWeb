@@ -9,16 +9,55 @@ import ReactDOM from "react-dom"
 import classNames from "classnames"
 import "./styles.less"
 
-class Element extends React.PureComponent {
+export default class Message extends React.PureComponent {
     state = {
         remove: false
+    }
+    _container;         //包裹message 的div容器
+    _dom;               //message dom节点
+    constructor(props){
+        super(props)
+    }
+    static defaultProps = {
+        defaultDuration : 2,
+        defaultContent :"提示"
+    }
+    componentWillUnMount(){
+        console.log('移除');
     }
     componentDidMount() {
         const { duration, onClose } = this.props
         setTimeout(() => {
-            this.setState({remove:true})
+            this.removeNode()
             onClose && onClose instanceof Function && onClose()
         }, duration * 1000)
+    }
+    //移除节点
+    removeNode = ()=>{
+        ReactDOM.unmountComponentAtNode( this._container )
+        this._dom.remove()
+    }
+    /**
+     * static 静态方法  不会被继承 可以直接被类调用
+     * 所以可以实现 Mesage.info() 这种
+     */
+    static renderElement = (type, content="提示", duration =2 , onClose)=>{
+        let div= document.createElement('div')
+        let _message = ReactDOM.render(
+            <Message
+                type={type}
+                content={content}
+                duration={duration}
+                onClose={onClose}
+            />,
+            div
+        )
+        let dom =  document.querySelector(".jk-message").appendChild(div)
+        _message._container = div
+        _message._dom = dom
+    }
+    static error(content, duration , onClose) {
+        this.renderElement("error", content, duration, onClose)
     }
     render() {
         const {
@@ -39,78 +78,36 @@ class Element extends React.PureComponent {
         const isShowClassName = type === typeConfig
 
         return (
-            <div>
-                {
-                    remove
-                        ? undefined
-                        : (
-                            <div key="message" className="jk-message-notice-content">
-                                <div
-                                    className={
-                                        classNames(
-                                            'jk-message-custom-content',
-                                            `message-${typeConfig[type]}`
-                                        )
-                                    }
-
-                                >
-                                    <p className="icon">
-                                        <i className={
-                                            classNames(
-                                                "icon",
-                                                { "icon-laba": type === typeConfig['info'] },
-                                                { "icon-true": type === typeConfig['success'] },
-                                                { "icon-guanbi": type === typeConfig['error'] },
-                                                { "icon-gantanhao": type === typeConfig['warning'] },
-                                                { "icon-dianzan": type === typeConfig['loading'] }
-                                            )
-                                        }
-                                            key="message-icon">
-                                        </i>
-                                    </p>
-                                    <p className="text">
-                                        {content}
-                                    </p>
-                                </div>
-                            </div>
+            <div key="message" className="jk-message-notice-content">
+                <div
+                    className={
+                        classNames(
+                            'jk-message-custom-content',
+                            `message-${typeConfig[type]}`
                         )
-                }
+                    }
+
+                >
+                    <p className="icon">
+                        <i className={
+                            classNames(
+                                "icon",
+                                { "icon-laba": type === typeConfig['info'] },
+                                { "icon-true": type === typeConfig['success'] },
+                                { "icon-guanbi": type === typeConfig['error'] },
+                                { "icon-gantanhao": type === typeConfig['warning'] },
+                                { "icon-dianzan": type === typeConfig['loading'] }
+                            )
+                        }
+                            key="message-icon">
+                        </i>
+                    </p>
+                    <p className="text">
+                        {content}
+                    </p>
+                </div>
             </div>
         )
     }
 }
 
-const Message = {
-    defaultContent: "提示",
-    defaultDuration: 2,
-    RenderElement(type, content, duration, onClose) {
-        const ele = React.createElement(Element, {
-            type,
-            content,
-            duration,
-            onClose
-        }, null)
-        ReactDOM.render(
-            ele,
-            document.querySelector(".jk-message")
-        )
-    },
-    info(content = this.defaultContent, duration = this.defaultDuration, onClose) {
-        this.RenderElement("info", content, duration, onClose)
-    },
-    success(content = this.defaultContent, duration = this.defaultDuration, onClose) {
-        this.RenderElement("success", content, duration, onClose)
-    },
-    warning(content = this.defaultContent, duration = this.defaultDuration, onClose) {
-        this.RenderElement("warning", content, duration, onClose)
-    },
-    error(content = this.defaultContent, duration = this.defaultDuration, onClose) {
-        this.RenderElement("error", content, duration, onClose)
-    },
-    loading(content = this.defaultContent, duration = this.defaultDuration, onClose) {
-        this.RenderElement("loading", content, duration, onClose)
-    }
-
-}
-
-export default Message
