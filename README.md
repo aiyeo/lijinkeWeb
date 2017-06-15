@@ -22,7 +22,7 @@ http://lijinke.xicp.io/
 - `socket.io`
 
 #### node环境
-- `v7.10.0`
+- `v8.0.0`
 
 ##### :)
 
