@@ -153,6 +153,7 @@ export default class ArticleDetail extends React.PureComponent {
                     visible={commentModalVisible}
                     onCancel={this.cancelCommentModal}
                     className="comment-modal"
+                    footer={null}
                 >
                     <form method="post" className="comment-form">
                         <fieldset>

@@ -58,6 +58,14 @@
             overflow-y: auto;
             max-height: calc(~"100vh - @{header-height} - @{music-player-height} - 50px")
         }
+        .modal-footer{
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            .jinke-btn{
+                flex-basis: 45%;
+            }
+        }
     }
 }
 @keyframes modalAnimate{

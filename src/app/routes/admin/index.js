@@ -112,7 +112,7 @@ export default class Admin extends React.PureComponent {
                                     })
                                 )
                                 : (<tr>
-                                    <td>暂无数据</td>
+                                    <td colSpan="10">暂无数据</td>
                                 </tr>)
                         }
                     </tbody>

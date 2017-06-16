@@ -222,6 +222,7 @@ export default class MusicPlayer extends React.PureComponent {
                     visible={uploadModalVisible}
                     onCancel={this.closeUploadModal}
                     className="upload-music-modal"
+                    footer={null}
                 >
                     {
                             uploadLoading

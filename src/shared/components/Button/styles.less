@@ -19,6 +19,7 @@
     transition: all .3s cubic-bezier(0.165, 0.84, 0.44, 1);
     position: relative;
     color: rgba(0,0,0,.65);
+    background-color: #fff;
     border-color: @border-color;
     outline: none;
     .btn-hover(@default-color);
@@ -26,7 +27,12 @@
         .btn-hover(@primary-color)
     }
     &.btn-default{
-        .btn-hover(@default-color)
+        color:rgba(0,0,0,.65);
+        background-color: #fff;
+        border:1px solid @default-color;
+        &:hover,&:active{
+            border:1px solid @primary-color
+        }
     }
     &.btn-warning{
         .btn-hover(@warning-color)

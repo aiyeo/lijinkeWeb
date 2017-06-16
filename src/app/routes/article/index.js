@@ -158,6 +158,7 @@ export default class Article extends React.PureComponent {
                     visible={articleModalVisible}
                     onCancel={this.cancelArticleModal}
                     className="edit-article-modal"
+                    footer={null}
                 >
                     <form method="post" className="edit-form">
                         <fieldset>

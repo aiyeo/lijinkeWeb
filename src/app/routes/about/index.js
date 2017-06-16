@@ -82,6 +82,7 @@ export default class About extends React.PureComponent {
                     visible={qrCodeModalVisible}
                     onCancel={this.onCloseQrCodeModal}
                     className="qr-code-modal"
+                    footer={null}
                 >
                     <div className="pay-content">
                         {
@@ -101,6 +102,10 @@ export default class About extends React.PureComponent {
                     visible={headerImgModalVisible}
                     onCancel={this.onCloseHeaderImgModal}
                     className="header-img-modal"
+                    footer={[
+                        <Button key="badBoy" onClick={this.onBadBoy}>我晕丑</Button>,
+                        <Button key="goodBoy" type="info" onClick={this.onGoodBoy}>真帅</Button>
+                    ]}
                 >
                     <div className="header-img-modal-content">
                          <img src={require("images/head-img.jpg")} alt="成都草莓音乐节,网易云音乐展台"/>
@@ -117,6 +122,14 @@ export default class About extends React.PureComponent {
     }
     onCloseHeaderImgModal = ()=>{
         this.setState({headerImgModalVisible:false})
+    }
+    onBadBoy = ()=>{
+        this.setState({headerImgModalVisible:false})
+        Message.warning('你瞎呀!')
+    }
+    onGoodBoy = ()=>{
+        this.setState({headerImgModalVisible:false})
+        Message.success('有眼光!')
     }
     onOpenHeaderImgModal = ()=>{
         this.setState({headerImgModalVisible:true})
