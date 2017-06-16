@@ -6,6 +6,7 @@ import Container from "shared/components/Container"
 import Modal from "shared/components/Modal"
 import Button from "shared/components/Button"
 import Message from "shared/components/Message"
+import Pagination from "shared/components/Pagination"
 import helper from "shared/libs/helper"
 import { Link } from "react-router"
 import classNames from "classnames"
@@ -109,19 +110,13 @@ export default class Article extends React.PureComponent {
                         }
 
                     </section>
-                    <section className="article-pagination">
-                        {
-                            pageIndex <= "1"
-                                ? <Button type="disbled">上一页</Button>
-                                : <Button type="primary" onClick={() => this.getArticlePageLists("prev")}>上一页</Button>
-                        }
-                        <span className="pages"><span className="pageIndex">{pageIndex}</span> / {count}</span>
-                        {
-                            pageIndex >= count
-                                ? <Button type="disbled">下一页</Button>
-                                : <Button type="primary" onClick={() => this.getArticlePageLists("next")}>下一页</Button>
-                        }
-                    </section>
+                    {/*分页器*/}
+                    <Pagination
+                        className={"article-pagination"}
+                        total={count}
+                        current={pageIndex}
+                        onChange={this.getArticlePageLists}
+                    />
                 </div>
                 { /*文章点击排行*/}
                 <div className="article-ranking">
@@ -202,7 +197,7 @@ export default class Article extends React.PureComponent {
             </Container>
         )
     }
-    getArticlePageLists = (type) => {
+    getArticlePageLists = (type,current) => {
         let { pageIndex } = this.state
 
         this.props.getArticleLists({
@@ -210,7 +205,7 @@ export default class Article extends React.PureComponent {
             pageSize: this.pageSize
         })
         this.setState({
-            pageIndex
+            pageIndex:current
         })
     }
     addPageView = (id) => {

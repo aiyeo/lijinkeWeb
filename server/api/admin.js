@@ -9,8 +9,23 @@ const sendEmail = require("../utils/sendEmail")
 
 //获取文章列表
 router.get('/articleList', async (req, res, next) => {
-    const data = await tArticle.find({})
-    res.data = data 
+    const {
+        pageIndex = 1,
+        pageSize = 5
+    } = req.query
+    
+    const articleList = await tArticle.find({})
+        .sort({publishDate:-1})
+        .skip((pageIndex - 1) * pageSize)
+        .limit(pageSize)
+
+    const count = ~~((await tArticle.find({}).count()) / pageSize) +1
+    
+    debug(`[获取文章列表成功],页码[${pageIndex}] 每页个数[${pageSize}]`)
+    res.data = {
+        articleList,
+        count
+    } 
     debug('文章列表获取成功')
     next()
 })

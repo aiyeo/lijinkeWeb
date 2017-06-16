@@ -27,7 +27,6 @@ export default class Home extends React.PureComponent {
   }
   render() {
     const { musicData } = this.props
-    console.log(musicData);
     const featureConfig = [{
       title:"聊天室",
       text:"聊一聊",
