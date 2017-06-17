@@ -109,7 +109,7 @@ export default class Message extends React.PureComponent {
                                 { "icon-true": type === typeConfig['success'] },
                                 { "icon-guanbi": type === typeConfig['error'] },
                                 { "icon-gantanhao": type === typeConfig['warning'] },
-                                { "icon-dianzan": type === typeConfig['loading'] }
+                                { "icon-jiazai loading-animate": type === typeConfig['loading'] }
                             )
                         }
                             key="message-icon">

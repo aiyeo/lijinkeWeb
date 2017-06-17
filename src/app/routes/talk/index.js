@@ -104,7 +104,7 @@ export default class Talk extends React.PureComponent {
           }
         </section>
         <div className="talk-btn talk-footer">
-          <input type="text" className="inp-message" value={currentMessage} placeholder="输入消息" onChange={this.saveMessage} />
+          <input type="text" className="inp-message" value={currentMessage} placeholder="输入消息" onKeyDown={this.keyDown} onChange={this.saveMessage} />
           {
             currentMessage == ""
               ? <Button key="disabledSend" className="btn-send" style={{
@@ -115,6 +115,12 @@ export default class Talk extends React.PureComponent {
         </div>
       </div>
     )
+  }
+  //回车发送
+  keyDown = (e)=>{
+    if(e.keyCode == 13 && this.state.currentMessage !=""){
+      this.sendMessage()
+    }
   }
   //输入信息
   saveMessage = (e) => {

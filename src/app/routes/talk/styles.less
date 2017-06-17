@@ -3,7 +3,7 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    height: calc(~"100vh - @{header-height} - @{music-player-height} - 20px");
+    height: calc(~"100vh - @{header-height} - 40px");
     .talk-header{
         flex-basis: 15%;
         >h2{
@@ -72,21 +72,27 @@
         display: flex;
         margin-top:10px;
         justify-content: space-between;
+        width:100%;
+        position: fixed;
+        left:0;
+        bottom:0;
         .inp-message{
             height: 100%;
-            flex-basis: 69%;
-            padding: 5px 10px;
-            border:1px solid;
+            flex-basis: 69.5%;
+            padding: 9px 10px;
+            height: 42px;
             outline: none;
-            border-radius: 4px;
         }
         .btn-send{
             flex-basis: 30%;
             height:100%;
             font-size:16px;
             word-spacing: 3px;
-            line-height: 18px;
+            // line-height: 18px;
             border:1px solid @primary-color;
+        }
+        .inp-message,.btn-send{
+            border-radius: 0
         }
     }
     ::-webkit-scrollbar{

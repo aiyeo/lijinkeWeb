@@ -4,12 +4,13 @@ import classNames from "classnames"
 import Button from "shared/components/Button"
 import "./styles.less"
 
-export default class Madal extends React.PureComponent {
+export default class Modal extends React.PureComponent {
     static defaultProps = {
         title: "标题",
         onOk: () => { },
         onCancel: () => { },
-        footer: []
+        footer: [],
+        content:null
     }
     static PropTypes = {
         onCancel: PropTypes.func.isRequired,
@@ -19,8 +20,25 @@ export default class Madal extends React.PureComponent {
             PropTypes.object
         ])
     }
+    //TODO 完成 Modal.confirm()  Modal.info() 这种确认框   Modal.prompt() 这种输入框
+    static confirm =()=>{
+        const div = document.createElement('div')
+        const _modal = ReactDOM.render(
+            <Modal
+                title="test"
+                visible={true}
+                onOk={()=>alert(1)}
+                onCancel={()=>alert(2)}
+                content={"1111"}
+            />,
+            div
+        )
+        console.log(_modal)
+        console.log( document.querySelector('#root'))
+        document.querySelector('.jk-message').appendChild(_modal)
+    }
     render() {
-        const { children, title, visible, onCancel, onOk, className, footer } = this.props
+        const { children,content, title, visible, onCancel, onOk, className, footer } = this.props
 
         return (
             <div key="jinke-modal-mask"
@@ -40,7 +58,7 @@ export default class Madal extends React.PureComponent {
                         </span>
                     </section>
                     <section key="modal-content" className="modal-content">
-                        {children}
+                        {content || children}
                     </section>
                     {
                         footer && footer.length >= 1

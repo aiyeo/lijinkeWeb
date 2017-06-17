@@ -16,7 +16,10 @@
         .clearfix();
         max-width: 80%;
         max-height:80%;
-        min-width: 140px;
+        min-width: 180px;
+        @media screen and (max-width:768px){
+            min-width: 160px;
+        }
         min-height: 30px;
         padding: 5px 10px;
         border-radius: 4px;
@@ -50,6 +53,7 @@
             
             &.message-loading{
                 i{
+                    animation: messageLoadingAnimate  .4s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
                     color:@loading-color
                 }
             }
@@ -62,6 +66,7 @@
                 }
             }
             .text{
+                color:@text-color;
                 font-size: 20px;
                 @media screen and (max-width:768px){
                     font-size:16px
@@ -77,6 +82,14 @@
         to{
             opacity: 1;
             transform: scale(1) translate3d(0,0,0); 
+        }
+    }
+    @keyframes messageLoadingAnimate{
+        from{
+            transform: translate(100px)
+        }
+        to{
+            transform: rotate(360deg)
         }
     }
 }

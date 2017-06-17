@@ -42,13 +42,15 @@ export default class Article extends React.PureComponent {
         rankingLoading: true,
         articleLoading: true,
         pageIndex: 1,                  //当前页码
+        draftTip:false                 //保存草稿提示
     }
     pageSize = 3          //文章每页个数
     render() {
         const { articleData, ranking } = this.props
         const articleLists = articleData && articleData.articleLists
         const count = articleData && articleData.count
-        const { rankingType, articleModalVisible, rankingLoading, articleLoading, pageIndex } = this.state
+        const { rankingType, articleModalVisible, rankingLoading, articleLoading, pageIndex,editContent,draftTip } = this.state
+
         return (
             <Container className="article-section">
                 <div className="article-list">
@@ -175,7 +177,8 @@ export default class Article extends React.PureComponent {
                         </fieldset>
                         <fieldset>
                             <p>文章内容：</p>
-                            <textarea name="editContent" onChange={(e) => this.setState({ editContent: e.target.value })} className="edit-textarea" placeholder="有啥想说的~" required></textarea>
+                             <span className={classNames('draft-tip',{"draft-animate":draftTip})} key="draft-tip">草稿已保存</span>
+                            <textarea name="editContent"  onChange={this.saveEditContent} className="edit-textarea" placeholder="有啥想说的~" value={editContent} required></textarea>
                         </fieldset>
                         <fieldset>
                             <p>文章分类：</p>
@@ -198,7 +201,21 @@ export default class Article extends React.PureComponent {
             </Container>
         )
     }
-    getArticlePageLists = (type,current) => {
+    //保存用户文章至草稿  以防丢失
+    //函数节流 绑定的onkeyUp事件  会高频多次触发  这次已停止操作的最后一次为准 保存到草稿
+    saveEditContent = (e) => {
+        const content = e.target.value
+        this.setState({ editContent: content })
+        clearTimeout( this.time)
+        this.time = setTimeout(()=>{
+            localStorage.setItem('contentDraft',content)
+            this.setState({draftTip:true})
+            setTimeout(()=>{
+                this.setState({draftTip:false})
+            },1000)
+        }, 2000)
+    }
+    getArticlePageLists = (type, current) => {
         let { pageIndex } = this.state
 
         this.props.getArticleLists({
@@ -206,7 +223,7 @@ export default class Article extends React.PureComponent {
             pageSize: this.pageSize
         })
         this.setState({
-            pageIndex:current
+            pageIndex: current
         })
     }
     addPageView = (id) => {
@@ -250,9 +267,19 @@ export default class Article extends React.PureComponent {
         if (this.props.uploadInfo && this.props.uploadInfo.success == 1) {
             Message.success('上传成功,请等待审核!')
             this.cancelArticleModal()
+            this.clearDraft()
         } else {
             Message.error('上传失败!')
         }
+    }
+    clearDraft = ()=>{
+        localStorage.removeItem('contentDraft')
+    }
+    addDraft = ()=>{
+         const draft = localStorage.getItem('contentDraft') || ""
+         this.setState({
+             editContent:draft
+         })
     }
     //切换排行榜
     toggleRanking = (rankingType) => {
@@ -275,6 +302,7 @@ export default class Article extends React.PureComponent {
 
     }
     componentDidMount() {
+        this.time = null;
         window.addEventListener('scroll', this.loadArticleLists)
         this.props.getArticleLists({
             pageIndex: this.state.pageIndex,
@@ -285,6 +313,7 @@ export default class Article extends React.PureComponent {
             articleLoading: false,
             rankingLoading: false
         })
+        this.addDraft()
     }
     componentWillUnMount() {
         window.removeEventListener('scroll', this.loadArticleLists)

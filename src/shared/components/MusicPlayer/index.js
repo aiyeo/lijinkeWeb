@@ -454,6 +454,7 @@ export default class MusicPlayer extends React.PureComponent {
     audioLoop = () => {
         this.setState({ isLoop: true })
         this.audio.loop = true
+        Message.success('单曲循环')
     }
     //重新播放
     audioReload = () => {
