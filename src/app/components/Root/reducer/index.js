@@ -9,6 +9,9 @@ export default function (state = {}, action) {
                 isLoading
             }
         default:
-            return state
+            return {
+                ...state,
+                weather:true
+            }
     }
 }

@@ -61,7 +61,6 @@ export default class Admin extends React.PureComponent {
                             <td>发表日期</td>
                             <td>PV</td>
                             <td>赞</td>
-                            <td>审核通过</td>
                             <td>邮箱</td>
                             <td>分类</td>
                             <td>操作</td>
@@ -93,7 +92,6 @@ export default class Admin extends React.PureComponent {
                                                 <td>{date}</td>
                                                 <td>{pageView}</td>
                                                 <td>{like}</td>
-                                                <td>{approve ? "已审核" : "未审核"}</td>
                                                 <td>{email}</td>
                                                 <td>{category}</td>
                                                 <td>

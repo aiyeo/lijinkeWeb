@@ -16,7 +16,7 @@ export default function (state = nameInitialState, action) {
         default:
             return {
                 ...state,
-                weather: false
+                weather: true
             }
     }
 }

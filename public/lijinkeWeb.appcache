@@ -1,18 +1,22 @@
 CACHE MANIFEST
 # lijinkeWeb appCache
-# 2017/6/16 10:57:53 v0.55
-/static/css/app.57a58810.css
+# 2017/6/19 21:57:56 v0.57
+/static/css/app.b427a046.css
 
-/static/fonts/iconfont09cc9c04.eot
-/static/fonts/iconfont5c62b9ab.svg
-/static/fonts/iconfontaad98aa7.ttf
-/static/fonts/iconfontbd733a73.woff
+/static/fonts/iconfont1d0f7a82.woff
+/static/fonts/iconfont9e3fc69a.eot
+/static/fonts/iconfontd5b7ab6f.svg
+/static/fonts/iconfontf7abcbc6.ttf
 
 
 /static/images/alipay6239faa1.jpg
-/static/images/bannerab29d28c.jpg
+/static/images/banner1ab29d28c.jpg
 /static/images/default6033e595.jpeg
 /static/images/head-imge7b417e6.jpg
+/static/images/my_12ff3b98d.jpg
+/static/images/my_23b1d37f2.jpg
+/static/images/my_3e77515aa.jpg
+/static/images/my_4c24c6836.jpg
 /static/images/photo147f92bdb.jpg
 /static/images/photo34d5ad8a9.jpg
 /static/images/photo4a11fdf4d.jpg
@@ -20,6 +24,8 @@ CACHE MANIFEST
 /static/images/photo65858f0d9.jpg
 /static/images/photo7adf2a5b5.jpg
 /static/images/photo8a4a3bd7f.jpg
+/static/images/photo9dcad45fb.jpg
+/static/images/she_1a05668a2.jpg
 /static/images/weChatPayd9334388.png
 
 /index.ico

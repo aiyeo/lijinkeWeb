@@ -29,22 +29,22 @@ export default class Home extends React.PureComponent {
     const { musicData } = this.props
     const featureConfig = [{
       title:"聊天室",
-      text:"聊一聊",
+      text:"蜀汉路东",
       iconName:"icon-liaotian",
       href:"/talk"
     },{
-      title:"照片墙",
-      text:"看一看",
+      title:"图画册",
+      text:"太升南路",
       iconName:"icon-zhaopian-copy",
       href:"/photo"
     },{
-      title:"有话说",
-      text:"说一说",
+      title:"杂文集",
+      text:"清江西路",
       iconName:"icon-luyinshuohuashengyin",
       href:"/article"
     },{
       title:"关于我",
-      text:"瞧一瞧",
+      text:"金科北路",
       iconName:"icon-2guanyuwomeneps",
       href:"/about"
     }]

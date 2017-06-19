@@ -286,7 +286,7 @@ export default class MusicPlayer extends React.PureComponent {
     }
     toggleWeather = () => {
         const { weather } = this.state
-        Message.success(weather ? '已切换至晴朗天气~' : '已切换至雨雪天气~')
+        Message.success(weather ? '晴朗天气' : '雨雪天气')
         this.setState({ weather: !weather })
         this.props.toogleWeather(!weather)
     }
@@ -336,6 +336,7 @@ export default class MusicPlayer extends React.PureComponent {
                     audioImgReady: false,
                     audioImg: {}
                 })
+                Message.error(`${name}读取中断`)
                 console.debug(`${name}读取中断`)
             };
             reader.onerror = () => {
@@ -397,7 +398,6 @@ export default class MusicPlayer extends React.PureComponent {
         xhr.upload.onprogress =  (e)=> {
             const { loaded, total } = e
             const progress = Math.round(loaded * 100 / total)
-            console.log(progress)
             this.setState({ uploadProgress: progress })
         }
 

@@ -13,10 +13,6 @@
     }
     &-controller{
         @player-width:80px;
-        @media screen and (max-width:768px){
-            transform: scale(0.5);
-            @player-width:50px !important;
-        }
         @player-height:@player-width;
         padding: 10px;
         width:@player-width;
@@ -32,6 +28,7 @@
         .transition(.3s);
         cursor:pointer;
         z-index: 99;
+
         &::before{
             content:"";
             position: absolute;
@@ -43,6 +40,14 @@
             border-radius: 50%;
             z-index:88;
             animation: scale 5s linear infinite;
+        }
+        @media screen and (max-width:768px){
+            width:60px;
+            height:60px;
+            &::before{
+                width:60px;
+                height:60px;
+            }
         }
         .center();
         i{
