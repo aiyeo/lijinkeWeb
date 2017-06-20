@@ -179,6 +179,9 @@ module.exports = (env) => {
     } else {
         options.plugins = options.plugins.concat([
             // new BundleAnalyzerPlugin(),     //生成打包图
+            // //webpackv3.0新增 作用域提升 默认是闭包式打包 浏览器执行速度变慢
+            // //开启这个去掉模块的包裹函数,体积更小
+            // new webpack.optimize.ModuleConcatenationPlugin(),
             new webpack.DefinePlugin({
                 "process.env.NODE_ENV": JSON.stringify("production"),
                 __DEBUG__: false,

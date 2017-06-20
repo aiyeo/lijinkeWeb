@@ -47,30 +47,32 @@ export default class Talk extends React.PureComponent {
         <div className="talk-header">
           <h2>在线聊天室</h2>
           <p>
-            <span className="num-content">当前在线人数 : <span key="userNum" className="userNum">{onlineNumber}</span>  </span>
-            <span className="name-content">用户名:<span key="username" className="username">{currentName}</span></span>
+            <span className="num-content">在线人数 : <span key="userNum" className="userNum">{onlineNumber}</span>  </span>
+            <span className="name-content">昵称:<span key="username" className="username">{currentName}</span></span>
           </p>
         </div>
-        <section key="talk-section" className="talk-section">
-          {
+        <div key="talk-section" className="talk-section-wrap">
+                    {
             showTip
-              ? <div className="user-join-tip">{userName}进入了房间</div>
+              ? <div key='user-join-tip' className="user-join-tip">{userName}进入了房间</div>
               : undefined
           }
           {
             loginOut
-              ? <div className="user-join-tip">{loginOutName}离开了房间</div>
+              ? <div key='user-out-tip' className="user-join-tip">{loginOutName}离开了房间</div>
               : undefined
           }
+                  <section key="talk-section" className="talk-section">
+
           {
             isConnect
               ? undefined
-              : <p className="init"><i className="icon icon-liaotian"></i>连接中...</p>
+              : <p className="init" className='init-key'><i className="icon icon-liaotian"></i>连接中...</p>
           }
           {
             !connectSuccess
-              ? <p className="init connect-error"><i className="icon icon-guanbi "></i> 聊天室连接失败,快找李金珂解决</p>
-              : <p className="init connect-success"><i className="icon icon-true "></i> 聊天室连接成功...</p>
+              ? <p className="init connect-error" key="connect-error"><i className="icon icon-guanbi "></i> 聊天室连接失败,快找李金珂解决</p>
+              : <p className="init connect-success" key="connect-success"><i className="icon icon-true "></i> 聊天室连接成功...</p>
           }
           {
             isConnect
@@ -103,6 +105,8 @@ export default class Talk extends React.PureComponent {
               : <p>正在召唤李金珂...</p>
           }
         </section>
+        </div>
+
         <div className="talk-btn talk-footer">
           <input type="text" className="inp-message" value={currentMessage} placeholder="输入消息" onKeyDown={this.keyDown} onChange={this.saveMessage} />
           {
@@ -186,7 +190,7 @@ export default class Talk extends React.PureComponent {
   //连接失败
   listenConnectFailed = () => {
     this.socket.on('connect_failed', () => {
-      Message.error("连接失败")
+      Message.error("连接失败!")
       this.setState({
         connectSuccess: false
       })
@@ -195,7 +199,7 @@ export default class Talk extends React.PureComponent {
   //监听错误
   listenConnectError = ()=>{
     this.socket.on('error',(e)=>{
-      Message.error("错误")
+      Message.error("异常!")
       console.error(`[error]:${e}`);
     })
   }

@@ -63,7 +63,11 @@ const images = [
     original: require('images/head-img.jpg'),
     thumbnail: require('images/head-img.jpg'),
     description: "哈哈"
-  },
+  },{
+    original: require('images/github.png'),
+    thumbnail: require('images/github.png'),
+    description: "第一次到webpack提issue"
+  }
 ]
 
 // photoCovers.map((v, i) => {
