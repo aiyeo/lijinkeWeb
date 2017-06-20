@@ -108,7 +108,7 @@ export default class Article extends React.PureComponent {
                                         </ul>
                                     )
 
-                                    : <p className="text-center"><i className="icon icon-xiayu"></i> 暂无文章</p>
+                                    : <p className="text-center color-white"><i className="icon icon-xiayu"></i> 暂无文章</p>
                         }
 
                     </section>
@@ -151,7 +151,7 @@ export default class Article extends React.PureComponent {
                                             </li>
                                         )
                                     })
-                                    : <li>暂无排行</li>
+                                    : <li className="text-center color-white">暂无排行</li>
                         }
                     </ul>
                 </div>
@@ -294,8 +294,6 @@ export default class Article extends React.PureComponent {
         let winH = window.innerHeight
         let scrollHeight = document.body.scrollHeight
         let scrollTop = document.body.scrollTop
-        console.log(scrollTop + winH);
-        console.log(scrollHeight);
         if (scrollTop + winH >= scrollHeight) {
             console.log('到底了')
         }

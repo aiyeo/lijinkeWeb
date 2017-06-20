@@ -11,6 +11,7 @@ import browser from "shared/libs/browser"
 import { Link } from "react-router"
 import classNames from "classnames"
 import moment from "moment"
+import TimeAgo from "timeago.js"
 import getArticleDetail, { toggleLike, publishComment, getArticleComments, toggleLikeComment } from "./action"
 
 import "./styles.less"
@@ -136,7 +137,9 @@ export default class ArticleDetail extends React.PureComponent {
                                                                     来自 {device}
                                                                 </span>
                                                             </div>
-                                                            <span className="time">{moment(publishDate).format("YYYY-MM-DD HH:mm:ss")}</span>
+                                                            <span className="time">
+                                                                {new TimeAgo().format(moment(publishDate).format("YYYY-MM-DD HH:mm:ss"),'zh_CN')}
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </li>
@@ -245,7 +248,7 @@ export default class ArticleDetail extends React.PureComponent {
     }
     //获取设备
     getDevice = ()=>{
-        return browser.versions.mobile ? '手机' : "PC"
+        return browser.isPC ? 'PC' :'手机'
     }
     //喜欢
     toggleLike = async () => {
@@ -262,7 +265,6 @@ export default class ArticleDetail extends React.PureComponent {
         }, 500)
     }
     setComments = (commentLists) => {
-        console.log('评论',commentLists);
         const commentLikeConfig = commentLists && commentLists.map(({ _id, like }) => {
             return {
                 commentId: _id,
