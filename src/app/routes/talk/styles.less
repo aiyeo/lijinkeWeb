@@ -37,6 +37,7 @@
             left:0;
             top:0;
             width: 100%;
+            z-index: 99;
             height: @tip-height;
             line-height: @tip-height;
             text-align: center;
@@ -98,15 +99,20 @@
             height: 42px;
             outline: none;
         }
-        .btn-send{
+        .btn-send,.btn-send-disabled{
             flex-basis: 30%;
             height:100%;
             font-size:16px;
             word-spacing: 3px;
-            // line-height: 18px;
+        }
+        .btn-send{
             border:1px solid @primary-color;
         }
-        .inp-message,.btn-send{
+        .btn-send-disabled{
+            background-color: @disabled-color;
+            border:1px solid @disabled-color;
+        }
+        .inp-message,.btn-send,.btn-send-disabled{
             border-radius: 0
         }
     }

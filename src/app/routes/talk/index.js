@@ -111,9 +111,7 @@ export default class Talk extends React.PureComponent {
           <input type="text" className="inp-message" value={currentMessage} placeholder="输入消息" onKeyDown={this.keyDown} onChange={this.saveMessage} />
           {
             currentMessage == ""
-              ? <Button key="disabledSend" className="btn-send" style={{
-                "border": "1px solid transparent"
-              }}>发送</Button>
+              ? <Button key="disabledSend" className="btn-send-disabled">发送</Button>
               : <Button key="sendMessage" type="primary" className="btn-send" onClick={this.sendMessage}>发送</Button>
           }
         </div>
