@@ -8,6 +8,7 @@ const http = require("http").createServer(app)
 const cors = require('cors')
 const url = require('url')
 const cookieParser = require('cookie-parser')
+const helmet = require('helmet')
 const proxy = require('express-http-proxy')
 const writeIndex = require('./utils/writeIndex')
 const timeOut = require('connect-timeout')
@@ -17,6 +18,7 @@ const mode = process.env.NODE_ENV || "DEV"
 
 //中间键部分
 //代理
+app.use(helmet())
 app.use('/socket.io', proxy(`${host}:${socket_port}`, {         
     forwardPath: function (req, res) {
         console.log(url.parse(req.url).path);

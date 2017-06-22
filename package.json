@@ -40,6 +40,7 @@
     "express-http-proxy": "^1.0.3",
     "extract-text-webpack-plugin": "^2.1.0",
     "file-stream-rotator": "^0.1.0",
+    "helmet": "^3.6.1",
     "imagemin-webpack-plugin": "^1.4.4",
     "mocha": "^3.4.2",
     "moment": "^2.18.1",
