@@ -11,7 +11,7 @@ import browser from "shared/libs/browser"
 import { Link } from "react-router"
 import classNames from "classnames"
 import moment from "moment"
-import TimeAgo from "timeago.js"
+import TimeAgo from "timeago-react"
 import getArticleDetail, { toggleLike, publishComment, getArticleComments, toggleLikeComment } from "./action"
 
 import "./styles.less"
@@ -138,7 +138,10 @@ export default class ArticleDetail extends React.PureComponent {
                                                                 </span>
                                                             </div>
                                                             <span className="time">
-                                                                {new TimeAgo().format(moment(publishDate).format("YYYY-MM-DD HH:mm:ss"),'zh_CN')}
+                                                                <TimeAgo
+                                                                    datetime={moment(publishDate).format("YYYY-MM-DD HH:mm:ss")}
+                                                                    locale='zh_CN'
+                                                                />
                                                             </span>
                                                         </div>
                                                     </div>
