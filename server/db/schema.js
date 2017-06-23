@@ -2,10 +2,10 @@ const mongoose = require('mongoose')
 const debug = require('debug')('music-schema')
 
 const musicSchema = new mongoose.Schema({
-    id: String,             //音乐id
     name: String,           //音乐名
     src: String,            //路径
-    imgSrc: String          //图片路径
+    cover: String,          //图片路径
+    desc:String             //描述
 }, {
         collection: "music"
     })
@@ -16,7 +16,7 @@ const articleSchema = new mongoose.Schema({
     author: String,           //作者
     publishDate: {            //发表日期
         type:Date,
-        dafault:Date.now
+        default:Date.now
     },        
     pageView: String,         //点击量
     like: String,             //喜欢数量
@@ -36,7 +36,7 @@ const commentSchema = new mongoose.Schema({
         device:String,               //设备
         publishDate:{               //发布日期
             type:Date,
-            dafault:Date.now
+            default:Date.now
         }          
 },{
     collection:"comment"

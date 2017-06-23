@@ -300,6 +300,22 @@
         bottom:0;
     }
 }
+    .audio-desc-modal{
+        input,textarea{
+            display: flex;
+            flex:1;
+            width:100%;
+            resize:none;
+            outline: none;
+            display: block;
+            padding: 5px 10px;
+            margin-top: 7px;
+        }
+        textarea{
+            height: 100px;
+            overflow-y: auto;
+        }
+    }
     .upload-music-modal{
         .upload-music-progress-mask{
             background: rgba(0,0,0,0.5);
@@ -317,6 +333,14 @@
             .progress{
                 color:@primary-color;
             }
+        }
+    }
+    .audio-desc-content-modal{
+        .name{
+            text-align: center;
+        }
+        .desc{
+            text-indent: 2em;
         }
     }
 @keyframes scale{

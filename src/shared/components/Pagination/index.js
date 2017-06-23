@@ -50,7 +50,8 @@ export default class Pagination extends React.PureComponent {
                 nextText
             },
             onChange,
-            className
+            className,
+            ...attr
         } = this.props
         const { prev, next } = this.typeConfig
         const { current } = this.state
@@ -58,7 +59,9 @@ export default class Pagination extends React.PureComponent {
         return (
             <section
                 className={
-                    classNames("pagination-section", className)}
+                    classNames("pagination-section", className)
+                }
+                {...attr}
             >
                 {
                     current <= this.defaultCurrentPage

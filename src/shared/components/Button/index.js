@@ -12,12 +12,13 @@ export default class Button extends React.PureComponent {
         type: PropTypes.oneOf(['primary', 'default', 'warning', 'success', 'error','info','disbled'])
     }
     render() {
-        const { children, type, className, htmlType,onClick } = this.props
+        const { children, type, className, htmlType,onClick,...attr } = this.props
         const Type = ( btnType )=>{
             return type.indexOf(btnType) != -1
         }
         return (
             <button
+                {...attr}
                 type={htmlType}
                 onClick={onClick}
                 className={

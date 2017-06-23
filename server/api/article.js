@@ -21,11 +21,11 @@ router.get('/lists', async (req, res, next) => {
     } = req.query
 
     const articleLists = await tArticle.find({ approve: true })
-        .sort({publishDate:-1})
+        .sort({ publishDate: -1 })
         .skip((pageIndex - 1) * pageSize)
         .limit(pageSize)
 
-    const count = ~~((await tArticle.find({approve:true}).count()) / pageSize) +1
+    const count = ~~((await tArticle.find({ approve: true }).count()) / pageSize) + 1
 
     debug(`[获取文章列表成功],页码[${pageIndex}] 每页个数[${pageSize}]`)
     res.data = {
@@ -77,29 +77,34 @@ router.post("/add-article", async (req, res, next) => {
         editCategory
         } = req.body
     debug('[client body]: ', req.body)
+    try {
 
-    // tArticle.insertMany
-    const data = await tArticle.create(
-        {
-            title: editTitle,
-            content: editContent,
-            author: editAuthor || "佚名",
-            publishDate: publishDate,
-            pageView: pageView,
-            like: like,
-            approve: approve,
-            email: editEmail,
-            category: editCategory
-        }
-    )
-    debug('新增文章成功')
-    res.data = { success: 1 }
-    await sendEmail.sendEmail({
-        subject: `【${editAuthor || '佚名'}】于 [${publishDate}] 发布了文章 [${editTitle}] 请尽快审核!`,
-        html: `<h2>文章内容</h2><p>${editContent}</p>`
-    })
-    debug('通知管理员审核邮件发送成功')
-    next()
+        // tArticle.insertMany
+        const data = await tArticle.create(
+            {
+                title: editTitle,
+                content: editContent,
+                author: editAuthor || "佚名",
+                publishDate: publishDate,
+                pageView: pageView,
+                like: like,
+                approve: approve,
+                email: editEmail,
+                category: editCategory
+            }
+        )
+        debug('新增文章成功')
+        res.data = { success: 1 }
+        await sendEmail.sendEmail({
+            subject: `【${editAuthor || '佚名'}】于 [${publishDate}] 发布了文章 [${editTitle}] 请尽快审核!`,
+            html: `<h2>文章内容</h2><p>${editContent}</p>`
+        })
+        debug('通知管理员审核邮件发送成功')
+        next()
+    } catch (error) {
+        next(error)
+    }
+
 })
 
 
@@ -108,13 +113,17 @@ router.post("/add-article", async (req, res, next) => {
  * @param {articleId}  String    文章id
  */
 router.post("/articleDetail", async (req, res, next) => {
+    try {
+        const { articleId } = req.body
+        debug('【articleId】', articleId)
+        const articleDetail = (await tArticle.find({ _id: articleId }))[0] || []
+        res.data = articleDetail
+        debug('获取文章详情成功')
+        next()
+    } catch (error) {
+        next(error)
+    }
 
-    const { articleId } = req.body
-    debug('【articleId】', articleId)
-    const articleDetail = (await tArticle.find({ _id: articleId }))[0] || []
-    res.data = articleDetail
-    debug('获取文章详情成功')
-    next()
 })
 
 /**
@@ -141,20 +150,25 @@ router.post('/addPageView', async (req, res, next) => {
 router.post("/toggleLike", async (req, res, next) => {
     const { isLike, id } = req.body
     debug('[喜欢]:', isLike)
-    let likeNum = (await tArticle.find({ _id: id }, { like: 1 }))[0].like
+    try {
+        let likeNum = (await tArticle.find({ _id: id }, { like: 1 }))[0].like
 
-    if (isLike === true) {
-        likeNum++
-    } else if (isLike === false) {
-        likeNum--
+        if (isLike === true) {
+            likeNum++
+        } else if (isLike === false) {
+            likeNum--
+        }
+        debug('喜欢量', likeNum)
+        const data = await tArticle.update({ _id: id }, { $set: { like: likeNum } })
+        debug('[喜欢点赞成功]')
+        res.data = {
+            success: 1
+        }
+        next()
+    } catch (error) {
+        next(error)
     }
-    debug('喜欢量', likeNum)
-    const data = await tArticle.update({ _id: id }, { $set: { like: likeNum } })
-    debug('[喜欢点赞成功]')
-    res.data = {
-        success: 1
-    }
-    next()
+
 })
 
 /**
@@ -165,20 +179,25 @@ router.post("/toggleLike", async (req, res, next) => {
 router.post("/toggle-commentLike", async (req, res, next) => {
     const { isLike, id } = req.body
     debug('[点赞]:', isLike)
-    let likeNum = (await tComment.find({ _id: id }, { like: 1 }))[0].like
+    try {
+        let likeNum = (await tComment.find({ _id: id }, { like: 1 }))[0].like
 
-    if (isLike === true) {
-        likeNum++
-    } else if (isLike === false) {
-        likeNum--
+        if (isLike === true) {
+            likeNum++
+        } else if (isLike === false) {
+            likeNum--
+        }
+        debug('评论点赞量', likeNum)
+        const data = await tComment.update({ _id: id }, { $set: { like: likeNum } })
+        debug('[评论点赞成功]')
+        res.data = {
+            success: 1
+        }
+        next()
+    } catch (error) {
+        next(error)
     }
-    debug('评论点赞量', likeNum)
-    const data = await tComment.update({ _id: id }, { $set: { like: likeNum } })
-    debug('[评论点赞成功]')
-    res.data = {
-        success: 1
-    }
-    next()
+
 })
 
 /**
@@ -188,10 +207,15 @@ router.post("/toggle-commentLike", async (req, res, next) => {
 router.get('/comment-lists', async (req, res, next) => {
     const { articleId } = req.query
     debug('[文章id]:', articleId)
-    const commentLists = await tComment.find({ articleId }).sort({publishDate:-1})
-    res.data = commentLists
-    debug('评论列表查询成功!')
-    next()
+    try {
+        const commentLists = await tComment.find({ articleId }).sort({ publishDate: -1 })
+        res.data = commentLists
+        debug('评论列表查询成功!')
+        next()
+    } catch (error) {
+        next(error)
+    }
+
 })
 
 /**
@@ -212,21 +236,25 @@ router.post('/publish-comment', async (req, res, next) => {
     } = req.body
 
     debug('[文章评论]', req.body)
-
-    const data = await tComment.create({
-        articleId,
-        commentName,
-        commentEmail,
-        commentContent,
-        publishDate,
-        device,
-        like:"0"
-    })
-    debug('[文章评论成功]');
-    res.data = {
-        success: 1
+    try {
+        const data = await tComment.create({
+            articleId,
+            commentName,
+            commentEmail,
+            commentContent,
+            publishDate,
+            device,
+            like: "0"
+        })
+        debug('[文章评论成功]');
+        res.data = {
+            success: 1
+        }
+        next()
+    } catch (error) {
+        next(error)
     }
-    next()
+
 
 })
 
@@ -238,20 +266,25 @@ router.post('/publish-comment', async (req, res, next) => {
 router.post("/toggle-commentLike", async (req, res, next) => {
     const { isLike, id } = req.body
     debug('[喜欢]:', isLike)
-    let likeNum = (await tArticle.find({ _id: id }, { like: 1 }))[0].like
+    try {
+        let likeNum = (await tArticle.find({ _id: id }, { like: 1 }))[0].like
 
-    if (isLike === true) {
-        likeNum++
-    } else if (isLike === false) {
-        likeNum--
+        if (isLike === true) {
+            likeNum++
+        } else if (isLike === false) {
+            likeNum--
+        }
+        debug('喜欢量', likeNum)
+        const data = await tArticle.update({ _id: id }, { $set: { like: likeNum } })
+        debug('[喜欢点赞成功]')
+        res.data({
+            success: 1
+        })
+        next()
+    } catch (error) {
+        next(error)
     }
-    debug('喜欢量', likeNum)
-    const data = await tArticle.update({ _id: id }, { $set: { like: likeNum } })
-    debug('[喜欢点赞成功]')
-    res.data({
-        success: 1
-    })
-    next()
+
 })
 
 

@@ -38,10 +38,11 @@ export default class Modal extends React.PureComponent {
         document.querySelector('.jk-message').appendChild(_modal)
     }
     render() {
-        const { children,content, title, visible, onCancel, onOk, className, footer } = this.props
+        const { children,content, title, visible, onCancel, onOk, className, footer,...attr } = this.props
 
         return (
             <div key="jinke-modal-mask"
+                {...attr}
                 className={
                     classNames(
                         "jinke-modal-mask",

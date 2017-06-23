@@ -2,20 +2,22 @@ const express = require('express')
 const router = express.Router()
 const config = require('../../config')
 const fs = require("fs")
+const Path = require('path')
 const debug = require('debug')('music')
+const { tMusic } = require("../db/connect")
 const multiparty = require('multiparty')
 const { host: HOST, port: PORT, staticPath } = config
 
 /**
  * 获取音乐
  */
-router.get('/getMusic', (req, res, next) => {
-
-    const { name, imageSrc, src } = getMusicInfo(fs);
+router.get('/getMusic', async (req, res, next) => {
+    const { cover, name, src,desc } = await tMusic.findOne()
     res.data = {
-        name: name ? name : "",
-        image: imageSrc ? `${HOST}${PORT}/music/${imageSrc}` : "",
-        src: src ? `${HOST}${PORT}/music/${src}` : ""
+        name: name || "",
+        imageSrc: cover || "",
+        src: src || "",
+        desc:desc || ""
     }
     next();
 })
@@ -46,35 +48,39 @@ const fieldsConfig = {
 /**
  * 上传音乐               
  */
-router.post('/uploadMusic', (req, res, next) => {
+router.post('/uploadMusic', async (req, res, next) => {
     const form = new multiparty.Form();
-    form.parse(req, (err, fields, files) => {
+    form.parse(req, async (err, fields, files) => {
         if (err) throw err
-        //新音频文件
-        const { name, src } = saveUploadAudio(files[fieldsConfig.file], fieldsConfig.file)
-        //新音频图片
-        const { imageSrc } = saveUploadAudio(files[fieldsConfig.img], fieldsConfig.img)
+        const audioDesc = fields.uploadAudioDesc[0]
+        const audioName = fields.uploadAudioName[0]
+        // //新音频文件
+        const { name, src } = saveUploadAudio(audioName, audioDesc, files[fieldsConfig.file], fieldsConfig.file)
+        // //新音频图片
+        const { cover } = saveUploadAudio(audioName, audioDesc, files[fieldsConfig.img], fieldsConfig.img)
 
+        await tMusic.update({
+            name: name || "",
+            src: src || "",
+            cover: cover || ""
+        })
+        debug('写入数据库成功')
         res.data = {
-            src: src && `${HOST}${PORT}/music/${src}` || "",
-            name: name && name || "",
-            imageSrc: imageSrc && `${HOST}${PORT}/music/${imageSrc}` || ""
+            src: src || "",
+            name: name || "",
+            imageSrc: cover || ""
         }
         next()
     })
 })
 
 //保存上传的音乐文件
-function saveUploadAudio(files, fileType) {
+function saveUploadAudio(audioName, audioDesc, files, fileType) {
     let fileData = {};
     if (files && files.length >= 1) {
         files.forEach((data, index) => {
             const { originalFilename, path, size } = data
             let file = fs.readFileSync(path)
-                // .toString()
-                // .replace(/%/g, "%25")
-                // .replace(/\&/g, "%26")
-                // .replace(/\+/g, "%2B");
             switch (fileType) {
                 case fieldsConfig['file']:
                     if (size == 0) {
@@ -82,17 +88,11 @@ function saveUploadAudio(files, fileType) {
                         fileData.src = ""
                         return
                     }
-                    const { name, src } = getMusicInfo(fs);
-                    if (src) {
-                        fs.unlinkSync(`${staticPath}/music/${src}`)
-                        debug(`删除${src}成功!`);
-                    }
-                    let newMusicPath = `${staticPath}/music/${Date.now()}.mp3`
-                    fs.writeFileSync(newMusicPath, file,'binary')
+                    let musicPath = `${staticPath}/music/${originalFilename}`
+                    fs.writeFileSync(musicPath, file, 'binary')
                     debug(`保存${originalFilename}成功`)
-                    const { name: newName, src: newSrc } = getMusicInfo(fs);
-                    fileData.name = originalFilename && originalFilename.replace(/(.*)\.mp3/, '$1') || "",
-                        fileData.src = newSrc
+                    fileData.name = (audioName || originalFilename && originalFilename.replace(/(.*)\.mp3/, '$1')) || ""
+                    fileData.src = `${HOST}${PORT}/music/${originalFilename}`
 
                     break;
                 case fieldsConfig['img']:
@@ -100,16 +100,10 @@ function saveUploadAudio(files, fileType) {
                         fileData.imageSrc = ""
                         return
                     }
-                    const { imageSrc } = getMusicInfo(fs);
-                    if (imageSrc) {
-                        fs.unlinkSync(`${staticPath}/music/${imageSrc}`)
-                        debug(`删除${imageSrc}成功!`);
-                    }
-                    let newPath = `${staticPath}/music/${Date.now()}.${originalFilename.replace(/.*\.(jpg|jpeg|png)$/, '$1')}`
-                    fs.writeFileSync(newPath, file,'binary')
+                    let coverPath = `${staticPath}/music/${Date.now()}.${originalFilename.replace(/.*\.(jpg|jpeg|png)$/, '$1')}`
+                    fs.writeFileSync(coverPath, file, 'binary')
                     debug(`保存${originalFilename}成功`)
-                    const { imageSrc: newImageSrc } = getMusicInfo(fs);
-                    fileData.imageSrc = newImageSrc
+                    fileData.cover = `${HOST}${PORT}/music/${originalFilename}`
                     break;
                 default:
                     debug('[error]:上传的音乐类型未知!')

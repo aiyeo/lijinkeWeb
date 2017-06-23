@@ -40,6 +40,7 @@ export default class MusicPlayer extends React.PureComponent {
         soundValue: 100,
         isDown: false,      //鼠标是否按下  判断是否在拖动进度条
         uploadModalVisible: false,       //音乐上传框
+        audioDescModalVisible: false,
         isCanUpload: false,        //是否能上传
         audioFileReady: false,
         audioImgReady: false,
@@ -47,7 +48,11 @@ export default class MusicPlayer extends React.PureComponent {
         audioImg: {},
         weather: true,         //默认雨雪天气
         uploadProgress: 0,        //上传进度
-        uploadLoading:false
+        uploadLoading: false,
+        audioDescReady: false,     //音乐描述
+        uploadAudioName: "",        //上传音乐名
+        uploadAudioDesc: "",        //描述
+        showAudioDesc:false
     }
     UPLOAD_URL = `${host}${port}/api/music/uploadMusic`
     IMG_MAX_SIZE = 1024
@@ -65,8 +70,8 @@ export default class MusicPlayer extends React.PureComponent {
     constructor(props) {
         super(props)
         this.audio = null       //当前播放器
-        this.defaultMusciName = "今日音乐"
-        this.defaultMusciImgSrc = require('images/default.jpeg')
+        this.defaultMusicName = "今日音乐"
+        this.defaultMusicImgSrc = require('images/default.jpeg')
         this.mouseX = 0
     }
     render() {
@@ -77,7 +82,8 @@ export default class MusicPlayer extends React.PureComponent {
             mode,
             className,
             audioUploadFile,
-            isUploadAudio
+            isUploadAudio,
+            desc
         } = this.props
 
         const {
@@ -96,8 +102,14 @@ export default class MusicPlayer extends React.PureComponent {
             audioImgReady,
             weather,
             uploadProgress,
-            uploadLoading
+            uploadLoading,
+            audioDescReady,
+            audioDescModalVisible,
+            uploadAudioDesc,
+            uploadAudioName,
+            showAudioDesc
         } = this.state
+        console.log(this.props);
         //当前播放进度
         const progress = ((currentTime / duration) * 100).toFixed(2)
 
@@ -121,10 +133,10 @@ export default class MusicPlayer extends React.PureComponent {
                             <div key="panel" className="music-player-panel translate">
                                 <section className="panel-content" key="panel-content">
                                     <div className={classNames("img-content", { "img-rotate": playing })} key="img-content">
-                                        <img key="img" src={audioUploadFile && audioUploadFile.imageSrc || imgSrc || this.defaultMusciImgSrc} alt="" />
+                                        <img key="img" src={audioUploadFile && audioUploadFile.imageSrc || imgSrc || this.defaultMusicImgSrc} alt="" />
                                     </div>
                                     <div className="progressbar-content" key="progressbar-content">
-                                        <span>{audioUploadFile && audioUploadFile.name || name || this.defaultMusciName}</span>
+                                        <span>{audioUploadFile && audioUploadFile.name || name || this.defaultMusicName}</span>
                                         <section>
                                             <span key="current-time" className="current-time">
                                                 {/*暂时只考虑10分钟以下的歌曲*/}
@@ -203,6 +215,9 @@ export default class MusicPlayer extends React.PureComponent {
                                                     <i className="icon icon-11111" title="收起"></i>
                                                 </span>
                                         }
+                                        <span className="select-audio-desc" onClick={this.showAudioDesc}>
+                                            <i className='icon icon-yinle'></i>
+                                        </span>
                                         {
                                             uploadAudio
                                                 ? <span className="upload-music" key="upload-music" onClick={this.showUploadModal}>
@@ -218,6 +233,7 @@ export default class MusicPlayer extends React.PureComponent {
                 }
                 <audio key="audio" className="music-player-audio" src={audioUploadFile && audioUploadFile.src || musicSrc} controls loop={isLoop}></audio>
                 <Modal
+                    key="upload-music-modal"
                     title="上传你喜欢的音乐"
                     visible={uploadModalVisible}
                     onCancel={this.closeUploadModal}
@@ -225,7 +241,7 @@ export default class MusicPlayer extends React.PureComponent {
                     footer={null}
                 >
                     {
-                            uploadLoading
+                        uploadLoading
                             ? <div className="upload-music-progress-mask">
                                 <p>上传中 <span className="progress">{progress}</span>%</p>
                                 <progress value={progress} max="100"></progress>
@@ -251,7 +267,7 @@ export default class MusicPlayer extends React.PureComponent {
                                         )
                                         : undefined
                                 }
-                                <Button type="block" htmlType="button" onClick={this.selectAudioImg}>选择图片</Button>
+                                <Button key='audioImgBtn' type={audioImgReady ? 'primary block' : 'block'} htmlType="button" onClick={this.selectAudioImg}>选择图片</Button>
                             </p>
                             <p>
                                 <input type="file" name="audioFile" ref="audioFile" className="hidden music-file-original-btn" onChange={this.selectAudioChange} />
@@ -260,7 +276,10 @@ export default class MusicPlayer extends React.PureComponent {
                                         ? <span>名字:{audioFile.name} || 大小:{audioFile.size}</span>
                                         : undefined
                                 }
-                                <Button type="block" htmlType="button" style={{ "marginTop": "10px" }} onClick={this.selectAudio} className="music-file-btn">选择音乐</Button>
+                                <Button key="audioFileBtn" type={audioFileReady ? 'block primary' : 'block'} htmlType="button" style={{ "marginTop": "10px" }} onClick={this.selectAudio} className="music-file-btn">选择音乐</Button>
+                            </p>
+                            <p>
+                                <Button key="audioDescBtn" type={audioDescReady ? 'block primary' : 'block'} htmlType="button" style={{ "marginTop": "10px" }} onClick={this.openAudioDescModal} className="music-file-btn">填写音乐信息</Button>
                             </p>
                             <p>
                                 {
@@ -268,7 +287,8 @@ export default class MusicPlayer extends React.PureComponent {
                                         ?
                                         audioFileReady
                                             ? <Button key="uploadBtn" type="primary block" htmlType="button" onClick={this.upLoadAudio} className="music-upload-file-btn">立即上传</Button>
-                                            : <Button key="uploadBtn" type="error block" htmlType="button" className="music-upload-file-btn">立即上传</Button>
+                                            : <Button key="uploadBtn" type="error block" htmlType="button"
+                                                onClick={this.cantUpLoadAudio} className="music-upload-file-btn">立即上传</Button>
 
                                         : undefined
                                 }
@@ -276,8 +296,65 @@ export default class MusicPlayer extends React.PureComponent {
                         </div>
                     </form>
                 </Modal>
+                <Modal
+                    key="audio-desc-modal"
+                    title="为你的音乐添加点信息(可不选)"
+                    visible={audioDescModalVisible}
+                    onCancel={this.closeAudioDescModal}
+                    className="audio-desc-modal"
+                    onOk={this.closeAudioDescModal}
+                >
+                    <p>
+                        <span>歌曲名:</span>
+                        <input type="text" name="uploadAudioName" placeholder="默认以您上传的音乐名为准" onChange={(e) => this.setState({ 'uploadAudioName': e.target.value })} />
+                    </p>
+                    <p>
+                        <span>为什么分享这首歌?</span>
+                        <textarea placeholder="让我们听听您的故事~" name="uploadAudioDesc" maxLength="100" onChange={(e) => this.setState({ 'uploadAudioDesc': e.target.value })}></textarea>
+                    </p>
+                </Modal>
+                <Modal
+                    key="audio-desc-content-modal"
+                    title="音乐故事"
+                    visible={showAudioDesc}
+                    onCancel={this.hideAudioDesc}
+                    className="audio-desc-content-modal"
+                    onOk={this.hideAudioDesc}
+                >
+                    <p className="name">
+                        <span>{audioUploadFile && audioUploadFile.name || name || this.defaultMusicName}</span>
+                    </p>
+                    <p className="desc">
+                        {desc || "上传这首歌的人没有填写关于这首歌的东东~"}
+                    </p>
+                </Modal>
             </figure>
         )
+    }
+    showAudioDesc= ()=>{
+        this.setState({
+            showAudioDesc:!this.state.showAudioDesc
+        })
+    }
+    hideAudioDesc = ()=>{
+        this.showAudioDesc()
+    }
+    saveAudioDesc = () => {
+
+    }
+    closeAudioDescModal = () => {
+        this.openAudioDescModal()
+        this.setState({
+            audioDescReady:true
+        })
+    }
+    openAudioDescModal = () => {
+        this.setState({
+            audioDescModalVisible: !this.state.audioDescModalVisible
+        })
+    }
+    cantUpLoadAudio = () => {
+        Message.warning('请上传音乐!')
     }
     goAdmin = () => {
         var pwd = prompt('请输入密码?')
@@ -361,41 +438,45 @@ export default class MusicPlayer extends React.PureComponent {
             reader.readAsDataURL(file);      //base64
         })
     }
+    //上传音乐
     upLoadAudio = () => {
-        this.setState({uploadLoading:true})
+        this.setState({ uploadLoading: true })
         const formEle = this.dom.querySelector('.upload-music-form')
         const formData = new FormData(formEle)
+        const { uploadAudioDesc, uploadAudioName } = this.state
+        formData.append('uploadAudioDesc', uploadAudioDesc)
+        formData.append('uploadAudioName', uploadAudioName)
         // this.props.uploadAudio(formData)
         const xhr = new XMLHttpRequest()
-        xhr.onloadstart = () =>{
+        xhr.onloadstart = () => {
             console.log("load start");
         }
-        xhr.onerror =  (e) => {
+        xhr.onerror = (e) => {
             Message.error('上传失败!')
         }
-        xhr.onload =  ()=> {
-            const {imgSrc,name,src} = JSON.parse(xhr.responseText).data
+        xhr.onload = () => {
+            const { imgSrc, name, src } = JSON.parse(xhr.responseText).data
             Message.success('上传成功!')
             this.setState({
                 imgSrc,
                 name,
-                musicSrc:src,
-                playing:false,
-                uploadLoading:false,
-                uploadModalVisible:false
+                musicSrc: src,
+                playing: false,
+                uploadLoading: false,
+                uploadModalVisible: false
             })
             location.reload()
         }
-        xhr.onabort =  (event)=> {
+        xhr.onabort = (event) => {
             Message.warning('连接中断!')
         }
-        xhr.ontimeout =  ()=> {
+        xhr.ontimeout = () => {
             Message.warning('连接超时!')
         }
-        xhr.onloadend =  ()=> {
+        xhr.onloadend = () => {
             console.log('上传结束')
         }
-        xhr.upload.onprogress =  (e)=> {
+        xhr.upload.onprogress = (e) => {
             const { loaded, total } = e
             const progress = Math.round(loaded * 100 / total)
             this.setState({ uploadProgress: progress })
@@ -442,7 +523,7 @@ export default class MusicPlayer extends React.PureComponent {
         let moveX = 0
         const { left } = this.getBoundingClientRect()
         if (isDown === true) {
-            moveX = (e.pageX - left - this.mouseX) >> 0
+            moveX = (e.pageX - left - this.mouseX) >>0
             this.audio.currentTime += moveX
         }
     }
