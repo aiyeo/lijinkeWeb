@@ -15,14 +15,14 @@ http://lijinke.xicp.io/
 - `Redux`
 - `React-Redux`
 - `React-Router v3.x`
-- `node.js v7.10.0`
+- `node.js`
 - `yarn`
 - `mongodb`
 - `mongoose`
 - `socket.io`
 
 #### node环境
-- `v8.0.0`
+- `v8.1.0`
 
 ##### :)
 
