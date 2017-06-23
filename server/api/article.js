@@ -205,11 +205,23 @@ router.post("/toggle-commentLike", async (req, res, next) => {
  * @param {articleId} String 文章id
  */
 router.get('/comment-lists', async (req, res, next) => {
-    const { articleId } = req.query
+    const { 
+        articleId,
+        pageIndex = 1,
+        pageSize = 3
+     } = req.query
     debug('[文章id]:', articleId)
     try {
-        const commentLists = await tComment.find({ articleId }).sort({ publishDate: -1 })
-        res.data = commentLists
+        const commentLists = await tComment
+                                .find({ articleId })
+                                .sort({ publishDate: -1 })
+                                .skip((pageIndex - 1) * pageSize)
+                                .limit(~~pageSize)
+        const count = ~~((await tComment.find({ articleId }).count()) / pageSize) + 1
+        res.data = {
+            commentLists,
+            count
+        }
         debug('评论列表查询成功!')
         next()
     } catch (error) {

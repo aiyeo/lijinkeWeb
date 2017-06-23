@@ -45,9 +45,9 @@ export function publishComment(values) {
         })
     }
 }
-export function getArticleComments(articleId) {
+export function getArticleComments(params) {
     return async function (dispatch) {
-        const lists = await helper.getJson("/article/comment-lists", {articleId})
+        const lists = await helper.getJson("/article/comment-lists", params)
         dispatch({
             type: GET_ARTICLE_COMMENTS,
             lists

@@ -65,7 +65,8 @@ export default class MusicPlayer extends React.PureComponent {
         name: PropTypes.string,                       //音乐名
         imgSrc: PropTypes.string,                     //图片路径
         musicSrc: PropTypes.string.isRequired,        //音乐路径
-        isUploadAudio: PropTypes.bool                    //是否上传音乐
+        isUploadAudio: PropTypes.bool,                    //是否上传音乐
+        desc:PropTypes.string
     }
     constructor(props) {
         super(props)
@@ -109,7 +110,6 @@ export default class MusicPlayer extends React.PureComponent {
             uploadAudioName,
             showAudioDesc
         } = this.state
-        console.log(this.props);
         //当前播放进度
         const progress = ((currentTime / duration) * 100).toFixed(2)
 
@@ -321,12 +321,14 @@ export default class MusicPlayer extends React.PureComponent {
                     className="audio-desc-content-modal"
                     onOk={this.hideAudioDesc}
                 >
-                    <p className="name">
-                        <span>{audioUploadFile && audioUploadFile.name || name || this.defaultMusicName}</span>
-                    </p>
-                    <p className="desc">
-                        {desc || "上传这首歌的人没有填写关于这首歌的东东~"}
-                    </p>
+                    <section style={{"width":"300px"}}>
+                        <p className="name">
+                            <span>{audioUploadFile && audioUploadFile.name || name || this.defaultMusicName}</span>
+                        </p>
+                        <p className="desc">
+                            {desc || "上传这首歌的人没有填写关于这首歌的东东~"}
+                        </p>
+                    </section>
                 </Modal>
             </figure>
         )
@@ -347,6 +349,9 @@ export default class MusicPlayer extends React.PureComponent {
         this.setState({
             audioDescReady:true
         })
+        if(!this.state.uploadAudioDesc || !this.state.uploadAudioDesc){
+            Message.success('保存成功!')
+        }
     }
     openAudioDescModal = () => {
         this.setState({

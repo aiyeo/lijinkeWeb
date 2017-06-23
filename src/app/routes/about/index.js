@@ -32,6 +32,7 @@ export default class About extends React.PureComponent {
         headerImgModalVisible:false,      //照片弹框
         qrCodeModalVisible:false          //二维码弹框
     }
+    myGitHub = 'https://github.com/lijinke666'
     render() {
         const {
             headerImgModalVisible,
@@ -57,7 +58,7 @@ export default class About extends React.PureComponent {
                                         <i className={classNames('icon',icon)}></i>
                                         {
                                             icon == "icon-article"
-                                             ? <a className="text" href="https://github.com/lijinke666" alt="github" title="立即前往" target="_blank">https://github.com/lijinke666</a>
+                                             ? <a className="text" href={this.myGitHub} alt="github" title="立即前往" target="_blank">{this.myGitHub}</a>
                                              : <span className="text">{text}</span> 
                                         }
                                     </li>
@@ -108,7 +109,12 @@ export default class About extends React.PureComponent {
                     ]}
                 >
                     <div className="header-img-modal-content">
-                         <img src={require("images/head-img.jpg")} alt="成都草莓音乐节,网易云音乐展台"/>
+                        {
+                            headerImgModalVisible
+                            ? <img src={require("images/head_img.jpg")} alt="成都草莓音乐节,网易云音乐展台"/>
+                            : undefined
+                        }
+                         
                     </div>
                 </Modal>
             </Container>

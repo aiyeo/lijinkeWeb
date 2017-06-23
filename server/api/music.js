@@ -15,7 +15,7 @@ router.get('/getMusic', async (req, res, next) => {
     const { cover, name, src,desc } = await tMusic.findOne()
     res.data = {
         name: name || "",
-        imageSrc: cover || "",
+        image: cover || "",
         src: src || "",
         desc:desc || ""
     }
@@ -62,7 +62,8 @@ router.post('/uploadMusic', async (req, res, next) => {
         await tMusic.update({
             name: name || "",
             src: src || "",
-            cover: cover || ""
+            cover: cover || "",
+            desc:audioDesc
         })
         debug('写入数据库成功')
         res.data = {

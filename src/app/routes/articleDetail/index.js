@@ -6,6 +6,7 @@ import Container from "shared/components/Container"
 import Message from "shared/components/Message"
 import Button from "shared/components/Button"
 import Modal from "shared/components/Modal"
+import Pagination from "shared/components/Pagination"
 import helper from "shared/libs/helper"
 import browser from "shared/libs/browser"
 import { Link } from "react-router"
@@ -21,7 +22,7 @@ import "./styles.less"
         articleInfo: ArticleDetailAction.articleInfo,
         pageViewInfo: ArticleDetailAction.pageViewInfo,
         commentInfo: ArticleDetailAction.commentInfo,
-        commentLists: ArticleDetailAction.commentLists
+        commentData: ArticleDetailAction.commentLists
     }),
     (dispatch) => (
         bindActionCreators({
@@ -42,11 +43,14 @@ export default class ArticleDetail extends React.PureComponent {
         commentModalVisible: false,
         articleLoading: true,
         commentLoading: true,
-        commentLikeConfig: []          //评论喜欢数,是否点赞
+        commentLikeConfig: [],         //评论喜欢数,是否点赞
+        pageIndex:1
     }
+    pageSize = 3
     render() {
-        const { articleInfo, commentLists } = this.props
-
+        const { articleInfo, commentData } = this.props
+        const commentLists = commentData && commentData.commentLists
+        const count = commentData && commentData.count
         const {
             isLike,
             likeNum,
@@ -55,7 +59,8 @@ export default class ArticleDetail extends React.PureComponent {
             commentModalVisible,
             articleLoading,
             commentLoading,
-            commentLikeConfig
+            commentLikeConfig,
+            pageIndex
         } = this.state
         return (
             <Container>
@@ -153,6 +158,12 @@ export default class ArticleDetail extends React.PureComponent {
                                 </ul>
                                 : <p className="not-comments"><i className="icon icon-xiayu"></i> 暂无评论</p>
                     }
+                    <Pagination
+                        className={"article-comments-pagination"}
+                        total={count}
+                        current={pageIndex}
+                        onChange={this.getArticleCommentLists}
+                    />
                 </section>
                 <Modal
                     title="发表评论"
@@ -181,6 +192,18 @@ export default class ArticleDetail extends React.PureComponent {
                 </Modal>
             </Container>
         )
+    }
+    getArticleCommentLists = (type, current) => {
+        let { pageIndex } = this.state
+
+        this.props.getArticleComments({
+            articleId:this.props.params._id,
+            pageIndex: type == "prev" ? --pageIndex : ++pageIndex,
+            pageSize: this.pageSize
+        })
+        this.setState({
+            pageIndex: current
+        })
     }
     //点赞评论
     //TODO 完成评论点赞
@@ -280,7 +303,11 @@ export default class ArticleDetail extends React.PureComponent {
     async componentDidMount() {
         const { params: { _id }, getArticleDetail, getArticleComments, addPageView } = this.props
         await getArticleDetail(_id)
-        await getArticleComments(_id)
+        await getArticleComments({
+            articleId:_id,
+            pageIndex:this.state.pageIndex,
+            pageSize:this.pageSize
+        })
 
         const { articleInfo, commentLists } = this.props
         // const commentLikeConfig = this.setComments(commentLists)
