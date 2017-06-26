@@ -32,6 +32,9 @@ export default class Weather extends React.PureComponent {
     window.addEventListener('resize', () => {
       this.canvasWidth = document.body.clientWidth
       this.canvasHeight = document.body.clientHeight
+      this.canvas.setAttribute('width', document.body.clientWidth)
+      this.canvas.setAttribute('height', document.body.clientHeight)
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     })
   }
   move = () => {
