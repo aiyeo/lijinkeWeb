@@ -12,7 +12,7 @@ const accessLogStream = fileStreamRotator.getStream({
     date_format:"YYYY-MM-DD",       //日期格式
     filename:path.resolve(logger_DIR,'lijinkeWeb-%DATE%.log'),     //文件名
     frequency:"daliy",     //频率---日常
-    verbose:true           //很长的日志
+    verbose:false           //很长的日志
 })
 const _morgan = morgan('combined',{stream:accessLogStream})
 module.exports = _morgan

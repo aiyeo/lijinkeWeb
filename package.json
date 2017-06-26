@@ -8,7 +8,7 @@
     "start": "npm run dev",
     "clean": "rimraf public/static && npm run clean-info",
     "clean-info": "node -e \"console.log('=======[ Static Folder Delete Success ]======== :)');\" ",
-    "prod-server": "npm run build && npm run updateCacheFile && set debug=*,-not_this && cross-env NODE_ENV=PROD pm2 restart ./process.json",
+    "prod-server": "npm run build && set debug=*,-not_this && cross-env NODE_ENV=PROD pm2 restart ./process.json",
     "dev-server": "set debug=*,-not_this && cross-env NODE_ENV=DEV nodemon server.js",
     "build": "npm run clean && webpack --env.mode=PROD --progress --config webpack.config.js",
     "dev": "npm run clean &&  webpack-dev-server --config webpack.config.js",
