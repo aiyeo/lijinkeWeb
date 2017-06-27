@@ -23,6 +23,8 @@
         @margin-mobile:170px;
         @header-img-width:100px;
         @header-img-height:@header-img-width;
+        @header-img-width-m:90px;
+        @header-img-height-m: @header-img-width-m;
         @media screen and (max-width:768px){
             @header-img-width:70px !important;
             @header-img-height:@header-img-width !important;
@@ -33,16 +35,16 @@
             position: relative;
             transform-origin: 50% -20%;
             height:@margin;
-            @media screen and (max-width:768px){
+              @media screen and (max-width:767px){
                 height:  @margin-mobile
             }
             animation: headerBoxAnimate   @header-img-animate-time cubic-bezier(.49,-0.16,.32,1.53)  forwards;
             .line{
                 width:2px;
                 height:@margin;
-                            @media screen and (max-width:768px){
-                height:  @margin-mobile;
-            }
+                 @media screen and (max-width:767px){
+                    height:  @margin-mobile;
+                }
                 background: #fff;
                 box-shadow: 1px 2px 3px rgba(0,0,0,.3);
                 position: absolute;
@@ -51,6 +53,9 @@
                 z-index:44;
                 animation: headerLineAnimate 3s cubic-bezier(.49,-0.16,.32,1.53) ;
                 animation-delay:2.5s;
+                       @media screen and (max-width:767px){
+                    top:-@header-img-height-m
+                }
             }
             .img{
                 cursor: -webkit-zoom-in;
@@ -67,8 +72,10 @@
                 box-shadow: 1px 1px 20px rgba(0,0,0,.3);
                 border-radius: 50%;
                 margin-top:@margin - @header-img-height;
-                            @media screen and (max-width:768px){
-                margin-top:  @margin-mobile - @header-img-height
+                               @media screen and (max-width:767px){
+                margin-top:  @margin-mobile - @header-img-height;
+                width:   @header-img-width-m;
+                height:   @header-img-height-m
             }
                 overflow: hidden;
             
@@ -88,7 +95,11 @@
                     color:#fff;
                     font-size:20px;
                     transform: scale(0);
-                    .transition()
+                    .transition();
+                @media screen and (max-width:767px){
+                    width:   @header-img-width-m;
+                    height:   @header-img-height-m
+                }
                 }
                 &:hover{
                     border:2px solid @primary-color;
@@ -141,7 +152,7 @@
         }
     }
     .qr-section{
-        margin-top: 30px;
+        margin: 30px 0;
         text-align: center;
         button{
             transform: scale(0);
