@@ -14,6 +14,7 @@ const autoprefixer = require('autoprefixer')                       //自动加�
 const CptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin') //压缩css
 const ImageminPlugin = require('imagemin-webpack-plugin').default         //压缩图片
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')       //生成打包图
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');            //webpack3 单独分离出来了这个压缩的
 
 const {host,dev_port} = require("./config")
 
@@ -181,12 +182,12 @@ module.exports = (env) => {
             // new BundleAnalyzerPlugin(),     //生成打包图
             // //webpackv3.0新增 作用域提升 默认是闭包式打包 浏览器执行速度变慢
             // //开启这个去掉模块的包裹函数,体积更小
-            // new webpack.optimize.ModuleConcatenationPlugin(),
+            new webpack.optimize.ModuleConcatenationPlugin(),
             new webpack.DefinePlugin({
                 "process.env.NODE_ENV": JSON.stringify("production"),
                 __DEBUG__: false,
             }),
-            new webpack.optimize.UglifyJsPlugin({                                //压缩
+            new UglifyJSPlugin({                                //压缩
                 output:{
                     comments:false //移除所有注释
                 },
@@ -202,7 +203,9 @@ module.exports = (env) => {
             //找到所有node_modules的依赖包  分离出来
             // /axios/ 没有用到的模块
             new webpack.optimize.CommonsChunkPlugin({
+                name:"app",
                 async:"common-in-lazy",
+                children:true,
                 minChunks:({ resource } = {} )=>(
                     resource &&
                     resource.includes('node_modules') &&
@@ -215,8 +218,11 @@ module.exports = (env) => {
             /**
              * 升级到 v2.6 貌似async不起作用  article admin detail 都使用了但是moment都打包进了对应的chunk文件
              * 导致文件增大了600kb
+             * 经过github上的提问 各路大神的帮助下  解决了上面这个问题 需要设置name!!!!!!!!!!!
              */
             new webpack.optimize.CommonsChunkPlugin({
+                name:"app",
+                children:true,
                 async: 'used-twice',
                 minChunks: (module, count) => (
                     count >= 2
