@@ -65,7 +65,7 @@
     "socket.io": "^2.0.1",
     "socket.io-client": "^2.0.1",
     "timeago-react": "^1.2.2",
-    "webpack": "2.4.1",
+    "webpack": "3.0.0",
     "webpack-bundle-analyzer": "^2.4.0",
     "xls-to-json": "^0.4.0"
   },
@@ -91,6 +91,7 @@
     "react-jinke-music-player": "^0.0.2",
     "react-loader": "^2.4.0",
     "style-loader": "~0.13.0",
+    "uglifyjs-webpack-plugin": "^0.4.6",
     "url-loader": "^0.5.8",
     "webpack-dev-server": "^2.4.5"
   }

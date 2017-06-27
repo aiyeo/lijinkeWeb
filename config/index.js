@@ -5,7 +5,7 @@ const mode = process.env.NODE_ENV || "DEV"
 const options = {
   host: mode == "DEV" ? "http://localhost" : "http://lijinke.xicp.io",
   dev_port:666,
-  socket_host:"http://192.168.199.148",
+  socket_host:"http://192.168.1.172",
   socket_port:1997,
   PORT: 1996,
   origin:"lijinkeWeb",

@@ -14,8 +14,9 @@ const autoprefixer = require('autoprefixer')                       //自动加�
 const CptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin') //压缩css
 const ImageminPlugin = require('imagemin-webpack-plugin').default         //压缩图片
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')       //生成打包图
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');            //webpack3 单独分离出来了这个压缩的
 
-const {host,dev_port} = require("./config")
+const { host, dev_port } = require("./config")
 
 module.exports = (env) => {
     //env 是npm script 运行webpack时传进来的  判断是否是开发环境
@@ -33,12 +34,13 @@ module.exports = (env) => {
             hot: true,            //热更新
             inline: true,         //iframe 模式
             historyApiFallback: true,    //浏览器 history
-            stats: {
+            stats: {              //统计
                 color: true,      //输出有颜色的信息
                 errors: true,     //显示错误信息
                 version: true,    //显示版本号
                 warnings: true,   //显示警告
-                progress: true    //显示进度
+                progress: true,   //显示进度,
+                timings:true,     //显示时间
             }
         },
 
@@ -46,12 +48,12 @@ module.exports = (env) => {
         entry: mode === "DEV"
             ? [
                 "react-hot-loader/patch",        //热更新
-                `webpack-dev-server/client?${host}:${dev_port}`,   
+                `webpack-dev-server/client?${host}:${dev_port}`,
                 "webpack/hot/only-dev-server",
                 path.resolve(__dirname, "src/index.js")
             ]
             : {
-                app:path.resolve(__dirname, "src/index.js"),
+                app: path.resolve(__dirname, "src/index.js"),
                 // vendor:['react']
             },
 
@@ -150,8 +152,8 @@ module.exports = (env) => {
 
         //自动补全后缀
         resolve: {
-            enforceExtension:false,        //2.0 后 不能写 extensions :[""]
-            extensions: ['.js', '.jsx','.json'],      //比如 test.js   可以写成 require('test')
+            enforceExtension: false,        //2.0 后 不能写 extensions :[""]
+            extensions: ['.js', '.jsx', '.json'],      //比如 test.js   可以写成 require('test')
             modules: [
                 path.resolve("src"),         //比如 src/app/components/xx  可以写成 app/components/xx
                 path.resolve("."),
@@ -181,14 +183,14 @@ module.exports = (env) => {
             // new BundleAnalyzerPlugin(),     //生成打包图
             // //webpackv3.0新增 作用域提升 默认是闭包式打包 浏览器执行速度变慢
             // //开启这个去掉模块的包裹函数,体积更小
-            // new webpack.optimize.ModuleConcatenationPlugin(),
+            new webpack.optimize.ModuleConcatenationPlugin(),
             new webpack.DefinePlugin({
                 "process.env.NODE_ENV": JSON.stringify("production"),
                 __DEBUG__: false,
             }),
-            new webpack.optimize.UglifyJsPlugin({                                //压缩
-                output:{
-                    comments:false //移除所有注释
+            new UglifyJSPlugin({                                //压缩
+                output: {
+                    comments: false //移除所有注释
                 },
                 compress: {
                     warnings: false
@@ -202,8 +204,10 @@ module.exports = (env) => {
             //找到所有node_modules的依赖包  分离出来
             // /axios/ 没有用到的模块
             new webpack.optimize.CommonsChunkPlugin({
-                async:"common-in-lazy",
-                minChunks:({ resource } = {} )=>(
+                name: "app",
+                async: "common-in-lazy",
+                children: true,
+                minChunks: ({ resource } = {}) => (
                     resource &&
                     resource.includes('node_modules') &&
                     /axios/.test(resource)
@@ -215,8 +219,11 @@ module.exports = (env) => {
             /**
              * 升级到 v2.6 貌似async不起作用  article admin detail 都使用了但是moment都打包进了对应的chunk文件
              * 导致文件增大了600kb
+             * 经过github上的提问 各路大神的帮助下  解决了上面这个问题 需要设置name!!!!!!!!!!!
              */
             new webpack.optimize.CommonsChunkPlugin({
+                name: "app",
+                children: true,
                 async: 'used-twice',
                 minChunks: (module, count) => (
                     count >= 2
@@ -227,11 +234,11 @@ module.exports = (env) => {
             //遍历node_modules目录 以.js结尾 一道vender chunk
             //自动化分离第三方依赖
             new webpack.optimize.CommonsChunkPlugin({
-                name:'vender',
-                filename:"js/common.[chunkhash:8].js",
-                minChunks:({ resource})=>(
+                name: 'app',
+                filename: "js/common.[chunkhash:8].js",
+                minChunks: ({ resource }) => (
                     resource &&
-                    resource.indexOf('node_modules') >=0 &&
+                    resource.indexOf('node_modules') >= 0 &&
                     resource.match(/\.js$/)
                 )
             }),
@@ -242,14 +249,14 @@ module.exports = (env) => {
             new ImageminPlugin({
                 // disable:false,
                 test: /\.(jpe?g|png|gif|svg)$/i,
-                optipng:{
-                    optimizationLevel:7
+                optipng: {
+                    optimizationLevel: 7
                 }
             }),
             new CptimizeCssAssetsPlugin({          //压缩css  与 ExtractTextPlugin 配合使用
                 cssProcessor: require('cssnano'),
-                cssProcessorOptions:{discardComments:{removeAll: true }}, //移除所有注释
-                canPrint:true        //是否向控制台打印消息
+                cssProcessorOptions: { discardComments: { removeAll: true } }, //移除所有注释
+                canPrint: true        //是否向控制台打印消息
             })
         ])
     }
