@@ -127,9 +127,7 @@ export default class Admin extends React.PureComponent {
                     onCancel={this.cancelContentModal}
                     className="edit-article-modal"
                 >
-                    {
-                        content
-                    }
+                    {content}
                 </Modal>
             </section>
         )
@@ -162,10 +160,12 @@ export default class Admin extends React.PureComponent {
             this.setState({ loading: true })
             await helper.postJson('/admin/approve', { id, title, publishDate, email })
             Message.success('审核通过！')
-            const data = await helper.getJson('/admin/articleList')
+            this.props.getArticleLists({
+                pageIndex: this.state.pageIndex,
+                pageSize: this.pageSize
+            })
             this.setState({
                 loading: false,
-                articleList: data.data
             })
         }
     }
