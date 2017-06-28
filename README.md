@@ -11,7 +11,7 @@ http://lijinke.xicp.io/
 #### 使用技术栈:
 - `React v15.X`
 - `ES6,ES7`
-- `webpack v2.4.0`
+- `webpack v3.0.0`
 - `Redux`
 - `React-Redux`
 - `React-Router v3.x`
@@ -19,6 +19,9 @@ http://lijinke.xicp.io/
 - `yarn`
 - `mongodb`
 - `mongoose`
+- `mocha`
+- `chai`
+- `less`
 - `socket.io`
 
 #### node环境
