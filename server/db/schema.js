@@ -18,8 +18,8 @@ const articleSchema = new mongoose.Schema({
         type:Date,
         default:Date.now
     },        
-    pageView: String,         //点击量
-    like: String,             //喜欢数量
+    pageView: Number,         //点击量
+    like: Number,             //喜欢数量
     approve:Boolean,           //是否审核通过
     email:String,              //作者邮箱  用来通知作者文章是否通过
     category:Array
