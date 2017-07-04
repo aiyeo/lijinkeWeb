@@ -44,7 +44,7 @@ export default class ArticleDetail extends React.PureComponent {
         articleLoading: true,
         commentLoading: true,
         commentLikeConfig: [],         //评论喜欢数,是否点赞
-        pageIndex:1
+        pageIndex: 1
     }
     pageSize = 3
     render() {
@@ -117,7 +117,7 @@ export default class ArticleDetail extends React.PureComponent {
                                                 like = 0
                                             } = item
 
-                                            {/*const { like: currentLikeNum, isLike } = commentLikeConfig.find(({ commentId }) => commentId == _id)*/}
+                                            {/*const { like: currentLikeNum, isLike } = commentLikeConfig.find(({ commentId }) => commentId == _id)*/ }
 
                                             return (
                                                 <li
@@ -197,7 +197,7 @@ export default class ArticleDetail extends React.PureComponent {
         let { pageIndex } = this.state
 
         this.props.getArticleComments({
-            articleId:this.props.params._id,
+            articleId: this.props.params._id,
             pageIndex: type == "prev" ? --pageIndex : ++pageIndex,
             pageSize: this.pageSize
         })
@@ -254,7 +254,11 @@ export default class ArticleDetail extends React.PureComponent {
         if (this.props.commentInfo && this.props.commentInfo.success === 1) {
             Message.success('评论成功!')
             this.cancelCommentModal()
-            await this.props.getArticleComments(this.props.params._id)
+            await this.props.getArticleComments({
+                articleId: this.props.params._id,
+                pageIndex: this.state.pageIndex,
+                pageSize: this.pageSize
+            })
 
 
             // const commentLikeConfig = this.setComments(this.props.commentLists)
@@ -273,8 +277,8 @@ export default class ArticleDetail extends React.PureComponent {
         this.setState({ commentModalVisible: false })
     }
     //获取设备
-    getDevice = ()=>{
-        return browser.isPC ? 'PC' :'手机'
+    getDevice = () => {
+        return browser.isPC ? 'PC' : '手机'
     }
     //喜欢
     toggleLike = async () => {
@@ -304,9 +308,9 @@ export default class ArticleDetail extends React.PureComponent {
         const { params: { _id }, getArticleDetail, getArticleComments, addPageView } = this.props
         await getArticleDetail(_id)
         await getArticleComments({
-            articleId:_id,
-            pageIndex:this.state.pageIndex,
-            pageSize:this.pageSize
+            articleId: _id,
+            pageIndex: this.state.pageIndex,
+            pageSize: this.pageSize
         })
 
         const { articleInfo, commentLists } = this.props
